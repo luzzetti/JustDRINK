@@ -26,7 +26,7 @@
     <properties>
         <revision>0.0.1-SNAPSHOT</revision>
         <start-class>it.luzzetti.justdrink.backoffice.AppLauncher</start-class>
-        <docker.image.prefix>backoffice</docker.image.prefix>
+        <docker.image.prefix>${artifactId}</docker.image.prefix>
         <java.version>17</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
