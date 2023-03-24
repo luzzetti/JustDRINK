@@ -1,10 +1,12 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.adapters;
 
 import it.luzzetti.justdrink.backoffice.application.ports.output.CreateRestaurantPort;
+import it.luzzetti.justdrink.backoffice.application.ports.output.ListRestaurantsPort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.RestaurantJpaEntity;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.mappers.RestaurantJpaMapper;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.repositories.RestaurantJpaRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
@@ -12,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 @RequiredArgsConstructor
-public class RestaurantJpaAdapter implements CreateRestaurantPort {
+public class RestaurantJpaAdapter implements ListRestaurantsPort, CreateRestaurantPort {
   private final RestaurantJpaRepository restaurantJpaRepository;
   private final RestaurantJpaMapper restaurantJpaMapper;
 
@@ -23,5 +25,12 @@ public class RestaurantJpaAdapter implements CreateRestaurantPort {
     RestaurantJpaEntity theCreatedEntity = restaurantJpaRepository.save(aNewEntity);
 
     return restaurantJpaMapper.toDomain(theCreatedEntity);
+  }
+
+  @Override
+  public List<Restaurant> listRestaurants(String filter, Integer maxPageSize, Integer offset) {
+
+    restaurantJpaRepository.findAll();
+    throw new UnsupportedOperationException("NOT YET IMPLEMENTED");
   }
 }
