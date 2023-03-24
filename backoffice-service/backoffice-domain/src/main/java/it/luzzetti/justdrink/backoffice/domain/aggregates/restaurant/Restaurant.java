@@ -7,13 +7,13 @@ import lombok.*;
 @Getter
 @Builder
 public class Restaurant implements AggregateRoot {
-  @Builder.Default private final RestaurantId id = new RestaurantId();
+  @Builder.Default private final RestaurantId id = RestaurantId.empty();
   private String name;
-  private Boolean enabled;
+  @Builder.Default private Boolean enabled = Boolean.FALSE;
 
   public record RestaurantId(UUID id) {
-    public RestaurantId() {
-      this(null);
+    public static RestaurantId empty() {
+      return new RestaurantId(null);
     }
   }
 }

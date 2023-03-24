@@ -19,6 +19,7 @@ public class CreateRestaurantService implements CreateRestaurantUseCase {
   @Transactional
   public Restaurant createRestaurant(@Valid CreateRestaurantCommand command) {
 
+    // Use-Case
     Restaurant aNewRestaurant = Restaurant.builder().name(command.name()).build();
 
     return createRestaurantPort.createRestaurant(aNewRestaurant);

@@ -1,6 +1,7 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters;
 
 import it.luzzetti.justdrink.backoffice.application.ports.input.CreateRestaurantUseCase;
+import it.luzzetti.justdrink.backoffice.application.ports.input.CreateRestaurantUseCase.CreateRestaurantCommand;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.RestaurantWebMapper;
 import jakarta.validation.constraints.NotBlank;
@@ -26,8 +27,7 @@ public class RestaurantRestControllerAdapter {
   public ResponseEntity<RestaurantCreatedResponse> createRestaurant(
       @RequestBody RestaurantCreationRequest request) {
     // Creating the command
-    var command =
-        CreateRestaurantUseCase.CreateRestaurantCommand.builder().name(request.name()).build();
+    var command = CreateRestaurantCommand.builder().name(request.name()).build();
 
     // Executing Use-Case
     Restaurant theCreatedRestaurant = createRestaurantUseCase.createRestaurant(command);
