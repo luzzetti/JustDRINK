@@ -2,11 +2,5 @@ server:
   port: 8080
 
 spring:
-
-
-logging:
-  level:
-    it:
-      luzzetti:
-        justdrink:
-          backoffice: DEBUG
+  application:
+    name: backoffice

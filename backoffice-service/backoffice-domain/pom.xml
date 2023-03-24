@@ -9,7 +9,7 @@
     <version>${revision}</version>
   </parent>
 
-  <name>:: JustDRINK :: Domain ::</name>
+  <name>:: backoffice-domain ::</name>
   <artifactId>backoffice-domain</artifactId>
 
 

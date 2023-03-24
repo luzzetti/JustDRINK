@@ -10,7 +10,7 @@
     <version>${revision}</version>
   </parent>
 
-  <name>:: JustDRINK :: Application ::</name>
+  <name>:: backoffice-application ::</name>
   <artifactId>backoffice-application</artifactId>
 
 

@@ -9,7 +9,7 @@
     <version>${revision}</version>
   </parent>
 
-  <name>:: JustDRINK :: Bootloader ::</name>
+  <name>:: backoffice-bootloader ::</name>
   <artifactId>backoffice-bootloader</artifactId>
 
   <dependencies>
