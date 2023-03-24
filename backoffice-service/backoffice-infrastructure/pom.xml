@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>it.luzzetti.justdrink</groupId>
+    <artifactId>backoffice</artifactId>
+    <version>${revision}</version>
+  </parent>
+
+  <name>:: JustDRINK :: Infrastructure ::</name>
+  <artifactId>backoffice-infrastructure</artifactId>
+
+  <modules>
+    <module>backoffice-input-rest-adapter</module>
+    <module>backoffice-output-jpa-adapter</module>
+  </modules>
+
+  <packaging>pom</packaging>
+
+  <dependencies>
+    <dependency>
+      <groupId>it.luzzetti.justdrink</groupId>
+      <artifactId>backoffice-application</artifactId>
+      <version>${revision}</version>
+    </dependency>
+  </dependencies>
+
+</project>
