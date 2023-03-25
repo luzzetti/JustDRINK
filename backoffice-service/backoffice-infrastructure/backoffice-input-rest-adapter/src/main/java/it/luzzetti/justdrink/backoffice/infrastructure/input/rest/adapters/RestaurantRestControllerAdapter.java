@@ -2,12 +2,12 @@ package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
-import it.luzzetti.justdrink.backoffice.application.ports.input.CreateRestaurantUseCase;
-import it.luzzetti.justdrink.backoffice.application.ports.input.CreateRestaurantUseCase.CreateRestaurantCommand;
-import it.luzzetti.justdrink.backoffice.application.ports.input.ListRestaurantsQuery;
-import it.luzzetti.justdrink.backoffice.application.ports.input.ListRestaurantsQuery.ListRestaurantsCommand;
-import it.luzzetti.justdrink.backoffice.application.ports.input.ShowRestaurantQuery;
-import it.luzzetti.justdrink.backoffice.application.ports.input.ShowRestaurantQuery.ShowRestaurantCommand;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.CreateRestaurantUseCase;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.CreateRestaurantUseCase.CreateRestaurantCommand;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsQuery;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsQuery.ListRestaurantsCommand;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ShowRestaurantQuery;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ShowRestaurantQuery.ShowRestaurantCommand;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import it.luzzetti.justdrink.backoffice.domain.shared.RestaurantId;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.RestaurantWebMapper;
@@ -70,10 +70,10 @@ public class RestaurantRestControllerAdapter {
   }
 
   @GetMapping("/{restaurantId}")
-  public ResponseEntity<RestaurantResource> showRestaurant(@PathVariable UUID restaurantId) {
+  public ResponseEntity<RestaurantResource> getRestaurant(@PathVariable UUID restaurantId) {
     // Parsing parameters from HTTP
     var command =
-        ShowRestaurantCommand.builder().restaurantId(RestaurantId.of(restaurantId)).build();
+        ShowRestaurantCommand.builder().restaurantId(new RestaurantId(restaurantId)).build();
 
     // Calling Use-Case
     Restaurant theFoundRestaurant = showRestaurantQuery.showRestaurant(command);
@@ -126,8 +126,9 @@ public class RestaurantRestControllerAdapter {
 
   private static void addStandardHateoasLinks(UUID restaurantId, RestaurantResource resource) {
     resource.add(
-        linkTo(methodOn(RestaurantRestControllerAdapter.class).showRestaurant(restaurantId))
+        linkTo(methodOn(RestaurantRestControllerAdapter.class).getRestaurant(restaurantId))
             .withSelfRel(),
+        linkTo(methodOn(MenuRestControllerAdapter.class).getMenu(restaurantId)).withRel("getMenu"),
         linkTo(RestaurantRestControllerAdapter.class).withRel("listRestaurants"));
   }
 }

@@ -1,7 +1,7 @@
 package it.luzzetti.justdrink.backoffice.application.services;
 
-import it.luzzetti.justdrink.backoffice.application.ports.input.CreateRestaurantUseCase;
-import it.luzzetti.justdrink.backoffice.application.ports.output.CreateRestaurantPort;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.CreateRestaurantUseCase;
+import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.CreateRestaurantPort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

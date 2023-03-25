@@ -1,8 +1,8 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.adapters;
 
-import it.luzzetti.justdrink.backoffice.application.ports.output.CreateRestaurantPort;
-import it.luzzetti.justdrink.backoffice.application.ports.output.FindRestaurantPort;
-import it.luzzetti.justdrink.backoffice.application.ports.output.ListRestaurantsPort;
+import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.CreateRestaurantPort;
+import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.FindRestaurantPort;
+import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.ListRestaurantsPort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import it.luzzetti.justdrink.backoffice.domain.shared.RestaurantId;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.RestaurantJpaEntity;

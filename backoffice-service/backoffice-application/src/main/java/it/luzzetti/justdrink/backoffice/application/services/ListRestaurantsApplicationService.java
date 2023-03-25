@@ -1,7 +1,7 @@
 package it.luzzetti.justdrink.backoffice.application.services;
 
-import it.luzzetti.justdrink.backoffice.application.ports.input.ListRestaurantsQuery;
-import it.luzzetti.justdrink.backoffice.application.ports.output.ListRestaurantsPort;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsQuery;
+import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.ListRestaurantsPort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
