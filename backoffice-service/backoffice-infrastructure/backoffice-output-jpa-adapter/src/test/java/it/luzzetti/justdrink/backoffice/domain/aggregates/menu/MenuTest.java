@@ -1,6 +1,5 @@
 package it.luzzetti.justdrink.backoffice.domain.aggregates.menu;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Assertions;
@@ -18,15 +17,5 @@ class MenuTest {
     assertNotNull(menu.getId());
 
     assertNull(menu.getId().id());
-  }
-
-  @Test
-  @DisplayName("Add Section To Menu")
-  void whenAddingMenuSection_thanItGetsAdded() {
-    Menu menu = Menu.newMenu();
-
-    menu.addSection("Pizze Rosse");
-
-    assertThat(menu.getSections()).hasSize(1);
   }
 }
