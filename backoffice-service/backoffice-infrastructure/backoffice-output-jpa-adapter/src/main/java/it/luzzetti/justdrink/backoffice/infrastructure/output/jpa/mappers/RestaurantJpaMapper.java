@@ -1,6 +1,7 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.mappers;
 
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
+import it.luzzetti.justdrink.backoffice.domain.shared.RestaurantId;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.RestaurantJpaEntity;
 import java.util.UUID;
 import org.mapstruct.Mapper;
@@ -11,11 +12,11 @@ public interface RestaurantJpaMapper {
 
   RestaurantJpaEntity toEntity(Restaurant aNewRestaurant);
 
-  default UUID map(Restaurant.RestaurantId restaurantId) {
+  default UUID map(RestaurantId restaurantId) {
     return restaurantId.id();
   }
 
-  default Restaurant.RestaurantId map(UUID uuid) {
-    return new Restaurant.RestaurantId(uuid);
+  default RestaurantId map(UUID uuid) {
+    return new RestaurantId(uuid);
   }
 }

@@ -4,6 +4,5 @@ import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.Resta
 import java.util.List;
 
 public interface CustomRestaurantJpaRepository {
-  List<RestaurantJpaEntity> customQuery(String filter);
-
+  List<RestaurantJpaEntity> findAll(String filter, Integer maxPageSize, Integer offset);
 }

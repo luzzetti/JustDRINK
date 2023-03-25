@@ -1,4 +1,4 @@
-package it.luzzetti.justdrink.backoffice.application.ports.input;
+package it.luzzetti.justdrink.backoffice.application.ports.input.restaurant;
 
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import jakarta.validation.constraints.NotEmpty;
