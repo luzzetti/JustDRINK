@@ -1,9 +1,10 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.adapters;
 
 import it.luzzetti.justdrink.backoffice.application.ports.output.CreateRestaurantPort;
+import it.luzzetti.justdrink.backoffice.application.ports.output.FindRestaurantPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.ListRestaurantsPort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
-import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.QRestaurantJpaEntity;
+import it.luzzetti.justdrink.backoffice.domain.shared.RestaurantId;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.RestaurantJpaEntity;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.mappers.RestaurantJpaMapper;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.repositories.RestaurantJpaRepository;
@@ -15,7 +16,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 @RequiredArgsConstructor
-public class RestaurantJpaAdapter implements ListRestaurantsPort, CreateRestaurantPort {
+public class RestaurantJpaAdapter
+    implements FindRestaurantPort, ListRestaurantsPort, CreateRestaurantPort {
   private final RestaurantJpaRepository restaurantJpaRepository;
   private final RestaurantJpaMapper restaurantJpaMapper;
 
@@ -30,12 +32,19 @@ public class RestaurantJpaAdapter implements ListRestaurantsPort, CreateRestaura
 
   @Override
   public List<Restaurant> listRestaurants(String filter, Integer maxPageSize, Integer offset) {
-    var root = QRestaurantJpaEntity.restaurantJpaEntity;
 
     List<RestaurantJpaEntity> restaurants =
-        (List<RestaurantJpaEntity>)
-            restaurantJpaRepository.findAll(root.name.containsIgnoreCase(filter));
+        restaurantJpaRepository.findAll(filter, maxPageSize, offset);
 
     return restaurants.stream().map(restaurantJpaMapper::toDomain).toList();
+  }
+
+  @Override
+  public Restaurant findRestaurantByIdMandatory(RestaurantId restaurantId) {
+
+    return restaurantJpaRepository
+        .findById(restaurantId.id())
+        .map(restaurantJpaMapper::toDomain)
+        .orElseThrow(() -> new IllegalArgumentException("Create a custom Exception for this"));
   }
 }

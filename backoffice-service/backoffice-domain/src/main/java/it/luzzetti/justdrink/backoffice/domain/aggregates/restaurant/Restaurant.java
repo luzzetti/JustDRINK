@@ -8,15 +8,7 @@ import lombok.*;
 @Getter
 @Builder
 public class Restaurant {
-  private final RestaurantId id = RestaurantId.empty();
-  @Getter private final String name;
-  private final Boolean enabled = Boolean.FALSE;
-
-  public Restaurant(String name) {
-    this.name = name;
-  }
-
-  public static Restaurant newRestaurant(String name) {
-    return new Restaurant(name);
-  }
+  @Builder.Default private RestaurantId id = RestaurantId.empty();
+  private String name;
+  private Boolean enabled;
 }

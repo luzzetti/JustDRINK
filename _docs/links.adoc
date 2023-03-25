@@ -1,17 +1,17 @@
 
 
+QueryDSL:
+https://samuel-mumo.medium.com/dynamic-queries-and-querydsl-jpa-support-in-spring-a1b4e233084b
+http://querydsl.com/static/querydsl/4.0.1/reference/html_single/#d0e227
+
+Archetypes:
 https://www.baeldung.com/maven-archetype
 
-
 Configure Google java formatter:
-
 As mentioned Here, Download the intellij-java-google-style.xml file from the This Link:
 https://google.github.io/styleguide/intellij-java-google-style.xml
-
 Then in Intellij, go Under Settings -> Editor -> Code Style. there in Scheme settings (settings icon on right side) -> import schemes-> intellij idea code style xml. Select the xml downloaded in first step. then in Scheme dropdown select the GoogleStyle IDE (newly added style). Click on apply and close.
 
 
-
-"If you're calling two seters in a row, you're missing a concept"
-
+"If you're calling two setters in a row, you're missing a concept"
 REST != CRUD via HTTP
