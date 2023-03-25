@@ -3,6 +3,7 @@ package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.adapters;
 import it.luzzetti.justdrink.backoffice.application.ports.output.CreateRestaurantPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.ListRestaurantsPort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
+import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.QRestaurantJpaEntity;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.RestaurantJpaEntity;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.mappers.RestaurantJpaMapper;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.repositories.RestaurantJpaRepository;
@@ -29,8 +30,12 @@ public class RestaurantJpaAdapter implements ListRestaurantsPort, CreateRestaura
 
   @Override
   public List<Restaurant> listRestaurants(String filter, Integer maxPageSize, Integer offset) {
+    var root = QRestaurantJpaEntity.restaurantJpaEntity;
 
-    restaurantJpaRepository.findAll();
-    throw new UnsupportedOperationException("NOT YET IMPLEMENTED");
+    List<RestaurantJpaEntity> restaurants =
+        (List<RestaurantJpaEntity>)
+            restaurantJpaRepository.findAll(root.name.containsIgnoreCase(filter));
+
+    return restaurants.stream().map(restaurantJpaMapper::toDomain).toList();
   }
 }
