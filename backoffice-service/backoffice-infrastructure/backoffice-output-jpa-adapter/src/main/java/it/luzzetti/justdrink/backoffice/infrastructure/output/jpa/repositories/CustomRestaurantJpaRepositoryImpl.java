@@ -2,14 +2,8 @@ package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.repositories;
 
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.RestaurantJpaEntity;
 import java.util.List;
-import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
-public class CustomRestaurantJpaRepositoryImpl extends QuerydslRepositorySupport
-    implements CustomRestaurantJpaRepository {
-
-  public CustomRestaurantJpaRepositoryImpl(Class<?> domainClass) {
-    super(domainClass);
-  }
+public class CustomRestaurantJpaRepositoryImpl implements CustomRestaurantJpaRepository {
 
   @Override
   public List<RestaurantJpaEntity> customQuery(String filter) {

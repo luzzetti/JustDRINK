@@ -7,4 +7,4 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 public interface RestaurantJpaRepository
     extends JpaRepository<RestaurantJpaEntity, UUID>,
-        QuerydslPredicateExecutor<RestaurantJpaEntity> {}
+        QuerydslPredicateExecutor<RestaurantJpaEntity>, CustomRestaurantJpaRepository {}

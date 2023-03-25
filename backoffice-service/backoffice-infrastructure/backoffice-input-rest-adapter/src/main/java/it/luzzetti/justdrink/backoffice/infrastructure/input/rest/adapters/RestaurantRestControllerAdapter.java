@@ -9,6 +9,7 @@ import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.Restau
 import jakarta.validation.constraints.NotBlank;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -35,9 +36,9 @@ public class RestaurantRestControllerAdapter {
       @RequestBody ListRestaurantsRequest request) {
 
     // Parsing values
-    String filter = request.filter();
-    Integer maxPageSize = request.maxPageSize();
-    int offset = PageTokenCodec.decode(request.pageToken());
+    String filter = request.filter().orElse("");
+    Integer maxPageSize = request.maxPageSize().orElse(10);
+    Integer offset = request.pageToken().map(PageTokenCodec::decode).orElse(5);
 
     // Creating command
     var command =
@@ -48,9 +49,10 @@ public class RestaurantRestControllerAdapter {
             .build();
 
     // Calling UseCase
-    var restaurants = listRestaurantsQuery.listRestaurants(command).stream()
-        .map(restaurantWebMapper::toListElement)
-        .toList();
+    var restaurants =
+        listRestaurantsQuery.listRestaurants(command).stream()
+            .map(restaurantWebMapper::toListElement)
+            .toList();
 
     // Crafting a response
     var response =
@@ -76,7 +78,8 @@ public class RestaurantRestControllerAdapter {
     }
   }
 
-  public record ListRestaurantsRequest(String filter, Integer maxPageSize, String pageToken) {}
+  public record ListRestaurantsRequest(
+      Optional<String> filter, Optional<Integer> maxPageSize, Optional<String> pageToken) {}
 
   @Builder
   public record ListRestaurantsResponse(
