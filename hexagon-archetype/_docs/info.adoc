@@ -1,0 +1,5 @@
+mvn install
+per compilare ed installare l'archetypo in locale
+
+Poi, andrà configurato su Intellij, per poter creare
+un nuovo modulo a partire da questo artefatto
