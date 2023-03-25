@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Log4j2
 @RequiredArgsConstructor
-public class CreateRestaurantService implements CreateRestaurantUseCase {
+public class CreateRestaurantApplicationService implements CreateRestaurantUseCase {
   private final CreateRestaurantPort createRestaurantPort;
 
   @Override

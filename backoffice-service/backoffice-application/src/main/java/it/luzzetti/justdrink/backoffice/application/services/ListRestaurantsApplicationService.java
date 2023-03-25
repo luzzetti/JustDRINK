@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Log4j2
 @RequiredArgsConstructor
-public class ListRestaurantsService implements ListRestaurantsQuery {
+public class ListRestaurantsApplicationService implements ListRestaurantsQuery {
 
   private final ListRestaurantsPort listRestaurantsPort;
 
