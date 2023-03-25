@@ -1,7 +1,9 @@
 package it.luzzetti.justdrink.backoffice.application.services;
 
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.CreateRestaurantUseCase;
+import it.luzzetti.justdrink.backoffice.application.ports.output.menu.CreateMenuPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.CreateRestaurantPort;
+import it.luzzetti.justdrink.backoffice.domain.aggregates.menu.Menu;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CreateRestaurantApplicationService implements CreateRestaurantUseCase {
   private final CreateRestaurantPort createRestaurantPort;
+  private final CreateMenuPort createMenuPort;
 
   @Override
   @Transactional
@@ -21,7 +24,17 @@ public class CreateRestaurantApplicationService implements CreateRestaurantUseCa
 
     // Use-Case
     Restaurant aNewRestaurant = Restaurant.builder().name(command.name()).build();
+    Restaurant theCreatedRestaurant = createRestaurantPort.createRestaurant(aNewRestaurant);
 
-    return createRestaurantPort.createRestaurant(aNewRestaurant);
+    Menu aNewMenu = Menu.newMenuForRestaurant(theCreatedRestaurant.getId());
+    Menu theCreatedMenu = createMenuPort.createMenu(aNewMenu);
+
+    log.debug(
+        () ->
+            String.format(
+                "The menu %s has been associated with restaurant %s",
+                theCreatedMenu.getId(), theCreatedMenu.getRestaurantId()));
+
+    return theCreatedRestaurant;
   }
 }
