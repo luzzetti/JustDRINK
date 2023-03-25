@@ -9,3 +9,9 @@ As mentioned Here, Download the intellij-java-google-style.xml file from the Thi
 https://google.github.io/styleguide/intellij-java-google-style.xml
 
 Then in Intellij, go Under Settings -> Editor -> Code Style. there in Scheme settings (settings icon on right side) -> import schemes-> intellij idea code style xml. Select the xml downloaded in first step. then in Scheme dropdown select the GoogleStyle IDE (newly added style). Click on apply and close.
+
+
+
+"If you're calling two seters in a row, you're missing a concept"
+
+REST != CRUD via HTTP
