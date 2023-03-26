@@ -32,7 +32,7 @@ public class MenuJpaEntity {
   @JoinColumn(name = "RESTAURANT_ID")
   private RestaurantJpaEntity restaurant;
 
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "MENU_ID")
   Set<MenuSectionJpaEntity> sections = new HashSet<>();
 }

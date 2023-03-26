@@ -4,6 +4,7 @@ import it.luzzetti.justdrink.backoffice.domain.shared.MenuId;
 import it.luzzetti.justdrink.backoffice.domain.shared.MenuSectionId;
 import it.luzzetti.justdrink.backoffice.domain.shared.RestaurantId;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -33,9 +34,14 @@ public class Menu {
     sections.add(aNewMenuSection);
   }
 
-  public void removeSection(MenuSectionId menuSectionIdToRemove) {
+  public void removeSectionById(MenuSectionId menuSectionIdToRemove) {
     // Validations ?
     sections.removeIf(s -> Objects.equals(s.getId(), menuSectionIdToRemove));
+  }
+
+  public List<MenuSection> getSections() {
+    // Approfondire "Unmodifiable vs Immutable"
+    return Collections.unmodifiableList(sections);
   }
 
   public MenuSection getLastCreatedSection() {
