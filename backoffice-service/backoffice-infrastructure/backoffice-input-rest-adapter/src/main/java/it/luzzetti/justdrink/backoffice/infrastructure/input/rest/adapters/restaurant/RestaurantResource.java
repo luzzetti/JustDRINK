@@ -1,4 +1,4 @@
-package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters;
+package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant;
 
 import java.util.UUID;
 import lombok.EqualsAndHashCode;
@@ -11,7 +11,8 @@ import org.springframework.hateoas.RepresentationModel;
 @Setter
 @ToString
 @EqualsAndHashCode(callSuper = true)
-public class MenuResource extends RepresentationModel<MenuResource> {
+public class RestaurantResource extends RepresentationModel<RestaurantResource> {
   private UUID id;
-
+  private String name;
+  private boolean enabled;
 }

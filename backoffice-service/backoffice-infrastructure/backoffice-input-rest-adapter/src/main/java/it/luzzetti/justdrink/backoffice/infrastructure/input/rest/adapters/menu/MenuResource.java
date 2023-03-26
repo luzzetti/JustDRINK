@@ -1,5 +1,6 @@
-package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters;
+package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.menu;
 
+import java.util.List;
 import java.util.UUID;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -11,8 +12,7 @@ import org.springframework.hateoas.RepresentationModel;
 @Setter
 @ToString
 @EqualsAndHashCode(callSuper = true)
-public class RestaurantResource extends RepresentationModel<RestaurantResource> {
+public class MenuResource extends RepresentationModel<MenuResource> {
   private UUID id;
-  private String name;
-  private boolean enabled;
+  private List<MenuSectionResource> sections;
 }

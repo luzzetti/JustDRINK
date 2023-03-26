@@ -1,4 +1,4 @@
-package it.luzzetti.justdrink.backoffice.application.services;
+package it.luzzetti.justdrink.backoffice.application.services.restaurant;
 
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ShowRestaurantQuery;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.FindRestaurantPort;

@@ -1,6 +1,7 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.adapters;
 
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.CreateRestaurantPort;
+import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.DeleteRestaurantPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.FindRestaurantPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.ListRestaurantsPort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
@@ -9,6 +10,7 @@ import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.Resta
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.mappers.RestaurantJpaMapper;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.repositories.RestaurantJpaRepository;
 import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
@@ -17,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 @RequiredArgsConstructor
 public class RestaurantJpaAdapter
-    implements FindRestaurantPort, ListRestaurantsPort, CreateRestaurantPort {
+    implements FindRestaurantPort, ListRestaurantsPort, CreateRestaurantPort, DeleteRestaurantPort {
   private final RestaurantJpaRepository restaurantJpaRepository;
   private final RestaurantJpaMapper restaurantJpaMapper;
 
@@ -46,5 +48,10 @@ public class RestaurantJpaAdapter
         .findById(restaurantId.id())
         .map(restaurantJpaMapper::toDomain)
         .orElseThrow(() -> new IllegalArgumentException("Create a custom Exception for this"));
+  }
+
+  @Override
+  public void deleteRestaurantById(UUID restaurantId) {
+    restaurantJpaRepository.deleteById(restaurantId);
   }
 }

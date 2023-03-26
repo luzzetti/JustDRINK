@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(uses = {RestaurantJpaMapper.class})
+@Mapper(uses = {RestaurantJpaMapper.class, MenuSectionJpaMapper.class})
 public interface MenuJpaMapper {
   @Mapping(target = "restaurantId", source = "restaurant.id")
   Menu toDomain(MenuJpaEntity anEntity);
@@ -20,6 +20,6 @@ public interface MenuJpaMapper {
   }
 
   default MenuId map(UUID uuid) {
-    return new MenuId(uuid);
+    return MenuId.from(uuid);
   }
 }
