@@ -33,10 +33,15 @@
     </developer>
   </developers>
 
+  <!-- il Docker image name è strettamente correlato al nome del repository DockerHub su cui pushare -->
+
   <properties>
     <revision>0.0.1-SNAPSHOT</revision>
     <start-class>it.luzzetti.justdrink.backoffice.AppLauncher</start-class>
-    <docker.image.name>luzzetti.it/justdrink/${project.artifactId}:${project.version}</docker.image.name>
+    <docker.image.name>docker.io/luzzetti/${project.artifactId}:${project.version}
+    </docker.image.name>
+    <dockerhub.username/>
+    <dockerhub.token/>
     <java.version>17</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>

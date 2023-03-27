@@ -38,9 +38,17 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
+          <mainClass>${start-class}</mainClass>
           <image>
             <name>${docker.image.name}</name>
+            <publish>true</publish>
           </image>
+          <docker>
+            <publishRegistry>
+              <username>${dockerhub.username}</username>
+              <password>${dockerhub.token}</password>
+            </publishRegistry>
+          </docker>
           <excludes>
             <exclude>
               <groupId>org.projectlombok</groupId>
