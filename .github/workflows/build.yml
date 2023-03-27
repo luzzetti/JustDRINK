@@ -23,4 +23,4 @@ jobs:
       run: mvn clean install -f ./backoffice-service/pom.xml
       
     - name: Creo il container con spring-boot
-      run: mvn spring-boot:build-image -f ./backoffice-service/backoffice-bootloader/pom.xml -Ddockerhub.username=${{secrets.DOCKER_HUB_USERNAME}} -Ddockerhub.token=${{secrets.DOCKER_HUB_PASSWORD}}
+      run: mvn spring-boot:build-image -f ./backoffice-service/backoffice-bootloader/pom.xml -Ddockerhub.username=${{secrets.DOCKER_HUB_USERNAME}} -Ddockerhub.token=${{secrets.DOCKER_HUB_TOKEN}}
