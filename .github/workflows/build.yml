@@ -18,5 +18,9 @@ jobs:
       with:
         distribution: 'corretto'
         java-version: '17'
-    - name: Build with Maven
+        
+    - name: Buildo con Maven
+      run: mvn clean install -f ./backoffice-service/pom.xml
+      
+    - name: Creo il container con spring-boot
       run: mvn spring-boot:build-image -f ./backoffice-service/backoffice-bootloader/pom.xml
