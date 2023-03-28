@@ -1,0 +1,14 @@
+services:
+
+  backoffice-service:
+    image: luzzetti/backoffice-bootloader:0.0.1-SNAPSHOT
+    ports:
+      - "9090:8080"
+    networks:
+      - justdrink
+    mem_limit: 500m
+
+networks:
+  justdrink:
+    name: justdrink
+    driver: bridge
