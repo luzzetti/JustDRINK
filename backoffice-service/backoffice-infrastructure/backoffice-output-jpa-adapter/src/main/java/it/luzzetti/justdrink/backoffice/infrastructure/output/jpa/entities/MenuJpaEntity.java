@@ -24,6 +24,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class MenuJpaEntity {
 
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "MENU_ID")
+  Set<MenuSectionJpaEntity> sections = new HashSet<>();
+
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
@@ -31,8 +35,4 @@ public class MenuJpaEntity {
   @OneToOne
   @JoinColumn(name = "RESTAURANT_ID")
   private RestaurantJpaEntity restaurant;
-
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-  @JoinColumn(name = "MENU_ID")
-  Set<MenuSectionJpaEntity> sections = new HashSet<>();
 }
