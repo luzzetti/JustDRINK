@@ -28,8 +28,8 @@ public class CreateProductApplicationService implements CreateProductUseCase {
     Menu theMenu = findMenuPort.findMenuByRestaurantIdMandatory(restaurantId);
 
     theMenu.addProductToSection(theNewProduct, sectionId);
-    Menu menu = updateMenuPort.updateMenu(theMenu);
 
+    Menu menu = updateMenuPort.updateMenu(theMenu);
     return menu.getLastCreatedProduct();
   }
 }
