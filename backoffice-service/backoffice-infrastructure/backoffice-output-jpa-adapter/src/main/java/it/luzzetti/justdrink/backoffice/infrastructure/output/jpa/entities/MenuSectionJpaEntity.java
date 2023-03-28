@@ -1,11 +1,16 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +29,10 @@ public class MenuSectionJpaEntity {
   private UUID id;
 
   private String title;
+
+  // Composition vs aggregation vs association
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<ProductJpaEntity> products = new HashSet<>();
 
   @CreationTimestamp private Instant createdAt;
 }

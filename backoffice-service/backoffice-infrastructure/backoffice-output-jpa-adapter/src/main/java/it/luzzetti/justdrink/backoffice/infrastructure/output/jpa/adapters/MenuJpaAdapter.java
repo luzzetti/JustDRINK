@@ -56,6 +56,7 @@ public class MenuJpaAdapter
     // Fetching data
     // Mantenere l'associazione a mano anziché nel mapper?
     MenuJpaEntity menuJpaEntity = menuJpaMapper.toEntity(aMenuToUpdate);
+
     var theAssociatedRestaurant =
         restaurantJpaRepository.getReferenceById(aMenuToUpdate.getRestaurantId().id());
     menuJpaEntity.setRestaurant(theAssociatedRestaurant);
