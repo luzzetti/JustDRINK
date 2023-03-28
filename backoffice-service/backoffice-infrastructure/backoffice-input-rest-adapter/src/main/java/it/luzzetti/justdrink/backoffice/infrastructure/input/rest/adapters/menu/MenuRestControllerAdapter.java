@@ -5,6 +5,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.CreateMenuSectionUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.CreateMenuSectionUseCase.CreateMenuSectionCommand;
+import it.luzzetti.justdrink.backoffice.application.ports.input.menu.CreateProductUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.DeleteMenuSectionUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.DeleteMenuSectionUseCase.DeleteMenuSectionCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ListMenuSectionsQuery;
@@ -13,14 +14,20 @@ import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ShowMenuQue
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ShowMenuQuery.ShowMenuCommand;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.menu.Menu;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.menu.MenuSection;
+import it.luzzetti.justdrink.backoffice.domain.aggregates.menu.Product;
+import it.luzzetti.justdrink.backoffice.domain.shared.MenuSectionId;
 import it.luzzetti.justdrink.backoffice.domain.shared.RestaurantId;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant.RestaurantRestControllerAdapter;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.MenuSectionWebMapper;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.MenuWebMapper;
+import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.ProductWebMapper;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.mapstruct.Mapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,8 +50,10 @@ public class MenuRestControllerAdapter {
   private final ListMenuSectionsQuery listMenuSectionsQuery;
   private final CreateMenuSectionUseCase createMenuSectionUseCase;
   private final DeleteMenuSectionUseCase deleteMenuSectionUseCase;
+  private final CreateProductUseCase createProductUseCase;
   private final MenuWebMapper menuWebMapper;
   private final MenuSectionWebMapper menuSectionWebMapper;
+  private final ProductWebMapper productWebMapper;
 
   @GetMapping
   public ResponseEntity<MenuResource> getMenu(@PathVariable UUID restaurantId) {
@@ -134,8 +143,15 @@ public class MenuRestControllerAdapter {
       @PathVariable UUID sectionId,
       @RequestBody ProductCreationRequest request) {
 
-    // TODO: da implementare
-    throw new UnsupportedOperationException("NOT YET IMPLEMENTED");
+    Product theCreatedProduct =
+        createProductUseCase.createProduct(
+            request.name(),
+            request.price(),
+            RestaurantId.from(restaurantId),
+            MenuSectionId.from(sectionId));
+
+    var response = productWebMapper.toResource(theCreatedProduct);
+    return new ResponseEntity<>(response, HttpStatus.CREATED);
   }
 
   @PostMapping("/sections/{sectionId}/products:move")

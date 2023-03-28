@@ -8,6 +8,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -48,5 +50,25 @@ public class Menu {
     return sections.stream()
         .max(Comparator.comparing(MenuSection::getCreatedAt))
         .orElseThrow(IllegalArgumentException::new);
+  }
+
+  public void addProductToSection(Product theNewProduct, MenuSectionId sectionId) {
+    MenuSection theSection = getSectionByIdMandatory(sectionId);
+    theSection.addProduct(theNewProduct);
+  }
+
+  private MenuSection getSectionByIdMandatory(MenuSectionId sectionId) {
+    return sections.stream()
+        .filter(o -> sectionId.equals(o.getId()))
+        .findFirst()
+        .orElseThrow(
+            () -> new IllegalArgumentException("Non esiste nessuna sezione con questo id"));
+  }
+
+  public Product getLastCreatedProduct() {
+    return sections.stream()
+        .flatMap(o -> o.getProducts().stream())
+        .max(Comparator.comparing(Product::getCreatedAt))
+        .orElseThrow(() -> new IllegalArgumentException("Non ci sono prodotti"));
   }
 }
