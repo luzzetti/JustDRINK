@@ -31,7 +31,7 @@ public class MenuSectionJpaEntity {
   private String title;
 
   // Composition vs aggregation vs association
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<ProductJpaEntity> products = new HashSet<>();
 
   @CreationTimestamp private Instant createdAt;
