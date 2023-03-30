@@ -1,4 +1,4 @@
-package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.menu;
+package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.menu.dto;
 
 import jakarta.validation.constraints.NotNull;
 import java.util.UUID;

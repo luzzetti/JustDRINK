@@ -1,6 +1,6 @@
-package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.menu;
+package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.menu.dto;
 
-import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -12,8 +12,7 @@ import org.springframework.hateoas.RepresentationModel;
 @Setter
 @ToString
 @EqualsAndHashCode(callSuper = true)
-public class ProductResource extends RepresentationModel<ProductResource> {
+public class MenuResource extends RepresentationModel<MenuResource> {
   private UUID id;
-  private String name;
-  private BigDecimal price;
+  private List<MenuSectionResource> sections;
 }

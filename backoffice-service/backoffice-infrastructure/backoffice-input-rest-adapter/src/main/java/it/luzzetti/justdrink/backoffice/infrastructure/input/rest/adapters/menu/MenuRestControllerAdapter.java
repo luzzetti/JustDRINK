@@ -3,6 +3,7 @@ package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.menu
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.CreateMenuSectionUseCase;
@@ -25,6 +26,12 @@ import it.luzzetti.justdrink.backoffice.domain.aggregates.menu.Product;
 import it.luzzetti.justdrink.backoffice.domain.shared.MenuSectionId;
 import it.luzzetti.justdrink.backoffice.domain.shared.ProductId;
 import it.luzzetti.justdrink.backoffice.domain.shared.RestaurantId;
+import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.menu.dto.MenuResource;
+import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.menu.dto.MenuSectionCreationRequest;
+import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.menu.dto.MenuSectionResource;
+import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.menu.dto.ProductCreationRequest;
+import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.menu.dto.ProductMoveRequest;
+import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.menu.dto.ProductResource;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant.RestaurantRestControllerAdapter;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.MenuSectionWebMapper;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.MenuWebMapper;
@@ -53,18 +60,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MenuRestControllerAdapter {
 
-  private final ShowMenuQuery showMenuQuery;
-  private final ListMenuSectionsQuery listMenuSectionsQuery;
+  // UseCases
   private final CreateMenuSectionUseCase createMenuSectionUseCase;
   private final DeleteMenuSectionUseCase deleteMenuSectionUseCase;
   private final CreateProductUseCase createProductUseCase;
+
+  // Queries
+  private final ShowMenuQuery showMenuQuery;
+  private final ListMenuSectionsQuery listMenuSectionsQuery;
+  private final ShowProductFromMenuSectionQuery showProductFromMenuSectionQuery;
+  private final ListProductsOfMenuSectionQuery listProductsOfMenuSectionQuery;
+
+  // Mappers
   private final MenuWebMapper menuWebMapper;
   private final MenuSectionWebMapper menuSectionWebMapper;
   private final ProductWebMapper productWebMapper;
-
-  private final ListProductsOfMenuSectionQuery listProductsOfMenuSectionQuery;
-
-  private final ShowProductFromMenuSectionQuery showProductFromMenuSectionQuery;
 
   private static void addStandardHateoasLinks(UUID restaurantId, MenuResource resource) {
 
@@ -148,6 +158,7 @@ public class MenuRestControllerAdapter {
             description = "Lista dei prodotti per la sezione richiesta",
             responseCode = "200")
       })
+  @Operation(summary = "Elenca i prodotti presenti in una determinata sezione del Menu")
   @GetMapping("/sections/{sectionId}/products")
   public ResponseEntity<List<ProductResource>> listProduct(
       @PathVariable UUID restaurantId, @PathVariable UUID sectionId) {

@@ -1,7 +1,10 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.afford;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import io.swagger.v3.oas.annotations.Operation;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.CreateRestaurantUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.CreateRestaurantUseCase.CreateRestaurantCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.DeleteRestaurantUseCase;
@@ -13,6 +16,7 @@ import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ShowR
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import it.luzzetti.justdrink.backoffice.domain.shared.RestaurantId;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.menu.MenuRestControllerAdapter;
+import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant.dto.RestaurantResource;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.RestaurantWebMapper;
 import jakarta.validation.constraints.NotBlank;
 import java.util.Base64;
@@ -38,12 +42,31 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class RestaurantRestControllerAdapter {
 
-  private final ListRestaurantsQuery listRestaurantsQuery;
-  private final ShowRestaurantQuery showRestaurantQuery;
+  // UseCases
   private final CreateRestaurantUseCase createRestaurantUseCase;
   private final DeleteRestaurantUseCase deleteRestaurantUseCase;
+
+  // Queries
+  private final ListRestaurantsQuery listRestaurantsQuery;
+  private final ShowRestaurantQuery showRestaurantQuery;
+
+  // Mappers
   private final RestaurantWebMapper restaurantWebMapper;
 
+  private static void addStandardHateoasLinks(UUID restaurantId, RestaurantResource resource) {
+
+    Class<RestaurantRestControllerAdapter> thisAdapter = RestaurantRestControllerAdapter.class;
+    Class<MenuRestControllerAdapter> menuAdapter = MenuRestControllerAdapter.class;
+
+    resource.add(
+        linkTo(methodOn(thisAdapter).getRestaurant(restaurantId))
+            .withSelfRel()
+            .andAffordance(afford(methodOn(thisAdapter).deleteRestaurant(restaurantId))),
+        linkTo(methodOn(menuAdapter).getMenu(restaurantId)).withRel("getMenu"),
+        linkTo(thisAdapter).withRel("listRestaurants"));
+  }
+
+  @Operation(summary = "Mostra la lista di ristoranti presenti")
   @GetMapping
   public ResponseEntity<ListRestaurantsResponse> listRestaurants(
       @RequestParam Optional<String> filter,
@@ -74,6 +97,7 @@ public class RestaurantRestControllerAdapter {
     return ResponseEntity.ok(response);
   }
 
+  @Operation(summary = "Mostra il dettaglio di un ristorante in base al restaurantId")
   @GetMapping("/{restaurantId}")
   public ResponseEntity<RestaurantResource> getRestaurant(@PathVariable UUID restaurantId) {
     // Parsing parameters from HTTP
@@ -91,12 +115,7 @@ public class RestaurantRestControllerAdapter {
     return ResponseEntity.ok(resource);
   }
 
-  @Builder
-  public record ListRestaurantsResponse(
-      List<RestaurantListElement> restaurants, String nextPageToken) {}
-
-  public record RestaurantListElement(UUID id, String name) {}
-
+  @Operation(summary = "Esegue la creazione di un nuovo ristorante")
   @PostMapping
   public ResponseEntity<RestaurantResource> createRestaurant(
       @RequestBody RestaurantCreationRequest request) {
@@ -113,6 +132,7 @@ public class RestaurantRestControllerAdapter {
     return ResponseEntity.ok(resource);
   }
 
+  @Operation(summary = "Esegue l'eliminazione di un ristorante, in base al restaurantId")
   @DeleteMapping("/{restaurantId}")
   public ResponseEntity<Void> deleteRestaurant(@PathVariable UUID restaurantId) {
     // Creating the command
@@ -125,20 +145,13 @@ public class RestaurantRestControllerAdapter {
     return ResponseEntity.noContent().build();
   }
 
+  @Builder
+  public record ListRestaurantsResponse(
+      List<RestaurantListElement> restaurants, String nextPageToken) {}
+
+  public record RestaurantListElement(UUID id, String name) {}
+
   public record RestaurantCreationRequest(@NotBlank String name) {}
-
-  private static void addStandardHateoasLinks(UUID restaurantId, RestaurantResource resource) {
-
-    Class<RestaurantRestControllerAdapter> thisAdapter = RestaurantRestControllerAdapter.class;
-    Class<MenuRestControllerAdapter> menuAdapter = MenuRestControllerAdapter.class;
-
-    resource.add(
-        linkTo(methodOn(thisAdapter).getRestaurant(restaurantId))
-            .withSelfRel()
-            .andAffordance(afford(methodOn(thisAdapter).deleteRestaurant(restaurantId))),
-        linkTo(methodOn(menuAdapter).getMenu(restaurantId)).withRel("getMenu"),
-        linkTo(thisAdapter).withRel("listRestaurants"));
-  }
 
   private record PageTokenCodec() {
     static Integer decode(String encodedString) {
