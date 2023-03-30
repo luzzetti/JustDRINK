@@ -10,6 +10,8 @@ import it.luzzetti.justdrink.backoffice.application.ports.input.menu.DeleteMenuS
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.DeleteMenuSectionUseCase.DeleteMenuSectionCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ListMenuSectionsQuery;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ListMenuSectionsQuery.ListMenuSectionsCommand;
+import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ListProductsOfMenuSectionQuery;
+import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ListProductsOfMenuSectionQuery.ListProductsOfmenuSectionCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ShowMenuQuery;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ShowMenuQuery.ShowMenuCommand;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.menu.Menu;
@@ -21,8 +23,10 @@ import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.resta
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.MenuSectionWebMapper;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.MenuWebMapper;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.ProductWebMapper;
+
 import java.util.List;
 import java.util.UUID;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.mapstruct.Mapper;
@@ -46,6 +50,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Log4j2
 @RequiredArgsConstructor
 public class MenuRestControllerAdapter {
+
   private final ShowMenuQuery showMenuQuery;
   private final ListMenuSectionsQuery listMenuSectionsQuery;
   private final CreateMenuSectionUseCase createMenuSectionUseCase;
@@ -54,6 +59,9 @@ public class MenuRestControllerAdapter {
   private final MenuWebMapper menuWebMapper;
   private final MenuSectionWebMapper menuSectionWebMapper;
   private final ProductWebMapper productWebMapper;
+
+  private final ListProductsOfMenuSectionQuery listProductsOfMenuSectionQuery;
+
 
   @GetMapping
   public ResponseEntity<MenuResource> getMenu(@PathVariable UUID restaurantId) {
@@ -125,8 +133,13 @@ public class MenuRestControllerAdapter {
   public ResponseEntity<List<ProductResource>> listProduct(
       @PathVariable UUID restaurantId, @PathVariable UUID sectionId) {
 
-    // TODO: da implementare
-    throw new UnsupportedOperationException("NOT YET IMPLEMENTED");
+    var command = ListProductsOfmenuSectionCommand.builder().restaurantId(restaurantId)
+        .menuSectionId(sectionId).build();
+
+    var response = listProductsOfMenuSectionQuery.listProductsOfMenuSection(command).stream()
+        .map(productWebMapper::toResource).toList();
+
+    return ResponseEntity.ok(response);
   }
 
   @GetMapping("/sections/{sectionId}/products/{productId}")

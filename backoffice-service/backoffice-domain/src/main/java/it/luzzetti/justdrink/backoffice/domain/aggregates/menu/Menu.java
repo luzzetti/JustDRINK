@@ -19,7 +19,8 @@ public class Menu {
 
   private MenuId id;
   private RestaurantId restaurantId;
-  @Builder.Default private List<MenuSection> sections = new ArrayList<>();
+  @Builder.Default
+  private List<MenuSection> sections = new ArrayList<>();
 
   // Non sono sicuro che debba essere possibile creare un menu senza associarlo ad un ristorante
   public static Menu newMenu() {
@@ -71,5 +72,9 @@ public class Menu {
         .max(Comparator.comparing(Product::getCreatedAt))
         .orElseThrow(() -> new IllegalArgumentException("Non ci sono prodotti"));
   }
-  //commento di prova
+
+  public List<Product> getProductsOfSection(MenuSectionId sectionId) {
+    return getSectionByIdMandatory(sectionId).getProducts();
+  }
+
 }
