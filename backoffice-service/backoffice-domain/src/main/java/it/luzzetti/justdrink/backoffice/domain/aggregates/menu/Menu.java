@@ -2,14 +2,12 @@ package it.luzzetti.justdrink.backoffice.domain.aggregates.menu;
 
 import it.luzzetti.justdrink.backoffice.domain.shared.MenuId;
 import it.luzzetti.justdrink.backoffice.domain.shared.MenuSectionId;
+import it.luzzetti.justdrink.backoffice.domain.shared.ProductId;
 import it.luzzetti.justdrink.backoffice.domain.shared.RestaurantId;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.*;
 
 @Getter
 @Builder
@@ -17,8 +15,7 @@ public class Menu {
 
   private MenuId id;
   private RestaurantId restaurantId;
-  @Builder.Default
-  private List<MenuSection> sections = new ArrayList<>();
+  @Builder.Default private List<MenuSection> sections = new ArrayList<>();
 
   // Non sono sicuro che debba essere possibile creare un menu senza associarlo ad un ristorante
   public static Menu newMenu() {
@@ -77,4 +74,8 @@ public class Menu {
     return Collections.unmodifiableList(products);
   }
 
+  public Product getProductofSection(MenuSectionId sectionId, ProductId productId) {
+    MenuSection sectionByIdMandatory = getSectionByIdMandatory(sectionId);
+    return sectionByIdMandatory.getProductById(productId);
+  }
 }

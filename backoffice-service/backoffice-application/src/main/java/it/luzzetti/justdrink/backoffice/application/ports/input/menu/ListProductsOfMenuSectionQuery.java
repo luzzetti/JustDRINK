@@ -8,9 +8,9 @@ import lombok.Builder;
 
 public interface ListProductsOfMenuSectionQuery {
 
-  List<Product> listProductsOfMenuSection(ListProductsOfmenuSectionCommand command) ;
+  List<Product> listProductsOfMenuSection(ListProductsOfMenuSectionCommand command);
 
   @Builder
-  record ListProductsOfmenuSectionCommand( @NotNull UUID restaurantId,@NotNull UUID menuSectionId){}
-
+  record ListProductsOfMenuSectionCommand(
+      @NotNull UUID restaurantId, @NotNull UUID menuSectionId) {}
 }

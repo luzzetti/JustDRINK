@@ -5,6 +5,8 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import it.luzzetti.justdrink.backoffice.domain.shared.ProductId;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -38,5 +40,10 @@ public class MenuSection {
 
   private boolean containsProductWithName(String name) {
     return products.stream().anyMatch(product -> Objects.equals(name, product.getName()));
+  }
+
+  public Product getProductById(ProductId productId){
+    return products.stream().filter(product -> product.getId().equals(productId)).findFirst().orElseThrow(
+            () -> new IllegalArgumentException("Non esiste nessun prodotto con questo id"));
   }
 }

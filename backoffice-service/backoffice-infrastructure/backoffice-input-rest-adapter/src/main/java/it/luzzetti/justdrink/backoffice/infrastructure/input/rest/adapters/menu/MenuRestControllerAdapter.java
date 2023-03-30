@@ -5,16 +5,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import it.luzzetti.justdrink.backoffice.application.ports.input.menu.CreateMenuSectionUseCase;
+import it.luzzetti.justdrink.backoffice.application.ports.input.menu.*;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.CreateMenuSectionUseCase.CreateMenuSectionCommand;
-import it.luzzetti.justdrink.backoffice.application.ports.input.menu.CreateProductUseCase;
-import it.luzzetti.justdrink.backoffice.application.ports.input.menu.DeleteMenuSectionUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.DeleteMenuSectionUseCase.DeleteMenuSectionCommand;
-import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ListMenuSectionsQuery;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ListMenuSectionsQuery.ListMenuSectionsCommand;
-import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ListProductsOfMenuSectionQuery;
-import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ListProductsOfMenuSectionQuery.ListProductsOfmenuSectionCommand;
-import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ShowMenuQuery;
+import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ListProductsOfMenuSectionQuery.ListProductsOfMenuSectionCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ShowMenuQuery.ShowMenuCommand;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.menu.Menu;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.menu.MenuSection;
@@ -60,6 +55,7 @@ public class MenuRestControllerAdapter {
 
   private final ListProductsOfMenuSectionQuery listProductsOfMenuSectionQuery;
 
+  private final ProductOfMenuSectionQuery productOfMenuSectionQuery;
 
   @GetMapping
   public ResponseEntity<MenuResource> getMenu(@PathVariable UUID restaurantId) {
@@ -123,32 +119,45 @@ public class MenuRestControllerAdapter {
     return ResponseEntity.noContent().build();
   }
 
-
   /*
    * PRODUCTS
    */
-  @ApiResponses(value = {
-      @ApiResponse(description = "Lista dei prodotti per la sezione richiesta", responseCode = "200")
-  })
+  @ApiResponses(value = {@ApiResponse(description = "Lista dei prodotti per la sezione richiesta",responseCode = "200")})
   @GetMapping("/sections/{sectionId}/products")
   public ResponseEntity<List<ProductResource>> listProduct(
       @PathVariable UUID restaurantId, @PathVariable UUID sectionId) {
 
-    var command = ListProductsOfmenuSectionCommand.builder().restaurantId(restaurantId)
-        .menuSectionId(sectionId).build();
+    var command =
+        ListProductsOfMenuSectionCommand.builder()
+            .restaurantId(restaurantId)
+            .menuSectionId(sectionId)
+            .build();
 
-    var response = listProductsOfMenuSectionQuery.listProductsOfMenuSection(command).stream()
-        .map(productWebMapper::toResource).toList();
+    var response =
+        listProductsOfMenuSectionQuery.listProductsOfMenuSection(command).stream()
+            .map(productWebMapper::toResource)
+            .toList();
 
     return ResponseEntity.ok(response);
   }
 
+  @ApiResponses(value = {@ApiResponse(description = "Mostra il prodotto", responseCode = "200")})
   @GetMapping("/sections/{sectionId}/products/{productId}")
-  public ResponseEntity<List<ProductResource>> showProduct(
+  public ResponseEntity<ProductResource> showProduct(
       @PathVariable UUID restaurantId, @PathVariable UUID sectionId, @PathVariable UUID productId) {
 
-    // TODO: da implementare
-    throw new UnsupportedOperationException("NOT YET IMPLEMENTED");
+    var command =
+        ProductOfMenuSectionQuery.ProductOfMenuSectionCommand.builder()
+            .restaurantId(restaurantId)
+            .menuSectionId(sectionId)
+            .productId(productId)
+            .build();
+
+    Product product = productOfMenuSectionQuery.productOfMenuSection(command);
+
+    var response = productWebMapper.toResource(product);
+
+    return ResponseEntity.ok(response);
   }
 
   @PostMapping("/sections/{sectionId}/products")
