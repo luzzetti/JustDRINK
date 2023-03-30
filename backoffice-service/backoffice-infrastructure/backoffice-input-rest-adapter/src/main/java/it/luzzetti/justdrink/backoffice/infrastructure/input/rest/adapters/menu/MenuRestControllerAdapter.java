@@ -3,6 +3,8 @@ package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.menu
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.CreateMenuSectionUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.CreateMenuSectionUseCase.CreateMenuSectionCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.CreateProductUseCase;
@@ -23,15 +25,11 @@ import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.resta
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.MenuSectionWebMapper;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.MenuWebMapper;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.ProductWebMapper;
-
 import java.util.List;
 import java.util.UUID;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.mapstruct.Mapper;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -125,10 +123,13 @@ public class MenuRestControllerAdapter {
     return ResponseEntity.noContent().build();
   }
 
+
   /*
    * PRODUCTS
    */
-
+  @ApiResponses(value = {
+      @ApiResponse(description = "Lista dei prodotti per la sezione richiesta", responseCode = "200")
+  })
   @GetMapping("/sections/{sectionId}/products")
   public ResponseEntity<List<ProductResource>> listProduct(
       @PathVariable UUID restaurantId, @PathVariable UUID sectionId) {

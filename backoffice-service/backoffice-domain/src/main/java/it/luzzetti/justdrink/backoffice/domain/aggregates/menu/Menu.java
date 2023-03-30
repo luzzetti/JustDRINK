@@ -8,8 +8,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -74,7 +72,9 @@ public class Menu {
   }
 
   public List<Product> getProductsOfSection(MenuSectionId sectionId) {
-    return getSectionByIdMandatory(sectionId).getProducts();
+    List<Product> products = getSectionByIdMandatory(sectionId).getProducts();
+
+    return Collections.unmodifiableList(products);
   }
 
 }
