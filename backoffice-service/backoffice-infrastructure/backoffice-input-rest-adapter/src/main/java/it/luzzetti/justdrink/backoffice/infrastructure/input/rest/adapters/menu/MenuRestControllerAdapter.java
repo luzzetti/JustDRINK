@@ -5,16 +5,25 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import it.luzzetti.justdrink.backoffice.application.ports.input.menu.*;
+import it.luzzetti.justdrink.backoffice.application.ports.input.menu.CreateMenuSectionUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.CreateMenuSectionUseCase.CreateMenuSectionCommand;
+import it.luzzetti.justdrink.backoffice.application.ports.input.menu.CreateProductUseCase;
+import it.luzzetti.justdrink.backoffice.application.ports.input.menu.CreateProductUseCase.CreateProductCommand;
+import it.luzzetti.justdrink.backoffice.application.ports.input.menu.DeleteMenuSectionUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.DeleteMenuSectionUseCase.DeleteMenuSectionCommand;
+import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ListMenuSectionsQuery;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ListMenuSectionsQuery.ListMenuSectionsCommand;
+import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ListProductsOfMenuSectionQuery;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ListProductsOfMenuSectionQuery.ListProductsOfMenuSectionCommand;
+import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ShowMenuQuery;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ShowMenuQuery.ShowMenuCommand;
+import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ShowProductFromMenuSectionQuery;
+import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ShowProductFromMenuSectionQuery.ShowProductOfMenuSectionCommand;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.menu.Menu;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.menu.MenuSection;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.menu.Product;
 import it.luzzetti.justdrink.backoffice.domain.shared.MenuSectionId;
+import it.luzzetti.justdrink.backoffice.domain.shared.ProductId;
 import it.luzzetti.justdrink.backoffice.domain.shared.RestaurantId;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant.RestaurantRestControllerAdapter;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.MenuSectionWebMapper;
@@ -55,7 +64,18 @@ public class MenuRestControllerAdapter {
 
   private final ListProductsOfMenuSectionQuery listProductsOfMenuSectionQuery;
 
-  private final ProductOfMenuSectionQuery productOfMenuSectionQuery;
+  private final ShowProductFromMenuSectionQuery showProductFromMenuSectionQuery;
+
+  private static void addStandardHateoasLinks(UUID restaurantId, MenuResource resource) {
+
+    var thisAdapter = MenuRestControllerAdapter.class;
+    var restaurantAdapter = RestaurantRestControllerAdapter.class;
+
+    resource.add(
+        linkTo(methodOn(thisAdapter).getMenu(restaurantId)).withSelfRel(),
+        linkTo(methodOn(thisAdapter).listMenuSections(restaurantId)).withRel("MenuSections"),
+        linkTo(methodOn(restaurantAdapter).getRestaurant(restaurantId)).withRel("Restaurant"));
+  }
 
   @GetMapping
   public ResponseEntity<MenuResource> getMenu(@PathVariable UUID restaurantId) {
@@ -122,22 +142,29 @@ public class MenuRestControllerAdapter {
   /*
    * PRODUCTS
    */
-  @ApiResponses(value = {@ApiResponse(description = "Lista dei prodotti per la sezione richiesta",responseCode = "200")})
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            description = "Lista dei prodotti per la sezione richiesta",
+            responseCode = "200")
+      })
   @GetMapping("/sections/{sectionId}/products")
   public ResponseEntity<List<ProductResource>> listProduct(
       @PathVariable UUID restaurantId, @PathVariable UUID sectionId) {
 
+    // Parsing the Http-request
     var command =
         ListProductsOfMenuSectionCommand.builder()
-            .restaurantId(restaurantId)
-            .menuSectionId(sectionId)
+            .restaurantId(RestaurantId.from(restaurantId))
+            .menuSectionId(MenuSectionId.from(sectionId))
             .build();
 
-    var response =
-        listProductsOfMenuSectionQuery.listProductsOfMenuSection(command).stream()
-            .map(productWebMapper::toResource)
-            .toList();
+    // Calling the appropriate Use-Case
+    List<Product> theFoundProducts =
+        listProductsOfMenuSectionQuery.listProductsOfMenuSection(command);
 
+    // Crafting a response
+    var response = theFoundProducts.stream().map(productWebMapper::toResource).toList();
     return ResponseEntity.ok(response);
   }
 
@@ -146,17 +173,19 @@ public class MenuRestControllerAdapter {
   public ResponseEntity<ProductResource> showProduct(
       @PathVariable UUID restaurantId, @PathVariable UUID sectionId, @PathVariable UUID productId) {
 
+    // Parsing the Http-request
     var command =
-        ProductOfMenuSectionQuery.ProductOfMenuSectionCommand.builder()
-            .restaurantId(restaurantId)
-            .menuSectionId(sectionId)
-            .productId(productId)
+        ShowProductOfMenuSectionCommand.builder()
+            .restaurantId(RestaurantId.from(restaurantId))
+            .menuSectionId(MenuSectionId.from(sectionId))
+            .productId(ProductId.from(productId))
             .build();
 
-    Product product = productOfMenuSectionQuery.productOfMenuSection(command);
+    // Calling the appropriate Use-Case
+    Product product = showProductFromMenuSectionQuery.showProductOfMenuSection(command);
 
+    // Crafting the response
     var response = productWebMapper.toResource(product);
-
     return ResponseEntity.ok(response);
   }
 
@@ -166,13 +195,19 @@ public class MenuRestControllerAdapter {
       @PathVariable UUID sectionId,
       @RequestBody ProductCreationRequest request) {
 
-    Product theCreatedProduct =
-        createProductUseCase.createProduct(
-            request.name(),
-            request.price(),
-            RestaurantId.from(restaurantId),
-            MenuSectionId.from(sectionId));
+    // Parsing HTTP-request into a command
+    var command =
+        CreateProductCommand.builder()
+            .name(request.name())
+            .price(request.price())
+            .restaurantId(RestaurantId.from(restaurantId))
+            .sectionId(MenuSectionId.from(sectionId))
+            .build();
 
+    // Calling the appropriate use-case
+    Product theCreatedProduct = createProductUseCase.createProduct(command);
+
+    // Crafting a response
     var response = productWebMapper.toResource(theCreatedProduct);
     return new ResponseEntity<>(response, HttpStatus.CREATED);
   }
@@ -195,20 +230,9 @@ public class MenuRestControllerAdapter {
     throw new UnsupportedOperationException("NOT YET IMPLEMENTED");
   }
 
-  private void addStandardHateoasLinks(MenuSectionResource resource) {
-    log.debug(() -> "Implementare %s".formatted(resource));
-  }
-
   // POST :reset
 
-  private static void addStandardHateoasLinks(UUID restaurantId, MenuResource resource) {
-
-    var thisAdapter = MenuRestControllerAdapter.class;
-    var restaurantAdapter = RestaurantRestControllerAdapter.class;
-
-    resource.add(
-        linkTo(methodOn(thisAdapter).getMenu(restaurantId)).withSelfRel(),
-        linkTo(methodOn(thisAdapter).listMenuSections(restaurantId)).withRel("MenuSections"),
-        linkTo(methodOn(restaurantAdapter).getRestaurant(restaurantId)).withRel("Restaurant"));
+  private void addStandardHateoasLinks(MenuSectionResource resource) {
+    log.debug(() -> "Implementare %s".formatted(resource));
   }
 }

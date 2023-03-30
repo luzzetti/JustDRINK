@@ -4,10 +4,13 @@ import it.luzzetti.justdrink.backoffice.domain.shared.MenuId;
 import it.luzzetti.justdrink.backoffice.domain.shared.MenuSectionId;
 import it.luzzetti.justdrink.backoffice.domain.shared.ProductId;
 import it.luzzetti.justdrink.backoffice.domain.shared.RestaurantId;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.util.*;
 
 @Getter
 @Builder
@@ -68,13 +71,13 @@ public class Menu {
         .orElseThrow(() -> new IllegalArgumentException("Non ci sono prodotti"));
   }
 
-  public List<Product> getProductsOfSection(MenuSectionId sectionId) {
+  public List<Product> listProductsFromSection(MenuSectionId sectionId) {
     List<Product> products = getSectionByIdMandatory(sectionId).getProducts();
 
     return Collections.unmodifiableList(products);
   }
 
-  public Product getProductofSection(MenuSectionId sectionId, ProductId productId) {
+  public Product getProductFromSection(MenuSectionId sectionId, ProductId productId) {
     MenuSection sectionByIdMandatory = getSectionByIdMandatory(sectionId);
     return sectionByIdMandatory.getProductById(productId);
   }

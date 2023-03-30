@@ -6,8 +6,6 @@ import it.luzzetti.justdrink.backoffice.application.ports.output.menu.UpdateMenu
 import it.luzzetti.justdrink.backoffice.domain.aggregates.menu.Menu;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.menu.Product;
 import it.luzzetti.justdrink.backoffice.domain.shared.MenuSectionId;
-import it.luzzetti.justdrink.backoffice.domain.shared.RestaurantId;
-import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -21,14 +19,17 @@ public class CreateProductApplicationService implements CreateProductUseCase {
   private final UpdateMenuPort updateMenuPort;
 
   @Override
-  public Product createProduct(
-      String nome, BigDecimal price, RestaurantId restaurantId, MenuSectionId sectionId) {
+  public Product createProduct(CreateProductCommand command) {
 
-    Product theNewProduct = Product.newProduct(nome, price);
-    Menu theMenu = findMenuPort.findMenuByRestaurantIdMandatory(restaurantId);
+    // Fetching-Creating resource
+    Product theNewProduct = Product.newProduct(command.name(), command.price());
+    Menu theMenu = findMenuPort.findMenuByRestaurantIdMandatory(command.restaurantId());
+    MenuSectionId theSectionId = command.sectionId();
 
-    theMenu.addProductToSection(theNewProduct, sectionId);
+    // Executing the Business-Rule
+    theMenu.addProductToSection(theNewProduct, theSectionId);
 
+    // Persisting data
     Menu menu = updateMenuPort.updateMenu(theMenu);
     return menu.getLastCreatedProduct();
   }
