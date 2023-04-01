@@ -1,0 +1,11 @@
+/*
+ * Ho bisogno della position relative, per poter lavorare con lo z-indez, ed avere
+ * la texture che scorre sotto la navbar. Ma devo indagare la differenza tra
+ * static e relative
+ */
+.navbar {
+  background: linear-gradient(0deg,transparent,#000);
+  margin: 0;
+  height: 115px;
+  position: relative;
+}

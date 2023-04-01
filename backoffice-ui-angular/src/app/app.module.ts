@@ -3,14 +3,26 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { RestaurantComponent } from './restaurant/restaurant.component';
+import { RestaurantIntroCardComponent } from './restaurant/restaurant-intro-card/restaurant-intro-card.component';
+import {CardModule} from "primeng/card";
+import { HeaderComponent } from './header/header.component';
+import { FooterComponent } from './footer/footer.component';
+import {MenubarModule} from "primeng/menubar";
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    RestaurantComponent,
+    RestaurantIntroCardComponent,
+    HeaderComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    CardModule,
+    MenubarModule
   ],
   providers: [],
   bootstrap: [AppComponent]
