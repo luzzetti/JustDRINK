@@ -1,3 +1,17 @@
+// Angular Documentation - component style best practices
+// The host is your Main Component
+
+:host ::ng-deep {
+  .restaurant-container.p-card {
+    .p-card-body {
+      padding-bottom: 1px;
+    }
+    .p-card-content {
+      padding-bottom: 1px;
+    }
+  }
+}
+
 #restaurant-logo {
   position: absolute;
   top: -36px;
