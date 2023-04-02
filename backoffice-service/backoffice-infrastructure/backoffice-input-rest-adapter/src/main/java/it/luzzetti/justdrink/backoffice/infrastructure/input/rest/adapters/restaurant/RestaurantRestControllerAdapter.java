@@ -27,6 +27,7 @@ import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,6 +41,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/1.0/restaurants")
 @Log4j2
 @RequiredArgsConstructor
+/*
+ * TODO: Rimuovere ASSOLUTAMENTE questa configurazione crossorigin da qui, una volta aggiunte
+ *  le corrette configurazioni WEB
+ */
+@CrossOrigin("*")
 public class RestaurantRestControllerAdapter {
 
   // UseCases
