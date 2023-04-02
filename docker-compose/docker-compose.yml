@@ -1,7 +1,7 @@
 services:
 
   backoffice-service:
-    image: luzzetti/backoffice-bootloader:0.0.1-SNAPSHOT
+    image: luzzetti/backoffice-bootloader:0.0.2-SNAPSHOT
     ports:
       - "9090:8080"
     networks:
