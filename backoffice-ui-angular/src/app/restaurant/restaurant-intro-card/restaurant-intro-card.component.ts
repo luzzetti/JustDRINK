@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-restaurant-intro-card',
@@ -6,5 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./restaurant-intro-card.component.scss']
 })
 export class RestaurantIntroCardComponent {
+
+  rating: number = 3;
 
 }

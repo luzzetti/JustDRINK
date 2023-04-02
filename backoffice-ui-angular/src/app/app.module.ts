@@ -9,6 +9,9 @@ import {CardModule} from "primeng/card";
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import {MenubarModule} from "primeng/menubar";
+import {AvatarModule} from "primeng/avatar";
+import {RatingModule} from "primeng/rating";
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -22,7 +25,10 @@ import {MenubarModule} from "primeng/menubar";
     BrowserModule,
     AppRoutingModule,
     CardModule,
-    MenubarModule
+    MenubarModule,
+    AvatarModule,
+    RatingModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

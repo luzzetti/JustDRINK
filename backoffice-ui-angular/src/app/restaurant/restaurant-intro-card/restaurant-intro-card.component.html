@@ -1,9 +1,26 @@
 <p-card>
-  <h1 class="text-center">Chez Christian</h1>
-  <p class="m-0">
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error
-    repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione
-    quam perferendis esse, cupiditate neque
-    quas!
+  <p-avatar id="restaurant-logo"
+            size="xlarge">
+    <img id="avatar-image" src="/assets/empty-restaurant-logo.png">
+  </p-avatar>
+
+  <h1 id="restaurant-name" class="text-center">Chez Christian</h1>
+
+  <p id="cuisines" class="m-0">
+    <span class="cuisine">Hamburger</span>
+    <span class="cuisine">Panini</span>
+  </p>
+
+  <div id="restaurant-rating-and-review">
+    <div id="restaurant-ratings">
+      <p-rating [(ngModel)]="rating" [readonly]="true" [cancel]="false"></p-rating>
+    </div>
+    <div id="restaurant-reviews">
+      <p> 1324 Recensioni </p>
+    </div>
+  </div>
+
+  <p id="restaurant-address">
+    <span>Via Acquaroni, 107, Roma, 00133</span>
   </p>
 </p-card>

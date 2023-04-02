@@ -1,0 +1,51 @@
+#restaurant-logo {
+  position: absolute;
+  top: -36px;
+  right: 45%;
+
+  #avatar-image {
+    border: 1px solid #d9d7d5;
+    border-radius: inherit;
+  }
+}
+
+#cuisines {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .cuisine {
+    // nothing
+  }
+
+  // Picko dal secondo elemento in poi
+  .cuisine:nth-child(n+2)::before {
+    color: rgb(60, 76, 79);
+    content: "•";
+    margin: 0 3px;
+  }
+}
+
+#restaurant-address {
+  margin-top: 10px;
+  text-align: center;
+}
+
+#restaurant-rating-and-review {
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  #restaurant-reviews {
+    //margin-top: 10px;
+    margin: 10px 10px 0 10px;
+    text-align: center;
+  }
+
+  #restaurant-ratings {
+    margin: 10px 10px 0 10px;
+    text-align: center;
+  }
+
+}
