@@ -21,6 +21,7 @@ public interface MenuRestController {
 
   ResponseEntity<List<MenuSectionResource>> listMenuSections(@PathVariable UUID restaurantId);
 
+  @Operation(summary = "Crea una sezione del menu")
   ResponseEntity<MenuSectionResource> createMenuSection(
       @PathVariable UUID restaurantId, @RequestBody MenuSectionCreationRequest request);
 

@@ -11,6 +11,7 @@ import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.Resta
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.mappers.MenuJpaMapper;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.repositories.MenuJpaRepository;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.repositories.RestaurantJpaRepository;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -48,7 +49,11 @@ public class MenuJpaAdapter
 
   @Override
   public void deleteMenuByRestaurantId(UUID restaurantId) {
-    menuJpaRepository.deleteMenuByRestaurantId(restaurantId);
+    Optional<MenuJpaEntity> menuByRestaurantId = menuJpaRepository.findMenuByRestaurantId(
+        restaurantId);
+    if(menuByRestaurantId.isPresent()){
+      menuJpaRepository.deleteById(menuByRestaurantId.get().getId());
+    }
   }
 
   @Override
