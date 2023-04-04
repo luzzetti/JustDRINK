@@ -18,6 +18,9 @@ import {DividerModule} from "primeng/divider";
 import {AccordionModule} from "primeng/accordion";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {PanelModule} from "primeng/panel";
+import { RestaurantSectionsComponent } from './restaurant/restaurant-sections/restaurant-sections.component';
+import {TieredMenuModule} from "primeng/tieredmenu";
+import {MenuModule} from "primeng/menu";
 
 @NgModule({
   declarations: [
@@ -25,7 +28,8 @@ import {PanelModule} from "primeng/panel";
     RestaurantComponent,
     RestaurantIntroCardComponent,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    RestaurantSectionsComponent
   ],
   imports: [
     BrowserModule,
@@ -38,7 +42,9 @@ import {PanelModule} from "primeng/panel";
     FormsModule,
     DividerModule,
     AccordionModule,
-    PanelModule
+    PanelModule,
+    TieredMenuModule,
+    MenuModule
   ],
   providers: [],
   bootstrap: [AppComponent]

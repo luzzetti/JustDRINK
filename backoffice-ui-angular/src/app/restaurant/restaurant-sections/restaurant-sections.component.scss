@@ -1,0 +1,33 @@
+#main-container {
+  margin-top: 170px;
+}
+
+:host ::ng-deep {
+  .p-menu {
+    width: 100%;
+    border: none;
+  }
+
+  .p-menu-list {
+    // ok
+  }
+
+  .p-menuitem {
+    background: none;
+    // Trick!
+    // Simula un border-left, ma cresce veros l'esterno anziché verso l'interno;
+    // Simula un outset, ma su un solo lato
+    box-shadow: -1px 0px 0px 0px #d9d7d5;
+    outline: none;
+
+  }
+
+  .p-menuitem-link:focus,
+  .p-menuitem-link:hover {
+    box-shadow: -2px 0px 0px 0px #484f56;
+    font-weight: bold;
+    background: none !important;
+    outline: none;
+  }
+
+}
