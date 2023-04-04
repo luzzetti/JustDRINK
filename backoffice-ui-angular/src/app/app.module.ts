@@ -21,6 +21,8 @@ import {PanelModule} from "primeng/panel";
 import { RestaurantSectionsComponent } from './restaurant/restaurant-sections/restaurant-sections.component';
 import {TieredMenuModule} from "primeng/tieredmenu";
 import {MenuModule} from "primeng/menu";
+import { RestaurantBasketComponent } from './restaurant/restaurant-basket/restaurant-basket.component';
+import {ButtonModule} from "primeng/button";
 
 @NgModule({
   declarations: [
@@ -29,7 +31,8 @@ import {MenuModule} from "primeng/menu";
     RestaurantIntroCardComponent,
     HeaderComponent,
     FooterComponent,
-    RestaurantSectionsComponent
+    RestaurantSectionsComponent,
+    RestaurantBasketComponent
   ],
   imports: [
     BrowserModule,
@@ -44,7 +47,8 @@ import {MenuModule} from "primeng/menu";
     AccordionModule,
     PanelModule,
     TieredMenuModule,
-    MenuModule
+    MenuModule,
+    ButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,0 +1,26 @@
+:host ::ng-deep {
+
+  .p-card-content {
+    padding-top: 0;
+  }
+
+  .p-button {
+    padding-left: 0;
+  }
+
+  .p-button-label {
+    font-size: 14px;
+    font-weight: normal;
+    text-decoration: underline;
+  }
+
+  .p-button-icon {
+    font-weight: bold;
+  }
+
+}
+
+#info-link {
+  color: #484f56;
+  text-decoration: underline;
+}
