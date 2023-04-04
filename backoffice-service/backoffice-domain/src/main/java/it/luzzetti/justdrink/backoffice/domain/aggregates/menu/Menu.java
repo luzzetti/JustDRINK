@@ -81,4 +81,9 @@ public class Menu {
     MenuSection sectionByIdMandatory = getSectionByIdMandatory(sectionId);
     return sectionByIdMandatory.getProductById(productId);
   }
+
+  public void removeProductFromSection(MenuSectionId sectionId, ProductId productId){
+    MenuSection sectionByIdMandatory = getSectionByIdMandatory(sectionId);
+    sectionByIdMandatory.removeProductById(productId);
+  }
 }

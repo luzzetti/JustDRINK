@@ -41,4 +41,10 @@ public class MenuSection {
         .orElseThrow(
             () -> new IllegalArgumentException("Non esiste nessun prodotto con questo id"));
   }
+
+  public void removeProductById(ProductId productIdToRemove) {
+    // Eseguire validazioni se necessario.
+    products.removeIf(p -> Objects.equals(p.getId(), productIdToRemove));
+  }
+
 }

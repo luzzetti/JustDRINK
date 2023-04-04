@@ -3,15 +3,14 @@ package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.menu
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.CreateMenuSectionUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.CreateMenuSectionUseCase.CreateMenuSectionCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.CreateProductUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.CreateProductUseCase.CreateProductCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.DeleteMenuSectionUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.DeleteMenuSectionUseCase.DeleteMenuSectionCommand;
+import it.luzzetti.justdrink.backoffice.application.ports.input.menu.DeleteProductFromMenuSectionUseCase;
+import it.luzzetti.justdrink.backoffice.application.ports.input.menu.DeleteProductFromMenuSectionUseCase.DeleteProductCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ListMenuSectionsQuery;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ListMenuSectionsQuery.ListMenuSectionsCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ListProductsOfMenuSectionQuery;
@@ -64,12 +63,13 @@ import org.springframework.web.bind.annotation.RestController;
  *  le corrette configurazioni WEB
  */
 @CrossOrigin("*")
-public class MenuRestControllerAdapter {
+public class MenuRestControllerAdapter implements MenuRestController {
 
   // UseCases
   private final CreateMenuSectionUseCase createMenuSectionUseCase;
   private final DeleteMenuSectionUseCase deleteMenuSectionUseCase;
   private final CreateProductUseCase createProductUseCase;
+  private final DeleteProductFromMenuSectionUseCase deleteProductFromMenuSectionUseCase;
 
   // Queries
   private final ShowMenuQuery showMenuQuery;
@@ -93,6 +93,7 @@ public class MenuRestControllerAdapter {
         linkTo(methodOn(restaurantAdapter).getRestaurant(restaurantId)).withRel("Restaurant"));
   }
 
+  @Override
   @GetMapping
   public ResponseEntity<MenuResource> getMenu(@PathVariable UUID restaurantId) {
     // Parsing parameters from HTTP
@@ -108,6 +109,7 @@ public class MenuRestControllerAdapter {
     return ResponseEntity.ok(resource);
   }
 
+  @Override
   @GetMapping("/sections")
   public ResponseEntity<List<MenuSectionResource>> listMenuSections(
       @PathVariable UUID restaurantId) {
@@ -122,6 +124,7 @@ public class MenuRestControllerAdapter {
     return ResponseEntity.ok(response);
   }
 
+  @Override
   @PostMapping("/sections")
   public ResponseEntity<MenuSectionResource> createMenuSection(
       @PathVariable UUID restaurantId, @RequestBody MenuSectionCreationRequest request) {
@@ -140,6 +143,7 @@ public class MenuRestControllerAdapter {
     return ResponseEntity.ok(resource);
   }
 
+  @Override
   @DeleteMapping("/sections/{sectionId}")
   public ResponseEntity<Void> deleteMenuSection(
       @PathVariable UUID restaurantId, @PathVariable UUID sectionId) {
@@ -158,13 +162,7 @@ public class MenuRestControllerAdapter {
   /*
    * PRODUCTS
    */
-  @ApiResponses(
-      value = {
-        @ApiResponse(
-            description = "Lista dei prodotti per la sezione richiesta",
-            responseCode = "200")
-      })
-  @Operation(summary = "Elenca i prodotti presenti in una determinata sezione del Menu")
+  @Override
   @GetMapping("/sections/{sectionId}/products")
   public ResponseEntity<List<ProductResource>> listProduct(
       @PathVariable UUID restaurantId, @PathVariable UUID sectionId) {
@@ -185,7 +183,7 @@ public class MenuRestControllerAdapter {
     return ResponseEntity.ok(response);
   }
 
-  @ApiResponses(value = {@ApiResponse(description = "Mostra il prodotto", responseCode = "200")})
+  @Override
   @GetMapping("/sections/{sectionId}/products/{productId}")
   public ResponseEntity<ProductResource> showProduct(
       @PathVariable UUID restaurantId, @PathVariable UUID sectionId, @PathVariable UUID productId) {
@@ -206,6 +204,7 @@ public class MenuRestControllerAdapter {
     return ResponseEntity.ok(response);
   }
 
+  @Override
   @PostMapping("/sections/{sectionId}/products")
   public ResponseEntity<ProductResource> createProduct(
       @PathVariable UUID restaurantId,
@@ -229,6 +228,7 @@ public class MenuRestControllerAdapter {
     return new ResponseEntity<>(response, HttpStatus.CREATED);
   }
 
+  @Override
   @PostMapping("/sections/{sectionId}/products:move")
   public ResponseEntity<ProductResource> moveProduct(
       @PathVariable UUID restaurantId,
@@ -239,12 +239,21 @@ public class MenuRestControllerAdapter {
     throw new UnsupportedOperationException("NOT YET IMPLEMENTED");
   }
 
+  @Override
   @DeleteMapping("/sections/{sectionId}/products/{productId}")
   public ResponseEntity<Void> deleteProduct(
       @PathVariable UUID restaurantId, @PathVariable UUID sectionId, @PathVariable UUID productId) {
 
-    // TODO: da implementare
-    throw new UnsupportedOperationException("NOT YET IMPLEMENTED");
+    DeleteProductCommand command =
+        DeleteProductCommand.builder()
+            .restaurantId(restaurantId)
+            .menuSectionId(sectionId)
+            .productId(productId)
+            .build();
+
+    deleteProductFromMenuSectionUseCase.deleteProduct(command);
+
+    return ResponseEntity.noContent().build();
   }
 
   // POST :reset
