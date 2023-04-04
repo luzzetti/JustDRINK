@@ -36,7 +36,7 @@
   <!-- il Docker image name è strettamente correlato al nome del repository DockerHub su cui pushare -->
 
   <properties>
-    <revision>0.0.1-SNAPSHOT</revision>
+    <revision>0.0.2-SNAPSHOT</revision>
     <start-class>it.luzzetti.justdrink.backoffice.AppLauncher</start-class>
     <docker.image.name>docker.io/luzzetti/${project.artifactId}:${project.version}
     </docker.image.name>
