@@ -24,7 +24,7 @@
             <tbody>
                 <tr v-for="(item, index) in sections" :key="index">
                     <td class="text-capitalize">{{ item.title }}</td>
-                    <td class="text-capitalize"><router-link :to="{path:`/restaurants/${this.$route.params.id}/menu/sections/${item.id}/products`}">
+                    <td class="text-capitalize"><router-link :to="{name:'product',params:{restaurantId:this.$route.params.restaurantId,sectionId:item.id}}">
                          {{item.id}}</router-link>
                     
                    </td>
@@ -56,21 +56,21 @@ export default {
             let newData = {
                 title: this.title
             }
-            axios.post(`${store.apiBaseUrl}/api/1.0/restaurants/${this.$route.params.id}/menu/sections`, newData).then((response) => {
+            axios.post(`${store.apiBaseUrl}/api/1.0/restaurants/${this.$route.params.restaurantId}/menu/sections`, newData).then((response) => {
                 console.log(response.data);
                 this.title = '';
                 this.getSection();
             })
         },
         getSection() {
-            axios.get(`${store.apiBaseUrl}/api/1.0/restaurants/${this.$route.params.id}/menu/sections`).then((response) => {
+            axios.get(`${store.apiBaseUrl}/api/1.0/restaurants/${this.$route.params.restaurantId}/menu/sections`).then((response) => {
                 console.log(response.data);
                 this.sections = response.data;
                 
             })
         },
         deleteSectionById(id) {
-            axios.delete(`${store.apiBaseUrl}/api/1.0/restaurants/${this.$route.params.id}/menu/sections/${id}`).then((response) => {
+            axios.delete(`${store.apiBaseUrl}/api/1.0/restaurants/${this.$route.params.restaurantId}/menu/sections/${id}`).then((response) => {
                 location.reload();
             })
         }

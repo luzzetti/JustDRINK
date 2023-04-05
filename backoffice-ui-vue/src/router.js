@@ -26,17 +26,17 @@ const router = createRouter({
             component: RestaurantList
         },
         {
-            path: '/restaurants/:id',
+            path: '/restaurants/:restaurantId',
             name: 'showRestaurant',
             component: ShowRestaurant
         },
         {
-            path: '/restaurants/:id/menu/sections',
+            path: '/restaurants/:restaurantId/menu/sections',
             name: 'menu',
             component: MenuPage
         },
         {
-            path: '/restaurants/:id/menu/sections/:sectionId/products',
+            path: '/restaurants/:restaurantId/menu/sections/:sectionId/products',
             name: 'product',
             component: ShowProduct
         },

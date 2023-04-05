@@ -5,7 +5,7 @@
             <div class="card-body">
                 <h5 class="card-title text-capitalize">{{ restaurant.name }}</h5>
                 <p class="card-text">Qui specifiche varie</p>
-                <router-link :to="{path:`/restaurants/${this.$route.params.id}/menu/sections`}"><button class="btn btn-primary">Vai al Menu</button></router-link>
+                <router-link :to="{name:'menu',params:{restaurantId:this.$route.params.restaurantId}}"><button class="btn btn-primary">Vai al Menu</button></router-link>
             </div>
         </div>
     </div>
@@ -23,7 +23,7 @@ export default {
     },
     methods: {
         infoRestaurant() {
-            axios.get(`${store.apiBaseUrl}/api/1.0/restaurants/${this.$route.params.id}`).then((response) => {
+            axios.get(`${store.apiBaseUrl}/api/1.0/restaurants/${this.$route.params.restaurantId}`).then((response) => {
                 console.log(response.data);
                 this.restaurant = response.data;
                 // console.log(this.restaurant);

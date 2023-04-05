@@ -12,7 +12,7 @@
         <tbody>
             <tr v-for="(item, index) in restaurants" :key="index">
                 <td class="text-capitalize">{{item.name}}</td>
-                <td class="text-capitalize"> <router-link :to="{name:'showRestaurant',params:{id:item.id}}">
+                <td class="text-capitalize"> <router-link :to="{name:'showRestaurant',params:{restaurantId:item.id}}">
                         {{item.id}}
                     </router-link></td>
                
