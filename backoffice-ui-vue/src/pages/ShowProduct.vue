@@ -13,7 +13,34 @@
             </div>
         </form>
     </div>
+    <h1 class="mt-5">Tabella dei Prodotti</h1>
+    <div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Id Product</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(item, index) in products" :key="index">
+                    <td class="text-capitalize">{{ item.name }}</td>
+                    <td class="text-capitalize">{{ item.price }} </td>
+                    <td>{{ item.id }}</td>
+                    <td>
+                        <form action="" method="DELETE">
+
+                        </form><i class="fa-solid fa-trash" @click="deleteProductById(item.id)"></i>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </template>
+
+
 
 <script>
 import axios from 'axios';
@@ -37,11 +64,33 @@ export default {
             axios.post(`${store.apiBaseUrl}/api/1.0/restaurants/${this.$route.params.restaurantId}/menu/sections/${this.$route.params.sectionId}/products`, newData).then((response) => {
                 console.log(response.data);
                 this.name = '';
-                this.price='';
+                this.price = '';
+                this.getProduct();
             })
         },
+        getProduct() {
+            axios.get(`${store.apiBaseUrl}/api/1.0/restaurants/${this.$route.params.restaurantId}/menu/sections/${this.$route.params.sectionId}/products`).then((response) => {
+                console.log(response.data);
+                this.products = response.data;
+
+            })
+        },
+        deleteProductById(id) {
+            axios.delete(`${store.apiBaseUrl}/api/1.0/restaurants/${this.$route.params.restaurantId}/menu/sections/${this.$route.params.sectionId}/products/${id}`).then((response) => {
+                console.log(response)
+                location.reload();
+                
+            })
+        }
+    },
+    mounted() {
+        this.getProduct()
     }
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.fa-solid {
+    color: red;
+}
+</style>
