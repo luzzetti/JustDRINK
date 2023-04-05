@@ -3,7 +3,7 @@
         <h1>Aggiungi Sezioni </h1>
         <form action="" method="POST">
             <div class="d-flex flex-column w-25 mt-4">
-                <h2 class="mt-2" for="" placeholder="Inserisci antipasto">Inserisci nome sezione</h2>
+                <h2 class="mt-2" for="">Inserisci nome sezione</h2>
                 <input type="text w-25" v-model="title" placeholder="inserisci titolo">
                 <button class="btn btn-secondary mt-2" @click.prevent="InviaSezione()">Crea sezione</button>
             </div>
