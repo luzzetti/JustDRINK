@@ -5,6 +5,7 @@ import CreateRestaurant from './pages/CreateRestaurant.vue';
 import RestaurantList from './pages/RestaurantList.vue';
 import ShowRestaurant from './pages/ShowRestaurant.vue';
 import MenuPage from './pages/MenuPage.vue';
+import ShowProduct from './pages/ShowProduct.vue'
 
 const router = createRouter({
     history: createWebHistory(),
@@ -30,15 +31,15 @@ const router = createRouter({
             component: ShowRestaurant
         },
         {
-            path: '/restaurants/:id/menu/section',
+            path: '/restaurants/:id/menu/sections',
             name: 'menu',
             component: MenuPage
         },
-        // {
-        //     path: '/restaurants/:id/menu/:sectionId/products',
-        //     name: 'product',
-        //     component: ShowProduct
-        // },
+        {
+            path: '/restaurants/:id/menu/sections/:sectionId/products',
+            name: 'product',
+            component: ShowProduct
+        },
   
     ]
 });

@@ -5,7 +5,7 @@
             <div class="card-body">
                 <h5 class="card-title text-capitalize">{{ restaurant.name }}</h5>
                 <p class="card-text">Qui specifiche varie</p>
-                <router-link :to="{path:`/restaurants/${this.$route.params.id}/menu/section`}"><button class="btn btn-primary">Vai al Menu</button></router-link>
+                <router-link :to="{path:`/restaurants/${this.$route.params.id}/menu/sections`}"><button class="btn btn-primary">Vai al Menu</button></router-link>
             </div>
         </div>
     </div>

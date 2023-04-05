@@ -24,7 +24,8 @@
             <tbody>
                 <tr v-for="(item, index) in sections" :key="index">
                     <td class="text-capitalize">{{ item.title }}</td>
-                    <td class="text-capitalize">{{item.id}}
+                    <td class="text-capitalize"><router-link :to="{path:`/restaurants/${this.$route.params.id}/menu/sections/${this.$route.params.id}/products`}">
+                         {{item.id}}</router-link>
                     
                    </td>
                     <td>
