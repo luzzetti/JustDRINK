@@ -24,10 +24,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class MenuJpaEntity {
 
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-  @JoinColumn(name = "MENU_ID")
-  Set<MenuSectionJpaEntity> sections = new HashSet<>();
-
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
@@ -35,4 +31,11 @@ public class MenuJpaEntity {
   @OneToOne
   @JoinColumn(name = "RESTAURANT_ID")
   private RestaurantJpaEntity restaurant;
+
+  // The menu has a TOTAL control of its sections
+  // When a menu is deleted, all sections must be automatically deleted
+  // This is the reason why we used CascadeType.ALL and orphanRemoval
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "MENU_ID")
+  private Set<MenuSectionJpaEntity> sections = new HashSet<>();
 }

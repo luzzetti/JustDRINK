@@ -1,6 +1,6 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.adapters;
 
-import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.CreateRestaurantPort;
+import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.SaveRestaurantPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.DeleteRestaurantPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.FindRestaurantPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.ListRestaurantsPort;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 @RequiredArgsConstructor
 public class RestaurantJpaAdapter
-    implements FindRestaurantPort, ListRestaurantsPort, CreateRestaurantPort, DeleteRestaurantPort {
+    implements FindRestaurantPort, ListRestaurantsPort, SaveRestaurantPort, DeleteRestaurantPort {
   private final RestaurantJpaRepository restaurantJpaRepository;
   private final RestaurantJpaMapper restaurantJpaMapper;
 

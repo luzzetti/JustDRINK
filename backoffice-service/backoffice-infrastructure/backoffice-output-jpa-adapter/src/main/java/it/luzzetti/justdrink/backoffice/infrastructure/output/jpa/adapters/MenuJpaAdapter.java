@@ -1,8 +1,8 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.adapters;
 
-import it.luzzetti.justdrink.backoffice.application.ports.output.menu.CreateMenuPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.menu.DeleteMenuPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.menu.FindMenuPort;
+import it.luzzetti.justdrink.backoffice.application.ports.output.menu.SaveMenuPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.menu.UpdateMenuPort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.menu.Menu;
 import it.luzzetti.justdrink.backoffice.domain.shared.RestaurantId;
@@ -11,7 +11,6 @@ import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.Resta
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.mappers.MenuJpaMapper;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.repositories.MenuJpaRepository;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.repositories.RestaurantJpaRepository;
-import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -20,8 +19,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 @RequiredArgsConstructor
-public class MenuJpaAdapter
-    implements FindMenuPort, CreateMenuPort, UpdateMenuPort, DeleteMenuPort {
+public class MenuJpaAdapter implements FindMenuPort, SaveMenuPort, UpdateMenuPort, DeleteMenuPort {
   private final MenuJpaRepository menuJpaRepository;
   private final RestaurantJpaRepository restaurantJpaRepository;
   private final MenuJpaMapper menuJpaMapper;
@@ -49,11 +47,7 @@ public class MenuJpaAdapter
 
   @Override
   public void deleteMenuByRestaurantId(UUID restaurantId) {
-    Optional<MenuJpaEntity> menuByRestaurantId = menuJpaRepository.findMenuByRestaurantId(
-        restaurantId);
-    if(menuByRestaurantId.isPresent()){
-      menuJpaRepository.deleteById(menuByRestaurantId.get().getId());
-    }
+    menuJpaRepository.findMenuByRestaurantId(restaurantId).ifPresent(menuJpaRepository::delete);
   }
 
   @Override

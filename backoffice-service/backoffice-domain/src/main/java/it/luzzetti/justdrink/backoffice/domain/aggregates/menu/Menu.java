@@ -18,6 +18,7 @@ public class Menu {
 
   private MenuId id;
   private RestaurantId restaurantId;
+
   @Builder.Default private List<MenuSection> sections = new ArrayList<>();
 
   // Non sono sicuro che debba essere possibile creare un menu senza associarlo ad un ristorante

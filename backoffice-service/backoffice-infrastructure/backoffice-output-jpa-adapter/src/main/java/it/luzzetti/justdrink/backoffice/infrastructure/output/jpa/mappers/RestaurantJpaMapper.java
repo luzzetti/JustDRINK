@@ -17,6 +17,6 @@ public interface RestaurantJpaMapper {
   }
 
   default RestaurantId map(UUID uuid) {
-    return new RestaurantId(uuid);
+    return RestaurantId.from(uuid);
   }
 }

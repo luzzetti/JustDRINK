@@ -2,7 +2,7 @@ package it.luzzetti.justdrink.backoffice.application.ports.output.restaurant;
 
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 
-public interface CreateRestaurantPort { 
+public interface SaveRestaurantPort {
 	Restaurant createRestaurant(Restaurant aNewRestaurant);
 	
 }
