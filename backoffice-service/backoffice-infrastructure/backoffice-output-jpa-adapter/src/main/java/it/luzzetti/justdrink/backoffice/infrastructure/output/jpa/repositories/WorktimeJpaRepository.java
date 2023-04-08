@@ -16,8 +16,11 @@ public interface WorktimeJpaRepository
 
   @Query(
       """
-          SELECT w FROM WorktimeJpaEntity w JOIN w.restaurant r WHERE r.id = :restaurantId
-          """)
+      SELECT w
+      FROM WorktimeJpaEntity w
+      JOIN w.restaurant r
+      WHERE r.id = :restaurantId
+      """)
   @EntityGraph(attributePaths = {"restaurant", "openings", "overrules"})
   Optional<WorktimeJpaEntity> findWorktimeByRestaurantId(@Param("restaurantId") UUID restaurantId);
 }
