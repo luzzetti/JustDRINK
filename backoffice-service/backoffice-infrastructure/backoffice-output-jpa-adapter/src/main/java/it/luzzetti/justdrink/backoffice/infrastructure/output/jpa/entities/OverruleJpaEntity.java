@@ -30,6 +30,7 @@ public class OverruleJpaEntity {
   private DayOfWeek dayOfWeek;
   private LocalTime alternativeOpenTime;
   private LocalTime alternativeCloseTime;
+  private Boolean closed;
 
   private Instant createdAt;
 }

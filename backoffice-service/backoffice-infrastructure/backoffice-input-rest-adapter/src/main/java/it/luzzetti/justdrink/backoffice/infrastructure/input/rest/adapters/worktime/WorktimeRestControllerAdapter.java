@@ -3,16 +3,18 @@ package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.work
 import it.luzzetti.justdrink.backoffice.application.ports.input.worktime.CreateOpeningUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.worktime.CreateOpeningUseCase.CreateOpeningCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.worktime.CreateOverruleUseCase;
-import it.luzzetti.justdrink.backoffice.application.ports.input.worktime.CreateOverruleUseCase.CreateOverruleCommand;
+import it.luzzetti.justdrink.backoffice.application.ports.input.worktime.CreateOverruleUseCase.CreateClosingOverruleCommand;
+import it.luzzetti.justdrink.backoffice.application.ports.input.worktime.CreateOverruleUseCase.CreateOpeningOverruleCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.worktime.ShowWorktimeQuery;
 import it.luzzetti.justdrink.backoffice.application.ports.input.worktime.ShowWorktimeQuery.ShowWorktimeCommand;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Opening;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Overrule;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Worktime;
 import it.luzzetti.justdrink.backoffice.domain.shared.RestaurantId;
+import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.worktime.dto.ClosingOverruleResource;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.worktime.dto.OpeningCreationRequest;
+import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.worktime.dto.OpeningOverruleResource;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.worktime.dto.OpeningResource;
-import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.worktime.dto.OverruleCreationRequest;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.worktime.dto.OverruleResource;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.worktime.dto.WorktimeResource;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.OpeningWebMapper;
@@ -32,7 +34,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /***
- * This is a 'Singleton sub-resource' like shown in 'API Design Patterns'
+ * This controller, contains examples of Polymorphism API.
+ * <p>
+ * Theory:
+ * Api Design Pattern - Part 4 - Chapter 16
+ * <p>
+ * Implementation:
+ * <a href="https://totheroot.nl/content/applying-polymorphism-to-a-rest-api-using-spring-boot">...</a>
  */
 
 @RestController
@@ -92,21 +100,46 @@ public class WorktimeRestControllerAdapter {
 
   @PostMapping("/overrules")
   public ResponseEntity<OverruleResource> createOverrule(
-      @PathVariable UUID restaurantId, @RequestBody @Valid OverruleCreationRequest request) {
+      @PathVariable UUID restaurantId, @RequestBody @Valid OverruleResource request) {
 
-    var command =
-        CreateOverruleCommand.builder()
-            .restaurantId(RestaurantId.from(restaurantId))
-            .validFrom(request.validFrom())
-            .validThrough(request.validThrough())
-            .dayOfWeek(request.dayOfWeek())
-            .alternativeOpenTime(request.alternativeOpenTime())
-            .alternativeCloseTime(request.alternativeCloseTime())
-            .build();
-
-    Overrule theCreatedOverrule = createOverruleUseCase.createOverrule(command);
+    Overrule theCreatedOverrule;
+    if (request instanceof OpeningOverruleResource openingRequest) {
+      theCreatedOverrule = handleOpeningOverruleCreation(openingRequest, restaurantId);
+    } else if (request instanceof ClosingOverruleResource closingRequest) {
+      theCreatedOverrule = handleClosingOverruleCreation(closingRequest, restaurantId);
+    } else {
+      throw new IllegalStateException("This should NEVER happens, honestly");
+    }
 
     OverruleResource response = overruleWebMapper.toResource(theCreatedOverrule);
     return ResponseEntity.ok(response);
+  }
+
+  private Overrule handleClosingOverruleCreation(
+      ClosingOverruleResource closingRequest, UUID restaurantId) {
+    var command =
+        CreateClosingOverruleCommand.builder()
+            .restaurantId(RestaurantId.from(restaurantId))
+            .validFrom(closingRequest.getValidFrom())
+            .validThrough(closingRequest.getValidThrough())
+            .dayOfWeek(closingRequest.getDayOfWeek())
+            .build();
+
+    return createOverruleUseCase.createClosingOverrule(command);
+  }
+
+  private Overrule handleOpeningOverruleCreation(
+      OpeningOverruleResource openingRequest, UUID restaurantId) {
+    var command =
+        CreateOpeningOverruleCommand.builder()
+            .restaurantId(RestaurantId.from(restaurantId))
+            .validFrom(openingRequest.getValidFrom())
+            .validThrough(openingRequest.getValidThrough())
+            .dayOfWeek(openingRequest.getDayOfWeek())
+            .alternativeOpenTime(openingRequest.getAlternativeOpenTime())
+            .alternativeCloseTime(openingRequest.getAlternativeCloseTime())
+            .build();
+
+    return createOverruleUseCase.createOpeningOverrule(command);
   }
 }

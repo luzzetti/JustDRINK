@@ -19,6 +19,7 @@ public class Overrule {
   private final DayOfWeek dayOfWeek;
   private final LocalTime alternativeOpenTime;
   private final LocalTime alternativeCloseTime;
+  private final Boolean closed;
   @Builder.Default private final Instant createdAt = Instant.now();
 
   // ####################################################
@@ -41,6 +42,12 @@ public class Overrule {
   }
 
   public boolean overlapsOpening(Overrule that) {
+
+    if (Boolean.TRUE.equals(that.closed) || Boolean.TRUE.equals(this.closed)) {
+      // a close overrule never overlaps.
+      return false;
+    }
+
     if (this.dayOfWeek != that.dayOfWeek) {
       return false;
     }

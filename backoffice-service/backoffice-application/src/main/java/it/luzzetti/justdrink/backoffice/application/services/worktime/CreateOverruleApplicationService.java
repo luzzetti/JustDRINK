@@ -5,11 +5,9 @@ import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.FindWo
 import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.SaveWorktimePort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Overrule;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Worktime;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Log4j2
@@ -21,8 +19,7 @@ public class CreateOverruleApplicationService implements CreateOverruleUseCase {
   private final SaveWorktimePort saveWorktimePort;
 
   @Override
-  @Transactional
-  public Overrule createOverrule(@Valid CreateOverruleCommand command) {
+  public Overrule createOpeningOverrule(CreateOpeningOverruleCommand command) {
     log.debug(() -> String.format("createOverrule(%s)", command));
 
     // Fetching resources
@@ -36,6 +33,33 @@ public class CreateOverruleApplicationService implements CreateOverruleUseCase {
             .dayOfWeek(command.dayOfWeek())
             .alternativeOpenTime(command.alternativeOpenTime())
             .alternativeCloseTime(command.alternativeCloseTime())
+            .closed(Boolean.FALSE)
+            .build();
+
+    // Use case
+    theWorktime.addOverrule(theNewOverrule);
+
+    // Crafting response
+    Worktime theUpdatedWorktime = saveWorktimePort.saveWorktime(theWorktime);
+    return theUpdatedWorktime.getLastCreatedOverrule();
+  }
+
+  @Override
+  public Overrule createClosingOverrule(CreateClosingOverruleCommand command) {
+    log.debug(() -> String.format("createOverrule(%s)", command));
+
+    // Fetching resources
+    Worktime theWorktime =
+        findWorktimePort.findWorktimeByRestaurantIdMandatory(command.restaurantId());
+
+    Overrule theNewOverrule =
+        Overrule.builder()
+            .validFrom(command.validFrom())
+            .validThrough(command.validThrough())
+            .dayOfWeek(command.dayOfWeek())
+            .alternativeOpenTime(null)
+            .alternativeCloseTime(null)
+            .closed(Boolean.TRUE)
             .build();
 
     // Use case

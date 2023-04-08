@@ -10,14 +10,23 @@ import lombok.Builder;
 
 public interface CreateOverruleUseCase {
 
-  Overrule createOverrule(CreateOverruleCommand command);
+  Overrule createOpeningOverrule(CreateOpeningOverruleCommand command);
+
+  Overrule createClosingOverrule(CreateClosingOverruleCommand command);
 
   @Builder
-  record CreateOverruleCommand(
+  record CreateOpeningOverruleCommand(
       @NotNull RestaurantId restaurantId,
       @NotNull LocalDate validFrom,
       @NotNull LocalDate validThrough,
       @NotNull DayOfWeek dayOfWeek,
       @NotNull LocalTime alternativeOpenTime,
       @NotNull LocalTime alternativeCloseTime) {}
+
+  @Builder
+  record CreateClosingOverruleCommand(
+      @NotNull RestaurantId restaurantId,
+      @NotNull LocalDate validFrom,
+      @NotNull LocalDate validThrough,
+      @NotNull DayOfWeek dayOfWeek) {}
 }
