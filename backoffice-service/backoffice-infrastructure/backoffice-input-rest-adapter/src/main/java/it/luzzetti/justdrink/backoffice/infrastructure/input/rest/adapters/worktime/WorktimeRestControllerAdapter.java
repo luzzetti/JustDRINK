@@ -2,15 +2,21 @@ package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.work
 
 import it.luzzetti.justdrink.backoffice.application.ports.input.worktime.CreateOpeningUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.worktime.CreateOpeningUseCase.CreateOpeningCommand;
+import it.luzzetti.justdrink.backoffice.application.ports.input.worktime.CreateOverruleUseCase;
+import it.luzzetti.justdrink.backoffice.application.ports.input.worktime.CreateOverruleUseCase.CreateOverruleCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.worktime.ShowWorktimeQuery;
 import it.luzzetti.justdrink.backoffice.application.ports.input.worktime.ShowWorktimeQuery.ShowWorktimeCommand;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Opening;
+import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Overrule;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Worktime;
 import it.luzzetti.justdrink.backoffice.domain.shared.RestaurantId;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.worktime.dto.OpeningCreationRequest;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.worktime.dto.OpeningResource;
+import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.worktime.dto.OverruleCreationRequest;
+import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.worktime.dto.OverruleResource;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.worktime.dto.WorktimeResource;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.OpeningWebMapper;
+import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.OverruleWebMapper;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.WorktimeWebMapper;
 import jakarta.validation.Valid;
 import java.util.UUID;
@@ -42,6 +48,7 @@ public class WorktimeRestControllerAdapter {
 
   // UseCases
   private final CreateOpeningUseCase createOpeningUseCase;
+  private final CreateOverruleUseCase createOverruleUseCase;
 
   // Queries
   private final ShowWorktimeQuery showWorktimeQuery;
@@ -49,6 +56,7 @@ public class WorktimeRestControllerAdapter {
   // Mappers
   private final WorktimeWebMapper worktimeWebMapper;
   private final OpeningWebMapper openingWebMapper;
+  private final OverruleWebMapper overruleWebMapper;
 
   @GetMapping
   public ResponseEntity<WorktimeResource> getWorktime(@PathVariable UUID restaurantId) {
@@ -79,6 +87,26 @@ public class WorktimeRestControllerAdapter {
     Opening theCreatedOpening = createOpeningUseCase.createOpening(command);
 
     OpeningResource response = openingWebMapper.toResource(theCreatedOpening);
+    return ResponseEntity.ok(response);
+  }
+
+  @PostMapping("/overrules")
+  public ResponseEntity<OverruleResource> createOverrule(
+      @PathVariable UUID restaurantId, @RequestBody @Valid OverruleCreationRequest request) {
+
+    var command =
+        CreateOverruleCommand.builder()
+            .restaurantId(RestaurantId.from(restaurantId))
+            .validFrom(request.validFrom())
+            .validThrough(request.validThrough())
+            .dayOfWeek(request.dayOfWeek())
+            .alternativeOpenTime(request.alternativeOpenTime())
+            .alternativeCloseTime(request.alternativeCloseTime())
+            .build();
+
+    Overrule theCreatedOverrule = createOverruleUseCase.createOverrule(command);
+
+    OverruleResource response = overruleWebMapper.toResource(theCreatedOverrule);
     return ResponseEntity.ok(response);
   }
 }

@@ -1,9 +1,9 @@
 package it.luzzetti.justdrink.backoffice.application.services.worktime;
 
-import it.luzzetti.justdrink.backoffice.application.ports.input.worktime.CreateOpeningUseCase;
+import it.luzzetti.justdrink.backoffice.application.ports.input.worktime.CreateOverruleUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.FindWorktimePort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.SaveWorktimePort;
-import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Opening;
+import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Overrule;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Worktime;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Log4j2
 @RequiredArgsConstructor
-public class CreateOpeningApplicationService implements CreateOpeningUseCase {
+public class CreateOverruleApplicationService implements CreateOverruleUseCase {
 
   // Ports
   private final FindWorktimePort findWorktimePort;
@@ -22,25 +22,27 @@ public class CreateOpeningApplicationService implements CreateOpeningUseCase {
 
   @Override
   @Transactional
-  public Opening createOpening(@Valid CreateOpeningCommand command) {
-    log.debug(() -> String.format("createOpening(%s)", command));
+  public Overrule createOverrule(@Valid CreateOverruleCommand command) {
+    log.debug(() -> String.format("createOverrule(%s)", command));
 
     // Fetching resources
     Worktime theWorktime =
         findWorktimePort.findWorktimeByRestaurantIdMandatory(command.restaurantId());
 
-    Opening theNewOpening =
-        Opening.builder()
+    Overrule theNewOverrule =
+        Overrule.builder()
+            .validFrom(command.validFrom())
+            .validThrough(command.validThrough())
             .dayOfWeek(command.dayOfWeek())
-            .openTime(command.openTime())
-            .closeTime(command.closeTime())
+            .alternativeOpenTime(command.alternativeOpenTime())
+            .alternativeCloseTime(command.alternativeCloseTime())
             .build();
 
     // Use case
-    theWorktime.addOpening(theNewOpening);
+    theWorktime.addOverrule(theNewOverrule);
 
     // Crafting response
     Worktime theUpdatedWorktime = saveWorktimePort.saveWorktime(theWorktime);
-    return theUpdatedWorktime.getLastCreatedOpening();
+    return theUpdatedWorktime.getLastCreatedOverrule();
   }
 }

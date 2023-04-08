@@ -5,9 +5,6 @@ package it.luzzetti.justdrink.backoffice.domain.aggregates.worktime;
 
 import it.luzzetti.justdrink.backoffice.domain.shared.RestaurantId;
 import it.luzzetti.justdrink.backoffice.domain.shared.WorktimeId;
-import java.time.DayOfWeek;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -22,33 +19,49 @@ public class Worktime {
   private final WorktimeId id;
   private final RestaurantId restaurantId;
   @Builder.Default private final List<Opening> openings = new ArrayList<>();
+  @Builder.Default private final List<Overrule> overrules = new ArrayList<>();
 
   public static Worktime newWorktimeForRestaurant(RestaurantId restaurantId) {
     return Worktime.builder().id(WorktimeId.empty()).restaurantId(restaurantId).build();
   }
 
-  public void addStandardOpening(DayOfWeek dayOfWeek, LocalTime openTime, LocalTime closeTime) {
-    Opening aStandardOpening =
-        Opening.builder().dayOfWeek(dayOfWeek).openTime(openTime).closeTime(closeTime).build();
+  public void addOpening(Opening aNewOpening) {
 
     // Validate Overlapping
-    List<Opening> overlappingOpenings =
-        openings.stream().filter(aStandardOpening::overlaps).toList();
+    openings.stream()
+        .filter(aNewOpening::overlapsOpening)
+        .findFirst()
+        .ifPresent(
+            o -> {
+              throw new IllegalArgumentException(
+                  "An opening with a clashing period of time already exists: %s".formatted(o));
+            });
 
-    if (!overlappingOpenings.isEmpty()) {
-      throw new IllegalArgumentException("Implement a specific OverlappingOpeningsException");
-    }
+    openings.add(aNewOpening);
+  }
 
-    openings.add(aStandardOpening);
+  public void addOverrule(Overrule aNewOverrule) {
+
+    overrules.stream()
+        .filter(aNewOverrule::overlapsValidity)
+        .filter(aNewOverrule::overlapsOpening)
+        .findFirst()
+        .ifPresent(
+            o -> {
+              throw new IllegalArgumentException(
+                  "An overrule with a clashing validity and opening period already exists: %s"
+                      .formatted(o));
+            });
+
+    overrules.add(aNewOverrule);
   }
 
   public List<Opening> getOpenings() {
     return Collections.unmodifiableList(openings);
   }
 
-  public boolean isOpen(LocalDateTime aMomentInTime) {
-    List<Opening> list = openings.stream().filter(o -> o.contains(aMomentInTime)).toList();
-    return !list.isEmpty();
+  public List<Overrule> getOverrules() {
+    return Collections.unmodifiableList(overrules);
   }
 
   public Opening getLastCreatedOpening() {
@@ -57,6 +70,9 @@ public class Worktime {
         .orElseThrow(IllegalArgumentException::new);
   }
 
-  // TODO: I should return a combined view, one way or another
-
+  public Overrule getLastCreatedOverrule() {
+    return overrules.stream()
+        .max(Comparator.comparing(Overrule::getCreatedAt))
+        .orElseThrow(IllegalArgumentException::new);
+  }
 }

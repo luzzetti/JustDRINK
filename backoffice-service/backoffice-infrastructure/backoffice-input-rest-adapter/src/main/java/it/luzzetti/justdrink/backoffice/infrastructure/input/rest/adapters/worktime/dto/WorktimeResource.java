@@ -2,4 +2,4 @@ package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.work
 
 import java.util.List;
 
-public record WorktimeResource(List<OpeningResource> openings) {}
+public record WorktimeResource(List<OpeningResource> openings, List<OverruleResource> overrules) {}

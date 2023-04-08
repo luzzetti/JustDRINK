@@ -7,12 +7,14 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
 public class Opening {
+  private UUID id;
   private final DayOfWeek dayOfWeek;
   private final LocalTime openTime;
   private final LocalTime closeTime;
@@ -21,7 +23,7 @@ public class Opening {
   // Short way
   // https://stackoverflow.com/a/325964
   // Check equality edge cases
-  public boolean overlaps(Opening that) {
+  public boolean overlapsOpening(Opening that) {
     if (this.dayOfWeek != that.dayOfWeek) {
       return false;
     }

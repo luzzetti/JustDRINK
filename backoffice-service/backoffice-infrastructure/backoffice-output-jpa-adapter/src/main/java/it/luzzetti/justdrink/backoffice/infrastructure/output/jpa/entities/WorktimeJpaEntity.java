@@ -35,4 +35,8 @@ public class WorktimeJpaEntity {
   @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "WORKTIME_ID")
   private Set<OpeningJpaEntity> openings = new HashSet<>();
+
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "WORKTIME_ID")
+  private Set<OverruleJpaEntity> overrules = new HashSet<>();
 }
