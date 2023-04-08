@@ -11,7 +11,6 @@ import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "PRODUCTS")
@@ -27,5 +26,5 @@ public class ProductJpaEntity {
   private String name;
   private BigDecimal price;
 
-  @CreationTimestamp private Instant createdAt;
+  private Instant createdAt;
 }

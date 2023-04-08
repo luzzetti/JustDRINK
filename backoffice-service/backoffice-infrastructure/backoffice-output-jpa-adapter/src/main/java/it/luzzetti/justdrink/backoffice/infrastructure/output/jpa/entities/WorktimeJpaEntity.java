@@ -1,5 +1,6 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -31,7 +32,7 @@ public class WorktimeJpaEntity {
   @JoinColumn(name = "RESTAURANT_ID")
   private RestaurantJpaEntity restaurant;
 
-  @OneToMany(fetch = FetchType.EAGER)
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "WORKTIME_ID")
   private Set<OpeningJpaEntity> openings = new HashSet<>();
 }

@@ -15,7 +15,6 @@ import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "SECTIONS")
@@ -34,5 +33,5 @@ public class MenuSectionJpaEntity {
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<ProductJpaEntity> products = new HashSet<>();
 
-  @CreationTimestamp private Instant createdAt;
+  private Instant createdAt;
 }

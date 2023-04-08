@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(uses = {RestaurantJpaMapper.class})
+@Mapper(uses = {RestaurantJpaMapper.class, OpeningJpaMapper.class})
 public interface WorktimeJpaMapper {
 
   default UUID map(WorktimeId worktimeId) {

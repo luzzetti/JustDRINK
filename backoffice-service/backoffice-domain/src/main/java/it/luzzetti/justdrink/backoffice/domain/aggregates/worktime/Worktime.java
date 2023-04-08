@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,14 +21,15 @@ public class Worktime {
 
   private final WorktimeId id;
   private final RestaurantId restaurantId;
-  private final List<Opening> openings = new ArrayList<>();
+  @Builder.Default private final List<Opening> openings = new ArrayList<>();
 
   public static Worktime newWorktimeForRestaurant(RestaurantId restaurantId) {
     return Worktime.builder().id(WorktimeId.empty()).restaurantId(restaurantId).build();
   }
 
-  public void addStandardOpening(DayOfWeek dayOfWeek, LocalTime opens, LocalTime closes) {
-    Opening aStandardOpening = Opening.of(dayOfWeek, opens, closes);
+  public void addStandardOpening(DayOfWeek dayOfWeek, LocalTime openTime, LocalTime closeTime) {
+    Opening aStandardOpening =
+        Opening.builder().dayOfWeek(dayOfWeek).openTime(openTime).closeTime(closeTime).build();
 
     // Validate Overlapping
     List<Opening> overlappingOpenings =
@@ -47,6 +49,12 @@ public class Worktime {
   public boolean isOpen(LocalDateTime aMomentInTime) {
     List<Opening> list = openings.stream().filter(o -> o.contains(aMomentInTime)).toList();
     return !list.isEmpty();
+  }
+
+  public Opening getLastCreatedOpening() {
+    return openings.stream()
+        .max(Comparator.comparing(Opening::getCreatedAt))
+        .orElseThrow(IllegalArgumentException::new);
   }
 
   // TODO: I should return a combined view, one way or another
