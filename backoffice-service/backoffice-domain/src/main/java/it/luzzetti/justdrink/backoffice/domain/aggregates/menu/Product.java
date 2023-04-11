@@ -1,6 +1,6 @@
 package it.luzzetti.justdrink.backoffice.domain.aggregates.menu;
 
-import it.luzzetti.justdrink.backoffice.domain.shared.ProductId;
+import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.ProductId;
 import java.math.BigDecimal;
 import java.time.Instant;
 import lombok.Builder;

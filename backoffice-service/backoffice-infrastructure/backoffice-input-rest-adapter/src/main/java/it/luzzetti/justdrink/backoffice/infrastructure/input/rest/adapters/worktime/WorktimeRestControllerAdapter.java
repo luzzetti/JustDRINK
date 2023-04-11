@@ -10,7 +10,7 @@ import it.luzzetti.justdrink.backoffice.application.ports.input.worktime.ShowWor
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Opening;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Overrule;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Worktime;
-import it.luzzetti.justdrink.backoffice.domain.shared.RestaurantId;
+import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.worktime.dto.ClosingOverruleResource;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.worktime.dto.OpeningCreationRequest;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.worktime.dto.OpeningOverruleResource;

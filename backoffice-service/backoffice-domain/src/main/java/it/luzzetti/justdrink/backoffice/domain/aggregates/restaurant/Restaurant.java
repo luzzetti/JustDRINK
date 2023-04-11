@@ -1,6 +1,6 @@
 package it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant;
 
-import it.luzzetti.justdrink.backoffice.domain.shared.RestaurantId;
+import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import lombok.*;
 
 @Getter

@@ -1,4 +1,4 @@
-package it.luzzetti.justdrink.backoffice.domain.shared;
+package it.luzzetti.justdrink.backoffice.domain.shared.typed_ids;
 
 import java.util.UUID;
 

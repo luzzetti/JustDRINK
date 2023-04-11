@@ -3,8 +3,9 @@ package it.luzzetti.justdrink.backoffice.domain.aggregates.worktime;
 // https://schema.org/OpeningHoursSpecification
 // https://stackoverflow.com/a/4465072
 
-import it.luzzetti.justdrink.backoffice.domain.shared.RestaurantId;
-import it.luzzetti.justdrink.backoffice.domain.shared.WorktimeId;
+import it.luzzetti.justdrink.backoffice.domain.services.worktime.ClashingOverrulesChecker;
+import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
+import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.WorktimeId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -41,6 +42,8 @@ public class Worktime {
   }
 
   public void addOverrule(Overrule aNewOverrule) {
+
+    ClashingOverrulesChecker.validate(aNewOverrule, overrules);
 
     overrules.stream()
         .filter(aNewOverrule::overlapsValidity)

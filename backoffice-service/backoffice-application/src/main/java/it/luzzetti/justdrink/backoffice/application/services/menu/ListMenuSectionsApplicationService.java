@@ -4,7 +4,7 @@ import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ListMenuSec
 import it.luzzetti.justdrink.backoffice.application.ports.output.menu.FindMenuPort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.menu.Menu;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.menu.MenuSection;
-import it.luzzetti.justdrink.backoffice.domain.shared.RestaurantId;
+import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

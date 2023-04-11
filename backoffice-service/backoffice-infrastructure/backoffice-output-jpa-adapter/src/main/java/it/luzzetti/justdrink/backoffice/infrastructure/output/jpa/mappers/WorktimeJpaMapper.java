@@ -1,7 +1,7 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.mappers;
 
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Worktime;
-import it.luzzetti.justdrink.backoffice.domain.shared.WorktimeId;
+import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.WorktimeId;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.WorktimeJpaEntity;
 import java.util.UUID;
 import org.mapstruct.Mapper;

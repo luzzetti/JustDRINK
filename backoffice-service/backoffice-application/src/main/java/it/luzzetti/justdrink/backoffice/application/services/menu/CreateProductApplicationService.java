@@ -5,7 +5,7 @@ import it.luzzetti.justdrink.backoffice.application.ports.output.menu.FindMenuPo
 import it.luzzetti.justdrink.backoffice.application.ports.output.menu.UpdateMenuPort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.menu.Menu;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.menu.Product;
-import it.luzzetti.justdrink.backoffice.domain.shared.MenuSectionId;
+import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.MenuSectionId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;

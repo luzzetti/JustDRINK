@@ -22,20 +22,6 @@ public class Overrule {
   private final Boolean closed;
   @Builder.Default private final Instant createdAt = Instant.now();
 
-  // ####################################################
-  // Qui viene "intercettato" il builder di lombok,
-  // per poter aggiungere validazioni custom al .build()
-  // e non avere mai domain-entity in uno stato invalido
-  // ####################################################
-
-  /**
-   * Override the builder() method to return our custom builder instead of the Lombok generated
-   * builder class.
-   */
-  public static OverruleBuilder builder() {
-    return new CustomBuilder();
-  }
-
   public boolean overlapsValidity(Overrule that) {
     return (this.validFrom.isBefore(that.validThrough)
         && this.validThrough.isAfter(that.validFrom));
@@ -54,6 +40,20 @@ public class Overrule {
 
     return (this.alternativeOpenTime.isBefore(that.alternativeCloseTime)
         && this.alternativeCloseTime.isAfter(that.alternativeOpenTime));
+  }
+
+  // ####################################################
+  // Qui viene "intercettato" il builder di lombok,
+  // per poter aggiungere validazioni custom al .build()
+  // e non avere mai domain-entity in uno stato invalido
+  // ####################################################
+
+  /**
+   * Override the builder() method to return our custom builder instead of the Lombok generated
+   * builder class.
+   */
+  public static OverruleBuilder builder() {
+    return new CustomBuilder();
   }
 
   /**

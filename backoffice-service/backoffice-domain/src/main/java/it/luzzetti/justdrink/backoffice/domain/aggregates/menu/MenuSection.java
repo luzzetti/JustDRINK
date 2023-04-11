@@ -1,7 +1,7 @@
 package it.luzzetti.justdrink.backoffice.domain.aggregates.menu;
 
-import it.luzzetti.justdrink.backoffice.domain.shared.MenuSectionId;
-import it.luzzetti.justdrink.backoffice.domain.shared.ProductId;
+import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.MenuSectionId;
+import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.ProductId;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;

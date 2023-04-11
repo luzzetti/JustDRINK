@@ -1,6 +1,6 @@
 package it.luzzetti.justdrink.backoffice.application.services.menu;
 
-import static it.luzzetti.justdrink.backoffice.domain.shared.RestaurantId.from;
+import static it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId.from;
 
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.CreateMenuSectionUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.output.menu.FindMenuPort;

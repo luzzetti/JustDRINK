@@ -3,7 +3,7 @@ package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.adapters;
 import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.FindWorktimePort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.SaveWorktimePort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Worktime;
-import it.luzzetti.justdrink.backoffice.domain.shared.RestaurantId;
+import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.mappers.WorktimeJpaMapper;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.repositories.RestaurantJpaRepository;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.repositories.WorktimeJpaRepository;

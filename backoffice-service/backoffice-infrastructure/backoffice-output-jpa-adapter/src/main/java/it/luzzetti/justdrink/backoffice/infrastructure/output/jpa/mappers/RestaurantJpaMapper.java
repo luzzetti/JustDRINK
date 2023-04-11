@@ -1,7 +1,7 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.mappers;
 
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
-import it.luzzetti.justdrink.backoffice.domain.shared.RestaurantId;
+import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.RestaurantJpaEntity;
 import java.util.UUID;
 import org.mapstruct.Mapper;
