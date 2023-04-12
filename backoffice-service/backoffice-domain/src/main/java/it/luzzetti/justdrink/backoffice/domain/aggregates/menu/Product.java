@@ -18,4 +18,5 @@ public class Product {
   public static Product newProduct(String name, BigDecimal price) {
     return Product.builder().name(name).price(price).build();
   }
+
 }

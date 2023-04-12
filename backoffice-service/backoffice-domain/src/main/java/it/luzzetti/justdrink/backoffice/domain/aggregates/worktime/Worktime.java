@@ -29,17 +29,8 @@ public class Worktime {
 
   public void addOpening(Opening aNewOpening) {
 
-    ClashingOpeningChecker.validate(aNewOpening, openings);
-
     // Validate Overlapping
-    openings.stream()
-        .filter(aNewOpening::overlapsOpening)
-        .findFirst()
-        .ifPresent(
-            o -> {
-              throw new IllegalArgumentException(
-                  "An opening with a clashing period of time already exists: %s".formatted(o));
-            });
+    ClashingOpeningChecker.validate(aNewOpening, openings);
 
     openings.add(aNewOpening);
   }
