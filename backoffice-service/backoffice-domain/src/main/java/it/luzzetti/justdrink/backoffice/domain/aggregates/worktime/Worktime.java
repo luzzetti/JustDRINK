@@ -3,6 +3,7 @@ package it.luzzetti.justdrink.backoffice.domain.aggregates.worktime;
 // https://schema.org/OpeningHoursSpecification
 // https://stackoverflow.com/a/4465072
 
+import it.luzzetti.justdrink.backoffice.domain.services.worktime.ClashingOpeningChecker;
 import it.luzzetti.justdrink.backoffice.domain.services.worktime.ClashingOverrulesChecker;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.WorktimeId;
@@ -27,6 +28,8 @@ public class Worktime {
   }
 
   public void addOpening(Opening aNewOpening) {
+
+    ClashingOpeningChecker.validate(aNewOpening, openings);
 
     // Validate Overlapping
     openings.stream()
