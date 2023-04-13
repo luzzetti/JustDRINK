@@ -9,7 +9,7 @@ public interface ClashingOpeningChecker {
 
     // qui metteremo in piedi la catena di validazione per gli Openings!
 
-    var firstValidation = new AnotherUselessValidator();
+    var firstValidation = new NoOverlapsOpeningsValidator(openings);
     var secondValidation = new NoSameOpenTimeAndCloseTime();
 
     firstValidation.setNextValidator(secondValidation);

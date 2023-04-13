@@ -15,6 +15,7 @@ public class NoSameOpenTimeAndCloseTime extends AbstractValidator<Opening> {
 
     if (hourOpen == hourClose && minuteOpen == minuteClose) {
       throw new ValidationException("Stai inserendo lo stesso orario di apertura e chiusura");
+
     }
   }
 }
