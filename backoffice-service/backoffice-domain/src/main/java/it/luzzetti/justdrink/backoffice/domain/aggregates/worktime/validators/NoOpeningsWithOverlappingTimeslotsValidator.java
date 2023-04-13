@@ -1,4 +1,4 @@
-package it.luzzetti.justdrink.backoffice.domain.services.worktime;
+package it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.validators;
 
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Opening;
 import it.luzzetti.justdrink.backoffice.domain.shared.validation.AbstractValidator;
@@ -6,10 +6,10 @@ import it.luzzetti.justdrink.backoffice.domain.shared.validation.ValidationExcep
 import java.util.Collection;
 import java.util.List;
 
-public class NoOverlapsOpeningsValidator extends AbstractValidator<Opening> {
+public class NoOpeningsWithOverlappingTimeslotsValidator extends AbstractValidator<Opening> {
   private final Collection<Opening> existingOpenings;
 
-  public NoOverlapsOpeningsValidator(List<Opening> existingOpenings) {
+  public NoOpeningsWithOverlappingTimeslotsValidator(List<Opening> existingOpenings) {
     this.existingOpenings = existingOpenings;
   }
 
@@ -18,11 +18,11 @@ public class NoOverlapsOpeningsValidator extends AbstractValidator<Opening> {
 
     for (Opening existingOpening : existingOpenings) {
       // controllo se le sovrapposizioni sono valide, se si lancio l'errore di validazione
-      boolean validityOverlaps = newOpening.overlapsOpening(existingOpening);
+      boolean validityOverlaps = newOpening.overlaps(existingOpening);
 
       if (validityOverlaps) {
         throw new ValidationException(
-            "The new Opening is clashing with %s. A store cannot be both Open and Closed in the same day"
+            "The new Opening is clashing with %s. Two opening's timeslots cannot overlap"
                 .formatted(existingOpening));
       }
     }

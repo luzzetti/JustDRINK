@@ -5,6 +5,7 @@ import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.FindWo
 import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.SaveWorktimePort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Opening;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Worktime;
+import it.luzzetti.justdrink.backoffice.domain.shared.value_objects.Timeslot;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -32,8 +33,8 @@ public class CreateOpeningApplicationService implements CreateOpeningUseCase {
     Opening theNewOpening =
         Opening.builder()
             .dayOfWeek(command.dayOfWeek())
-            .openTime(command.openTime())
-            .closeTime(command.closeTime())
+            .timeslot(
+                Timeslot.builder().from(command.openTime()).through(command.closeTime()).build())
             .build();
 
     // Use case

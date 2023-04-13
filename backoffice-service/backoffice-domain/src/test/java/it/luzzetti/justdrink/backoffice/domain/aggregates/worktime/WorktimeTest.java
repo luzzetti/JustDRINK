@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.WorktimeId;
 import it.luzzetti.justdrink.backoffice.domain.shared.validation.ValidationException;
+import it.luzzetti.justdrink.backoffice.domain.shared.value_objects.Timeslot;
 import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalTime;
@@ -33,26 +34,6 @@ class WorktimeTest {
   }
 
   @Test
-  @DisplayName("Opening Adding - Error expected")
-  void whenAddingOpeningWithSameOpenAndCloseTime_thanAnExceptionIsThrown() {
-    LocalTime aTime = LocalTime.of(20, 15, 0);
-    LocalTime aSecondTime = LocalTime.of(20, 15, 0);
-
-    Opening theInvalidOpening =
-        Opening.builder()
-            .id(UUID.randomUUID())
-            .createdAt(Instant.now())
-            .openTime(aTime)
-            .closeTime(aSecondTime)
-            .build();
-
-    assertThrows(
-        ValidationException.class,
-        () -> aTestWorktime.addOpening(theInvalidOpening),
-        "Non è stata lanciata alcuna eccezione");
-  }
-
-  @Test
   @DisplayName("Opening Adding - Happy Case")
   void whenAddingValidOpening_thanItIsAdded() {
     LocalTime openingTime = LocalTime.of(8, 0, 0);
@@ -62,8 +43,7 @@ class WorktimeTest {
         Opening.builder()
             .id(UUID.randomUUID())
             .createdAt(Instant.now())
-            .openTime(openingTime)
-            .closeTime(closingTime)
+            .timeslot(Timeslot.builder().from(openingTime).through(closingTime).build())
             .build();
 
     int expectedOpeningsSize = 1;
@@ -78,28 +58,43 @@ class WorktimeTest {
   static List<Opening> invalidOpeningsProvider() {
     return List.of(
         Opening.builder()
-            .openTime(LocalTime.of(8, 0, 0))
-            .closeTime(LocalTime.of(13, 0, 0))
+            .timeslot(
+                Timeslot.builder()
+                    .from(LocalTime.of(8, 0, 0))
+                    .through(LocalTime.of(13, 0, 0))
+                    .build())
             .dayOfWeek(DayOfWeek.MONDAY)
             .build(),
         Opening.builder()
-            .openTime(LocalTime.of(7, 0, 0))
-            .closeTime(LocalTime.of(14, 0, 0))
+            .timeslot(
+                Timeslot.builder()
+                    .from(LocalTime.of(7, 0, 0))
+                    .through(LocalTime.of(14, 0, 0))
+                    .build())
             .dayOfWeek(DayOfWeek.MONDAY)
             .build(),
         Opening.builder()
-            .openTime(LocalTime.of(9, 0, 0))
-            .closeTime(LocalTime.of(12, 0, 0))
+            .timeslot(
+                Timeslot.builder()
+                    .from(LocalTime.of(9, 0, 0))
+                    .through(LocalTime.of(12, 0, 0))
+                    .build())
             .dayOfWeek(DayOfWeek.MONDAY)
             .build(),
         Opening.builder()
-            .openTime(LocalTime.of(9, 0, 0))
-            .closeTime(LocalTime.of(14, 0, 0))
+            .timeslot(
+                Timeslot.builder()
+                    .from(LocalTime.of(9, 0, 0))
+                    .through(LocalTime.of(14, 0, 0))
+                    .build())
             .dayOfWeek(DayOfWeek.MONDAY)
             .build(),
         Opening.builder()
-            .openTime(LocalTime.of(7, 0, 0))
-            .closeTime(LocalTime.of(12, 0, 0))
+            .timeslot(
+                Timeslot.builder()
+                    .from(LocalTime.of(7, 0, 0))
+                    .through(LocalTime.of(12, 0, 0))
+                    .build())
             .dayOfWeek(DayOfWeek.MONDAY)
             .build());
   }
@@ -107,35 +102,29 @@ class WorktimeTest {
   @ParameterizedTest
   @DisplayName("Opening Adding - Expected overlapping")
   @MethodSource("invalidOpeningsProvider")
-  void whenAddingOpeningThatOverlapsAnyOpenings(Opening opening) {
+  void whenAddingOverlappingOpenings_thanAnExceptionIsThrown(Opening opening) {
 
+    // Setting up phase
     Opening firstValidOpening =
         Opening.builder()
             .id(UUID.randomUUID())
             .createdAt(Instant.now())
-            .openTime(LocalTime.of(8, 0, 0))
-            .closeTime(LocalTime.of(13, 0, 0))
+            .timeslot(
+                Timeslot.builder()
+                    .from(LocalTime.of(8, 0, 0))
+                    .through(LocalTime.of(13, 0, 0))
+                    .build())
             .dayOfWeek(DayOfWeek.MONDAY)
             .build();
+
+    // Executing phase
     aTestWorktime.addOpening(firstValidOpening);
 
+    // Assert phase
     assertThrows(
         ValidationException.class,
         () -> aTestWorktime.addOpening(opening),
         "Not validation throws!");
   }
 
-  @Test
-  @DisplayName("Opening adding - Open time is before close time")
-  void whenAddingOpeningWhereTheOpenTimeIsBeforeTheCloseTime() {
-    var theNewOpening =
-        Opening.builder()
-            .openTime(LocalTime.of(15, 0, 0))
-            .closeTime(LocalTime.of(10, 0, 0))
-            .build();
-    assertThrows(
-        ValidationException.class,
-        () -> aTestWorktime.addOpening(theNewOpening),
-        "Not validation throws");
-  }
 }

@@ -1,4 +1,4 @@
-package it.luzzetti.justdrink.backoffice.domain.services.worktime;
+package it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.validators;
 
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Overrule;
 import it.luzzetti.justdrink.backoffice.domain.shared.validation.AbstractValidator;
@@ -24,7 +24,8 @@ class NoOpeningAndClosingOverrulesOnSameDayValidator extends AbstractValidator<O
 
       boolean validityOverlaps = thisOverrule.overlapsValidity(thatOverrule);
       boolean isSameDayOfWeek = thisOverrule.getDayOfWeek().equals(thatOverrule.getDayOfWeek());
-      boolean isClashingOpeningWithClosing = thisOverrule.getClosed() != thatOverrule.getClosed();
+      boolean isClashingOpeningWithClosing =
+          !thisOverrule.getClosed().equals(thatOverrule.getClosed());
 
       if (validityOverlaps && isSameDayOfWeek && isClashingOpeningWithClosing) {
         throw new ValidationException(

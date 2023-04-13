@@ -1,4 +1,4 @@
-package it.luzzetti.justdrink.backoffice.domain.services.worktime;
+package it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.validators;
 
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Overrule;
 import it.luzzetti.justdrink.backoffice.domain.shared.validation.ValidationException;
@@ -13,16 +13,14 @@ public interface ClashingOverrulesChecker {
      * Instantiation of all the validators.
      * Add more validators here if needed...
      */
-    var firstValidator = new UselessValidator();
-    var secondValidator = new NoOpeningOverrulesOnOverlappingTimeslotsValidator(existingOverrules);
-    var thirdValidator = new NoOpeningAndClosingOverrulesOnSameDayValidator(existingOverrules);
+    var firstValidator = new NoOpeningOverrulesWithOverlappingTimeslotsValidator(existingOverrules);
+    var secondValidator = new NoOpeningAndClosingOverrulesOnSameDayValidator(existingOverrules);
 
     /*
      * Hooking them up in sequence.
      * Link more validators here if needed...
      */
     firstValidator.setNextValidator(secondValidator);
-    secondValidator.setNextValidator(thirdValidator);
 
     // Launching the chain from the first validator
     firstValidator.handleValidation(theNewOverrule);

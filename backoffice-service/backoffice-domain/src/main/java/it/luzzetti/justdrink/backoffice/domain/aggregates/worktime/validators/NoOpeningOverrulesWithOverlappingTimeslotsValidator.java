@@ -1,4 +1,4 @@
-package it.luzzetti.justdrink.backoffice.domain.services.worktime;
+package it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.validators;
 
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Overrule;
 import it.luzzetti.justdrink.backoffice.domain.shared.validation.AbstractValidator;
@@ -6,10 +6,10 @@ import it.luzzetti.justdrink.backoffice.domain.shared.validation.ValidationExcep
 import java.util.Collection;
 import java.util.List;
 
-class NoOpeningOverrulesOnOverlappingTimeslotsValidator extends AbstractValidator<Overrule> {
+class NoOpeningOverrulesWithOverlappingTimeslotsValidator extends AbstractValidator<Overrule> {
   private final Collection<Overrule> existingOverrules;
 
-  public NoOpeningOverrulesOnOverlappingTimeslotsValidator(List<Overrule> existingOverrules) {
+  public NoOpeningOverrulesWithOverlappingTimeslotsValidator(List<Overrule> existingOverrules) {
     this.existingOverrules = existingOverrules;
   }
 

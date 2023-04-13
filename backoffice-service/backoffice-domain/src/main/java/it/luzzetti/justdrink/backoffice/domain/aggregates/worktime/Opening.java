@@ -1,5 +1,6 @@
 package it.luzzetti.justdrink.backoffice.domain.aggregates.worktime;
 
+import it.luzzetti.justdrink.backoffice.domain.shared.value_objects.Timeslot;
 import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -11,43 +12,33 @@ import lombok.Getter;
 @Getter
 @Builder
 public class Opening {
-  private final DayOfWeek dayOfWeek;
-  private final LocalTime openTime;
-  private final LocalTime closeTime;
-  @Builder.Default private final Instant createdAt = Instant.now();
   private UUID id;
+  private final DayOfWeek dayOfWeek;
+  private final Timeslot timeslot;
+  @Builder.Default private final Instant createdAt = Instant.now();
 
-  // Short way
-  // https://stackoverflow.com/a/325964
-  // Check equality edge cases
-  public boolean overlapsOpening(Opening that) {
-    if (this.dayOfWeek != that.dayOfWeek) {
+  /***
+   * Two openings overlaps, if they have clashing timeslot on the same day of the week
+   */
+  public boolean overlaps(Opening that) {
+
+    // Different days cannot overlap
+    if (!this.dayOfWeek.equals(that.dayOfWeek)) {
       return false;
     }
 
-    return (this.openTime.isBefore(that.closeTime) && this.closeTime.isAfter(that.openTime));
+    return this.timeslot.overlaps(that.timeslot);
   }
 
   public boolean contains(LocalDateTime aMomentInTime) {
 
-    DayOfWeek theDayOfWeek = aMomentInTime.getDayOfWeek();
-    LocalTime theLocalTime = aMomentInTime.toLocalTime();
+    DayOfWeek thatDayOfWeek = aMomentInTime.getDayOfWeek();
+    LocalTime thatLocalTime = aMomentInTime.toLocalTime();
 
-    if (!isSameDayOfWeek(theDayOfWeek)) {
-      return false;
-    }
-    if (!isLocalTimeContained(theLocalTime)) {
+    if (!this.dayOfWeek.equals(thatDayOfWeek)) {
       return false;
     }
 
-    return true;
-  }
-
-  private boolean isSameDayOfWeek(DayOfWeek theDayOfWeek) {
-    return this.getDayOfWeek() == theDayOfWeek;
-  }
-
-  private boolean isLocalTimeContained(LocalTime theLocalTime) {
-    return this.getOpenTime().isBefore(theLocalTime) && this.getCloseTime().isAfter(theLocalTime);
+    return this.timeslot.contains(thatLocalTime);
   }
 }
