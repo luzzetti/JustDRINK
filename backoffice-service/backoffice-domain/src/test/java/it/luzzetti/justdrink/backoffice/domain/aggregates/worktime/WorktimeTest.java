@@ -36,7 +36,7 @@ class WorktimeTest {
   @DisplayName("Opening Adding - Error expected")
   void whenAddingOpeningWithSameOpenAndCloseTime_thanAnExceptionIsThrown() {
     LocalTime aTime = LocalTime.of(20, 15, 0);
-    LocalTime aSecondTime = LocalTime.of(20, 20, 0);
+    LocalTime aSecondTime = LocalTime.of(20, 15, 0);
 
     Opening theInvalidOpening =
         Opening.builder()
