@@ -14,9 +14,26 @@ import lombok.ToString;
 @ToString
 public class Overrule {
   private UUID id;
+  /*
+   * TODO:
+   * Così come gli orari openTime e closeTime sono stati uniti in un oggetto di tipo 'fascia oraria'
+   * o in inglese 'Timeslot', anche in questo caso potremmo unire i due campi 'validFrom' e 'validThrough'
+   * in un unico campo 'validity' o 'validityPeriod' o con il nome che preferite.
+   *
+   * Il VO (Value Object) risultante, potrebbe essere un oggetto di tipo 'DatePeriod' comprendente,
+   * per l'appunto, questi due campi.
+   * (Seguire l'esempio di Timeslot)
+   */
   private final LocalDate validFrom;
   private final LocalDate validThrough;
   private final DayOfWeek dayOfWeek;
+  /*
+   * TODO:
+   * per quale motivo mantenere i due campi separati, quando la loro unione è concettualmente
+   * una 'fascia oraria' ?
+   * Modelliamo questo 'concetto' come è gia stato fatto dentro le 'Opening', utilizzando
+   * il VO (Value Object) chiamato 'Timeslot'
+   */
   private final LocalTime alternativeOpenTime;
   private final LocalTime alternativeCloseTime;
   private final Boolean closed;
@@ -40,32 +57,5 @@ public class Overrule {
 
     return (this.alternativeOpenTime.isBefore(that.alternativeCloseTime)
         && this.alternativeCloseTime.isAfter(that.alternativeOpenTime));
-  }
-
-  // ####################################################
-  // Qui viene "intercettato" il builder di lombok,
-  // per poter aggiungere validazioni custom al .build()
-  // e non avere mai domain-entity in uno stato invalido
-  // ####################################################
-
-  /**
-   * Override the builder() method to return our custom builder instead of the Lombok generated
-   * builder class.
-   */
-  public static OverruleBuilder builder() {
-    return new CustomBuilder();
-  }
-
-  /**
-   * Customized builder class, extends the Lombok generated builder class and overrides method
-   * implementations.
-   */
-  private static class CustomBuilder extends OverruleBuilder {
-
-    /** Adding validations as part of build() method. */
-    public Overrule build() {
-
-      return super.build();
-    }
   }
 }
