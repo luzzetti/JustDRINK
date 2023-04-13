@@ -35,20 +35,12 @@ public class Worktime {
     openings.add(aNewOpening);
   }
 
+  /***
+   * a new overrule can be added only if it doesn't clash with the existing ones.
+   * In case of a clash, a ValidationException will be thrown
+   */
   public void addOverrule(Overrule aNewOverrule) {
-
     ClashingOverrulesChecker.validate(aNewOverrule, overrules);
-
-    overrules.stream()
-        .filter(aNewOverrule::overlapsValidity)
-        .filter(aNewOverrule::overlapsOpening)
-        .findFirst()
-        .ifPresent(
-            o -> {
-              throw new IllegalArgumentException(
-                  "An overrule with a clashing validity and opening period already exists: %s"
-                      .formatted(o));
-            });
 
     overrules.add(aNewOverrule);
   }
