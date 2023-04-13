@@ -124,4 +124,18 @@ class WorktimeTest {
         () -> aTestWorktime.addOpening(opening),
         "Not validation throws!");
   }
+
+  @Test
+  @DisplayName("Opening adding - Open time is before close time")
+  void whenAddingOpeningWhereTheOpenTimeIsBeforeTheCloseTime() {
+    var theNewOpening =
+        Opening.builder()
+            .openTime(LocalTime.of(15, 0, 0))
+            .closeTime(LocalTime.of(10, 0, 0))
+            .build();
+    assertThrows(
+        ValidationException.class,
+        () -> aTestWorktime.addOpening(theNewOpening),
+        "Not validation throws");
+  }
 }

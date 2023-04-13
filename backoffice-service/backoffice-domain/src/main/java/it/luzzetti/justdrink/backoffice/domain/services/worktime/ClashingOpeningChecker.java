@@ -11,8 +11,11 @@ public interface ClashingOpeningChecker {
 
     var firstValidation = new NoOverlapsOpeningsValidator(openings);
     var secondValidation = new NoSameOpenTimeAndCloseTime();
+    var thirdValidation = new NoOpeningWithOpenTimeAfterCloseTimeValidator();
 
     firstValidation.setNextValidator(secondValidation);
+    secondValidation.setNextValidator(thirdValidation);
+
     firstValidation.handleValidation(aNewOpening);
   }
 }
