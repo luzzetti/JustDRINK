@@ -43,7 +43,7 @@ class WorktimeTest {
         Opening.builder()
             .id(UUID.randomUUID())
             .createdAt(Instant.now())
-            .timeslot(Timeslot.builder().from(openingTime).through(closingTime).build())
+            .shift(Timeslot.builder().from(openingTime).through(closingTime).build())
             .build();
 
     int expectedOpeningsSize = 1;
@@ -58,7 +58,7 @@ class WorktimeTest {
   static List<Opening> invalidOpeningsProvider() {
     return List.of(
         Opening.builder()
-            .timeslot(
+            .shift(
                 Timeslot.builder()
                     .from(LocalTime.of(8, 0, 0))
                     .through(LocalTime.of(13, 0, 0))
@@ -66,7 +66,7 @@ class WorktimeTest {
             .dayOfWeek(DayOfWeek.MONDAY)
             .build(),
         Opening.builder()
-            .timeslot(
+            .shift(
                 Timeslot.builder()
                     .from(LocalTime.of(7, 0, 0))
                     .through(LocalTime.of(14, 0, 0))
@@ -74,7 +74,7 @@ class WorktimeTest {
             .dayOfWeek(DayOfWeek.MONDAY)
             .build(),
         Opening.builder()
-            .timeslot(
+            .shift(
                 Timeslot.builder()
                     .from(LocalTime.of(9, 0, 0))
                     .through(LocalTime.of(12, 0, 0))
@@ -82,7 +82,7 @@ class WorktimeTest {
             .dayOfWeek(DayOfWeek.MONDAY)
             .build(),
         Opening.builder()
-            .timeslot(
+            .shift(
                 Timeslot.builder()
                     .from(LocalTime.of(9, 0, 0))
                     .through(LocalTime.of(14, 0, 0))
@@ -90,7 +90,7 @@ class WorktimeTest {
             .dayOfWeek(DayOfWeek.MONDAY)
             .build(),
         Opening.builder()
-            .timeslot(
+            .shift(
                 Timeslot.builder()
                     .from(LocalTime.of(7, 0, 0))
                     .through(LocalTime.of(12, 0, 0))
@@ -109,7 +109,7 @@ class WorktimeTest {
         Opening.builder()
             .id(UUID.randomUUID())
             .createdAt(Instant.now())
-            .timeslot(
+            .shift(
                 Timeslot.builder()
                     .from(LocalTime.of(8, 0, 0))
                     .through(LocalTime.of(13, 0, 0))

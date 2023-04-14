@@ -20,6 +20,7 @@ public class Worktime {
 
   private final WorktimeId id;
   private final RestaurantId restaurantId;
+
   @Builder.Default private final List<Opening> openings = new ArrayList<>();
   @Builder.Default private final List<Overrule> overrules = new ArrayList<>();
 

@@ -13,7 +13,8 @@ class DatePeriodTest {
   void whenCreatingDatePeriodWithSameFromAndThroughTime_thanAnExceptionIsThrown() {
 
     LocalDate aDate = LocalDate.of(1970, 1, 1);
-    var datePeriodBuilder = DatePeriod.builder().validFrom(aDate).validThrough(aDate);
+
+    var datePeriodBuilder = DatePeriod.builder().from(aDate).through(aDate);
 
     assertThrows(IllegalArgumentException.class, datePeriodBuilder::build);
   }
@@ -24,7 +25,7 @@ class DatePeriodTest {
 
     LocalDate firstDate = LocalDate.of(1970, 2, 1);
     LocalDate secondDate = LocalDate.of(1970, 1, 1);
-    var datePeriodBuilder = DatePeriod.builder().validFrom(firstDate).validThrough(secondDate);
+    var datePeriodBuilder = DatePeriod.builder().from(firstDate).through(secondDate);
 
     assertThrows(IllegalArgumentException.class, datePeriodBuilder::build);
   }

@@ -88,8 +88,7 @@ public class WorktimeRestControllerAdapter {
         CreateOpeningCommand.builder()
             .restaurantId(RestaurantId.from(restaurantId))
             .dayOfWeek(request.dayOfWeek())
-            .openTime(request.openTime())
-            .closeTime(request.closeTime())
+            .shift(request.shift())
             .build();
 
     Opening theCreatedOpening = createOpeningUseCase.createOpening(command);
@@ -120,8 +119,7 @@ public class WorktimeRestControllerAdapter {
     var command =
         CreateClosingOverruleCommand.builder()
             .restaurantId(RestaurantId.from(restaurantId))
-            .validFrom(closingRequest.getValidFrom())
-            .validThrough(closingRequest.getValidThrough())
+            .validity(closingRequest.getValidity())
             .dayOfWeek(closingRequest.getDayOfWeek())
             .build();
 
@@ -133,11 +131,9 @@ public class WorktimeRestControllerAdapter {
     var command =
         CreateOpeningOverruleCommand.builder()
             .restaurantId(RestaurantId.from(restaurantId))
-            .validFrom(openingRequest.getValidFrom())
-            .validThrough(openingRequest.getValidThrough())
+            .validity(openingRequest.getValidity())
             .dayOfWeek(openingRequest.getDayOfWeek())
-            .alternativeOpenTime(openingRequest.getAlternativeOpenTime())
-            .alternativeCloseTime(openingRequest.getAlternativeCloseTime())
+            .alternativeShift(openingRequest.getAlternativeShift())
             .build();
 
     return createOverruleUseCase.createOpeningOverrule(command);

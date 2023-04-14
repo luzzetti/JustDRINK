@@ -14,20 +14,20 @@ import lombok.Getter;
 public class Opening {
   private UUID id;
   private final DayOfWeek dayOfWeek;
-  private final Timeslot timeslot;
+  private final Timeslot shift;
   @Builder.Default private final Instant createdAt = Instant.now();
 
   /***
    * Two openings overlaps, if they have clashing timeslot on the same day of the week
    */
-  public boolean overlaps(Opening that) {
+  public boolean overlapsShift(Opening that) {
 
     // Different days cannot overlap
     if (!this.dayOfWeek.equals(that.dayOfWeek)) {
       return false;
     }
 
-    return this.timeslot.overlaps(that.timeslot);
+    return this.shift.overlaps(that.shift);
   }
 
   public boolean contains(LocalDateTime aMomentInTime) {
@@ -39,6 +39,6 @@ public class Opening {
       return false;
     }
 
-    return this.timeslot.contains(thatLocalTime);
+    return this.shift.contains(thatLocalTime);
   }
 }

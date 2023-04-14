@@ -27,6 +27,5 @@ public class OpeningJpaEntity {
   private DayOfWeek dayOfWeek;
   private LocalTime openTime;
   private LocalTime closeTime;
-
   private Instant createdAt;
 }

@@ -14,20 +14,20 @@ import lombok.ToString;
 @ToString
 public class Overrule {
   private UUID id;
-  private final DatePeriod datePeriod;
+  private final DatePeriod validity;
   private final DayOfWeek dayOfWeek;
-  private final Timeslot alternativeTimeslot;
+  private final Timeslot alternativeShift;
   private final Boolean closed;
   @Builder.Default private final Instant createdAt = Instant.now();
 
   public boolean overlapsValidity(Overrule that) {
-    return this.datePeriod.overlaps(that.datePeriod);
+    return this.validity.overlaps(that.validity);
   }
 
-  public boolean overlapsOpening(Overrule that) {
+  public boolean overlapsAlternativeShift(Overrule that) {
 
+    // a 'closingOverrule' never overlaps.
     if (Boolean.TRUE.equals(that.closed) || Boolean.TRUE.equals(this.closed)) {
-      // a close overrule never overlaps.
       return false;
     }
 
@@ -35,6 +35,6 @@ public class Overrule {
       return false;
     }
 
-    return this.alternativeTimeslot.overlaps(that.alternativeTimeslot);
+    return this.alternativeShift.overlaps(that.alternativeShift);
   }
 }

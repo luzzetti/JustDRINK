@@ -18,7 +18,7 @@ public class NoOpeningsWithOverlappingTimeslotsValidator extends AbstractValidat
 
     for (Opening existingOpening : existingOpenings) {
       // controllo se le sovrapposizioni sono valide, se si lancio l'errore di validazione
-      boolean validityOverlaps = newOpening.overlaps(existingOpening);
+      boolean validityOverlaps = newOpening.overlapsShift(existingOpening);
 
       if (validityOverlaps) {
         throw new ValidationException(

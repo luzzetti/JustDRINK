@@ -5,8 +5,6 @@ import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.FindWo
 import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.SaveWorktimePort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Overrule;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Worktime;
-import it.luzzetti.justdrink.backoffice.domain.shared.value_objects.DatePeriod;
-import it.luzzetti.justdrink.backoffice.domain.shared.value_objects.Timeslot;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -30,17 +28,9 @@ public class CreateOverruleApplicationService implements CreateOverruleUseCase {
 
     Overrule theNewOverrule =
         Overrule.builder()
-            .datePeriod(
-                DatePeriod.builder()
-                    .validFrom(command.validFrom())
-                    .validThrough(command.validThrough())
-                    .build())
+            .validity(command.validity())
             .dayOfWeek(command.dayOfWeek())
-            .alternativeTimeslot(
-                Timeslot.builder()
-                    .from(command.alternativeOpenTime())
-                    .through(command.alternativeCloseTime())
-                    .build())
+            .alternativeShift(command.alternativeShift())
             .closed(Boolean.FALSE)
             .build();
 
@@ -62,13 +52,9 @@ public class CreateOverruleApplicationService implements CreateOverruleUseCase {
 
     Overrule theNewOverrule =
         Overrule.builder()
-            .datePeriod(
-                DatePeriod.builder()
-                    .validFrom(command.validFrom())
-                    .validThrough(command.validThrough())
-                    .build())
+            .validity(command.validity())
             .dayOfWeek(command.dayOfWeek())
-            .alternativeTimeslot(null)
+            .alternativeShift(null)
             .closed(Boolean.TRUE)
             .build();
 

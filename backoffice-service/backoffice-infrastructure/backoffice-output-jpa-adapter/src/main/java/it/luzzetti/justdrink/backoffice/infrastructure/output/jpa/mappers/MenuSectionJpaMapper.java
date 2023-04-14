@@ -9,7 +9,6 @@ import org.mapstruct.Mapper;
 @Mapper(uses = {ProductJpaMapper.class})
 public interface MenuSectionJpaMapper {
   MenuSection toDomain(MenuSectionJpaEntity anEntity);
-
   MenuSectionJpaEntity toEntity(MenuSection aMenu);
 
   default UUID map(MenuSectionId aTypedId) {

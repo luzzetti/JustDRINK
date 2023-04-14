@@ -5,12 +5,13 @@ import java.time.Period;
 import lombok.Builder;
 
 @Builder
-public record DatePeriod(LocalDate validFrom, LocalDate validThrough) {
+public record DatePeriod(LocalDate from, LocalDate through) {
 
   public boolean overlaps(DatePeriod that) {
-    return (this.validFrom.isBefore(that.validThrough)
-        && this.validThrough.isAfter(that.validFrom));
+    return (this.from.isBefore(that.through) && this.through.isAfter(that.from));
   }
+
+  // Lombok's Builder Override to add validations
 
   public static DatePeriodBuilder builder() {
     return new CustomBuilder();
@@ -19,10 +20,10 @@ public record DatePeriod(LocalDate validFrom, LocalDate validThrough) {
   private static class CustomBuilder extends DatePeriodBuilder {
     public DatePeriod build() {
 
-      if (Period.between(super.validFrom, super.validThrough).isZero()) {
+      if (Period.between(super.from, super.through).isZero()) {
         throw new IllegalArgumentException("a DatePeriod should have a duration bigger than zero");
       }
-      if (super.validThrough.isBefore(super.validFrom)) {
+      if (super.through.isBefore(super.from)) {
         throw new IllegalArgumentException("a DatePeriod cannot starts AFTER its ending");
       }
 

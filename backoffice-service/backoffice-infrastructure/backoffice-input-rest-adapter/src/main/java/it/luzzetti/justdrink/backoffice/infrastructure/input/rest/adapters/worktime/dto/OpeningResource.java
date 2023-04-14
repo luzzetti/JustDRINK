@@ -1,7 +1,6 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.worktime.dto;
 
+import it.luzzetti.justdrink.backoffice.domain.shared.value_objects.Timeslot;
 import java.time.DayOfWeek;
-import java.time.LocalTime;
 
-// TODO: Gli orari...maronn...bisogna accordarsi sugli orari
-public record OpeningResource(DayOfWeek dayOfWeek, LocalTime openTime, LocalTime closeTime) {}
+public record OpeningResource(DayOfWeek dayOfWeek, Timeslot shift) {}

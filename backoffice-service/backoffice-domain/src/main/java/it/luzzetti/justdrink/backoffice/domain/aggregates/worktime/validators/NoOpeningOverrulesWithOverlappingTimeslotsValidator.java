@@ -23,9 +23,9 @@ class NoOpeningOverrulesWithOverlappingTimeslotsValidator extends AbstractValida
 
       boolean validityOverlaps = thisOverrule.overlapsValidity(thatOverrule);
       boolean isSameDayOfWeek = thisOverrule.getDayOfWeek().equals(thatOverrule.getDayOfWeek());
-      boolean openingOverlaps = thisOverrule.overlapsOpening(thatOverrule);
+      boolean isTimeslotOverlapping = thisOverrule.overlapsAlternativeShift(thatOverrule);
 
-      if (validityOverlaps && isSameDayOfWeek && openingOverlaps) {
+      if (validityOverlaps && isSameDayOfWeek && isTimeslotOverlapping) {
         throw new ValidationException(
             "The new overrule is clashing with %s. They cannot have overlapping timeslots"
                 .formatted(thatOverrule));

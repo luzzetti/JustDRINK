@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import it.luzzetti.justdrink.backoffice.domain.shared.value_objects.DatePeriod;
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 import lombok.Data;
 
 @JsonTypeInfo(
@@ -20,7 +20,6 @@ import lombok.Data;
 @Data
 public abstract class OverruleResource {
   private OverruleType overruleType;
-  private LocalDate validFrom;
-  private LocalDate validThrough;
+  private DatePeriod validity;
   private DayOfWeek dayOfWeek;
 }
