@@ -26,10 +26,9 @@ public interface OverruleWebMapper {
     } else {
       OpeningOverruleResource openingOverruleResource = new OpeningOverruleResource();
       openingOverruleResource.setOverruleType(OverruleType.OPENING);
-      openingOverruleResource.setAlternativeOpenTime(domain.getAlternativeOpenTime());
-      openingOverruleResource.setAlternativeCloseTime(domain.getAlternativeCloseTime());
+      openingOverruleResource.setAlternativeOpenTime(domain.getAlternativeTimeslot().from());
+      openingOverruleResource.setAlternativeCloseTime(domain.getAlternativeTimeslot().through());
       return openingOverruleResource;
     }
-
   }
 }

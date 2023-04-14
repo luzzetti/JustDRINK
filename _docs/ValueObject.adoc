@@ -1,0 +1,9 @@
+  /*
+   * Così come gli orari openTime e closeTime sono stati uniti in un oggetto di tipo 'fascia oraria'
+   * o in inglese 'Timeslot', anche in questo caso potremmo unire i due campi 'validFrom' e 'validThrough'
+   * in un unico campo 'validity' o 'validityPeriod' o con il nome che preferite.
+   *
+   * Il VO (Value Object) risultante, potrebbe essere un oggetto di tipo 'DatePeriod' comprendente,
+   * per l'appunto, questi due campi.
+   * (Seguire l'esempio di Timeslot)
+   */

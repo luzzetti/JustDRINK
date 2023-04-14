@@ -5,6 +5,8 @@ import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.FindWo
 import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.SaveWorktimePort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Overrule;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Worktime;
+import it.luzzetti.justdrink.backoffice.domain.shared.value_objects.DatePeriod;
+import it.luzzetti.justdrink.backoffice.domain.shared.value_objects.Timeslot;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -28,11 +30,17 @@ public class CreateOverruleApplicationService implements CreateOverruleUseCase {
 
     Overrule theNewOverrule =
         Overrule.builder()
-            .validFrom(command.validFrom())
-            .validThrough(command.validThrough())
+            .datePeriod(
+                DatePeriod.builder()
+                    .validFrom(command.validFrom())
+                    .validThrough(command.validThrough())
+                    .build())
             .dayOfWeek(command.dayOfWeek())
-            .alternativeOpenTime(command.alternativeOpenTime())
-            .alternativeCloseTime(command.alternativeCloseTime())
+            .alternativeTimeslot(
+                Timeslot.builder()
+                    .from(command.alternativeOpenTime())
+                    .through(command.alternativeCloseTime())
+                    .build())
             .closed(Boolean.FALSE)
             .build();
 
@@ -54,11 +62,13 @@ public class CreateOverruleApplicationService implements CreateOverruleUseCase {
 
     Overrule theNewOverrule =
         Overrule.builder()
-            .validFrom(command.validFrom())
-            .validThrough(command.validThrough())
+            .datePeriod(
+                DatePeriod.builder()
+                    .validFrom(command.validFrom())
+                    .validThrough(command.validThrough())
+                    .build())
             .dayOfWeek(command.dayOfWeek())
-            .alternativeOpenTime(null)
-            .alternativeCloseTime(null)
+            .alternativeTimeslot(null)
             .closed(Boolean.TRUE)
             .build();
 
