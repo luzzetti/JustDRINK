@@ -38,8 +38,8 @@
   <properties>
     <revision>0.0.2-SNAPSHOT</revision>
     <start-class>it.luzzetti.justdrink.backoffice.AppLauncher</start-class>
-    <!--    <docker.image.name>docker.io/luzzetti/${project.artifactId}:${project.version}</docker.image.name>-->
-    <docker.image.name>docker.io/luzzetti/${project.artifactId}:latest</docker.image.name>
+    <docker.image.name>docker.io/luzzetti/${project.artifactId}:${project.version}
+    </docker.image.name>
     <dockerhub.username/>
     <dockerhub.token/>
     <java.version>17</java.version>

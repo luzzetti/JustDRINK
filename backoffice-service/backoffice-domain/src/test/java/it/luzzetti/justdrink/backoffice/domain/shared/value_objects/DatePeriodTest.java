@@ -9,14 +9,13 @@ import org.junit.jupiter.api.Test;
 class DatePeriodTest {
 
   @Test
-  @DisplayName("DatePeriod Invalid Creation - Same 'from' and 'through' time")
-  void whenCreatingDatePeriodWithSameFromAndThroughTime_thanAnExceptionIsThrown() {
+  @DisplayName("DatePeriod Valid Creation - Same 'from' and 'through' time")
+  void whenCreatingDatePeriodWithSameFromAndThroughTime_thanItWorks() {
 
     LocalDate aDate = LocalDate.of(1970, 1, 1);
 
-    var datePeriodBuilder = DatePeriod.builder().from(aDate).through(aDate);
-
-    assertThrows(IllegalArgumentException.class, datePeriodBuilder::build);
+    DatePeriod theCreatedPeriod = DatePeriod.builder().from(aDate).through(aDate).build();
+    assertNotNull(theCreatedPeriod);
   }
 
   @Test
