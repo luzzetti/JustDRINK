@@ -142,7 +142,8 @@ public class RestaurantRestControllerAdapter {
   @DeleteMapping("/{restaurantId}")
   public ResponseEntity<Void> deleteRestaurant(@PathVariable UUID restaurantId) {
     // Creating the command
-    var command = DeleteRestaurantCommand.builder().restaurantId(restaurantId).build();
+    var command =
+        DeleteRestaurantCommand.builder().restaurantId(RestaurantId.from(restaurantId)).build();
 
     // Executing Use-Case
     deleteRestaurantUseCase.deleteRestaurant(command);

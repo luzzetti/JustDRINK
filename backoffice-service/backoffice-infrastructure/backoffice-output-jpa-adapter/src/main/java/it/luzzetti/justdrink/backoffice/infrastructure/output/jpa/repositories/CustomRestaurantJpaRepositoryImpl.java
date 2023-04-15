@@ -5,6 +5,7 @@ import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.QRest
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.RestaurantJpaEntity;
 import jakarta.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -20,6 +21,7 @@ public class CustomRestaurantJpaRepositoryImpl implements CustomRestaurantJpaRep
    */
   @Override
   public List<RestaurantJpaEntity> findAll(String filter, Integer maxPageSize, Integer offset) {
+
     var restaurant = QRestaurantJpaEntity.restaurantJpaEntity;
 
     return new JPAQueryFactory(entityManager)
@@ -29,5 +31,19 @@ public class CustomRestaurantJpaRepositoryImpl implements CustomRestaurantJpaRep
         .offset(offset)
         .limit(maxPageSize)
         .fetch();
+  }
+
+  @Override
+  public Optional<RestaurantJpaEntity> findRestaurantByName(String restaurantName) {
+
+    var restaurant = QRestaurantJpaEntity.restaurantJpaEntity;
+
+    RestaurantJpaEntity theFoundRestaurant =
+        new JPAQueryFactory(entityManager)
+            .selectFrom(restaurant)
+            .where(restaurant.name.equalsIgnoreCase(restaurantName))
+            .fetchOne();
+
+    return Optional.ofNullable(theFoundRestaurant);
   }
 }

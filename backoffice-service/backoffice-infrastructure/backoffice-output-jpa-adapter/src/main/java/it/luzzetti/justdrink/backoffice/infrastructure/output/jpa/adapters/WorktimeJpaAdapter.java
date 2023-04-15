@@ -1,5 +1,6 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.adapters;
 
+import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.DeleteWorktimePort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.FindWorktimePort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.SaveWorktimePort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Worktime;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 @RequiredArgsConstructor
-public class WorktimeJpaAdapter implements FindWorktimePort, SaveWorktimePort {
+public class WorktimeJpaAdapter implements FindWorktimePort, SaveWorktimePort, DeleteWorktimePort {
 
   // Repositories
   private final WorktimeJpaRepository worktimeJpaRepository;
@@ -41,5 +42,10 @@ public class WorktimeJpaAdapter implements FindWorktimePort, SaveWorktimePort {
         .findWorktimeByRestaurantId(restaurantId.id())
         .map(worktimeJpaMapper::toDomain)
         .orElseThrow(() -> new IllegalArgumentException("Change this exception."));
+  }
+
+  @Override
+  public void deleteWorktimeByRestaurantId(RestaurantId restaurantId) {
+    worktimeJpaRepository.deleteWorktimeByRestaurantId(restaurantId.id());
   }
 }

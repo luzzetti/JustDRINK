@@ -11,7 +11,6 @@ import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.Resta
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.mappers.MenuJpaMapper;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.repositories.MenuJpaRepository;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.repositories.RestaurantJpaRepository;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
@@ -46,11 +45,6 @@ public class MenuJpaAdapter implements FindMenuPort, SaveMenuPort, UpdateMenuPor
   }
 
   @Override
-  public void deleteMenuByRestaurantId(UUID restaurantId) {
-    menuJpaRepository.findMenuByRestaurantId(restaurantId).ifPresent(menuJpaRepository::delete);
-  }
-
-  @Override
   public Menu updateMenu(Menu aMenuToUpdate) {
     // Fetching data
     // Mantenere l'associazione a mano anziché nel mapper?
@@ -65,5 +59,12 @@ public class MenuJpaAdapter implements FindMenuPort, SaveMenuPort, UpdateMenuPor
 
     // Returning a Response
     return menuJpaMapper.toDomain(theReplacedMenu);
+  }
+
+  @Override
+  public void deleteMenuByRestaurantId(RestaurantId restaurantId) {
+    menuJpaRepository
+        .findMenuByRestaurantId(restaurantId.id())
+        .ifPresent(menuJpaRepository::delete);
   }
 }

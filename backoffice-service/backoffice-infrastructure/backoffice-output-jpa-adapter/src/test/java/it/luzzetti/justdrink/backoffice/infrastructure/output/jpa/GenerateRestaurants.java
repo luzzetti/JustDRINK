@@ -1,6 +1,8 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa;
 
-import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;import java.util.ArrayList;import java.util.List;
+import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GenerateRestaurants {
 

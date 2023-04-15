@@ -1,8 +1,7 @@
 package it.luzzetti.justdrink.backoffice.application.ports.output.menu;
 
-
-import java.util.UUID;
+import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 
 public interface DeleteMenuPort {
-void deleteMenuByRestaurantId(UUID restaurantId);
+  void deleteMenuByRestaurantId(RestaurantId restaurantId);
 }

@@ -1,9 +1,10 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.adapters;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
+import static org.junit.jupiter.api.Assertions.*;
+
+import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.GenerateRestaurants;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.SpringDataConfiguration;
-import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.QRestaurantJpaEntity;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.RestaurantJpaEntity;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.mappers.RestaurantJpaMapper;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.repositories.RestaurantJpaRepository;
@@ -12,6 +13,7 @@ import java.util.List;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -25,9 +27,12 @@ import org.springframework.test.context.ContextConfiguration;
 class RestaurantJpaAdapterTest {
 
   @Autowired EntityManager entityManager;
-  private JPAQueryFactory queryFactory;
   @Autowired RestaurantJpaRepository restaurantJpaRepository;
   @Autowired RestaurantJpaMapper restaurantJpaMapper;
+  private RestaurantJpaAdapter theAdapterUnderTest;
+
+  // Test Values
+  private static final String EXISTING_NAME = "Tana del cibo";
 
   @BeforeAll
   void beforeAll() {
@@ -37,12 +42,14 @@ class RestaurantJpaAdapterTest {
             .toList();
 
     restaurantJpaRepository.saveAll(generated);
+
+    // Creating the adapter to be tested
+    this.theAdapterUnderTest =
+        new RestaurantJpaAdapter(restaurantJpaRepository, restaurantJpaMapper);
   }
 
   @BeforeEach
-  void beforeEach() {
-    queryFactory = new JPAQueryFactory(entityManager);
-  }
+  void beforeEach() {}
 
   @AfterAll
   void afterAll() {
@@ -50,15 +57,40 @@ class RestaurantJpaAdapterTest {
   }
 
   @Test
-  void should_find_no_tutorials_if_repository_is_empty() {
-    QRestaurantJpaEntity restaurant = QRestaurantJpaEntity.restaurantJpaEntity;
+  @DisplayName("Find Restaurant By Name - Happy Case")
+  void whenQueryingByName_thenItFindOnlyOneResult() {
 
-    RestaurantJpaEntity found =
-        queryFactory
-            .selectFrom(restaurant)
-            .where(restaurant.name.equalsIgnoreCase("Tana del cibo"))
-            .fetchOne();
+    Restaurant found = theAdapterUnderTest.findRestaurantByName(EXISTING_NAME);
 
-    System.out.println(found.getName());
+    assertNotNull(found, "the restaurant has not been found, but it should've");
+    assertNotNull(found.getId(), "the found restaurant should have an ID");
+    assertNotNull(found.getName(), "the found restaurant should have a name. Maybe is a proxy?");
+  }
+
+  @Test
+  @DisplayName("Create Restaurant - Happy Case")
+  void whenCreatingRestaurant_thenItGetsCreated() {
+
+    Restaurant aRestaurant = Restaurant.builder().name("aName").build();
+
+    Restaurant theCreatedRestaurant = theAdapterUnderTest.createRestaurant(aRestaurant);
+
+    assertNotNull(aRestaurant);
+    assertNotNull(aRestaurant.getId());
+    System.out.println(theCreatedRestaurant);
+  }
+
+  @Test
+  @DisplayName("Delete Restaurant - Happy Case")
+  void whenDeletingRestaurant_thenItGetsDeleted() {
+
+    Restaurant anExistingRestaurant = theAdapterUnderTest.findRestaurantByName(EXISTING_NAME);
+
+    theAdapterUnderTest.deleteRestaurantById(anExistingRestaurant.getId());
+
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> theAdapterUnderTest.findRestaurantByName(EXISTING_NAME),
+        "the restaurant shouldn't exist anymore in the database");
   }
 }
