@@ -5,24 +5,28 @@
   // ####################################################
 
   /**
+   * Override the builder() method to return our custom builder instead of the Lombok generated
+   * builder class.
+   */
+  public static TimeslotBuilder builder() {
+    return new CustomBuilder();
+  }
+
+  /*
    * Customized builder class, extends the Lombok generated builder class and overrides method
    * implementations.
    */
-  private static class CustomBuilder extends OpeningBuilder {
+  private static class CustomBuilder extends TimeslotBuilder {
 
-    /** Adding validations as part of build() method. */
-    public Opening build() {
+    /* Adding validations as part of build() method. */
+    public Timeslot build() {
 
-      if (Duration.between(super.openTime, super.closeTime).isZero()) {
-        throw new IllegalArgumentException("this opening value has no sense (idiot)");
+      if (Duration.between(super.from, super.through).isZero()) {
+        throw new IllegalArgumentException("a timeslot should have a duration bigger than zero");
       }
 
-      if (MINUTES.between(super.openTime, super.closeTime) < 5) {
-        throw new IllegalArgumentException("An opening duration must be AT LEAST 5 minutes");
-      }
-
-      if (super.openTime.isAfter(super.closeTime)) {
-        throw new IllegalArgumentException("openTime must be PRECEDENT of closeTime");
+      if (super.from.isAfter(super.through)) {
+        throw new IllegalArgumentException("a timeslot cannot starts AFTER its ending");
       }
 
       return super.build();

@@ -1,9 +1,11 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.mappers;
 
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Overrule;
+import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.OverruleId;
 import it.luzzetti.justdrink.backoffice.domain.shared.value_objects.DatePeriod;
 import it.luzzetti.justdrink.backoffice.domain.shared.value_objects.Timeslot;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.OverruleJpaEntity;
+import java.util.UUID;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -38,5 +40,13 @@ public interface OverruleJpaMapper {
         .from(entity.getValidFrom())
         .through(entity.getValidThrough())
         .build();
+  }
+
+  default UUID map(OverruleId overruleId) {
+    return overruleId.id();
+  }
+
+  default OverruleId map(UUID uuid) {
+    return OverruleId.from(uuid);
   }
 }

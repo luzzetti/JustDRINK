@@ -5,12 +5,14 @@ package it.luzzetti.justdrink.backoffice.domain.aggregates.worktime;
 
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.validators.ClashingOpeningsChecker;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.validators.ClashingOverrulesChecker;
+import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.OpeningId;
+import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.OverruleId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.WorktimeId;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -23,10 +25,6 @@ public class Worktime {
 
   @Builder.Default private final List<Opening> openings = new ArrayList<>();
   @Builder.Default private final List<Overrule> overrules = new ArrayList<>();
-
-  public static Worktime newWorktimeForRestaurant(RestaurantId restaurantId) {
-    return Worktime.builder().id(WorktimeId.empty()).restaurantId(restaurantId).build();
-  }
 
   public void addOpening(Opening aNewOpening) {
 
@@ -54,15 +52,48 @@ public class Worktime {
     return Collections.unmodifiableList(overrules);
   }
 
-  public Opening getLastCreatedOpening() {
+  public Opening getOpeningById(OpeningId anOpeningId) {
     return openings.stream()
-        .max(Comparator.comparing(Opening::getCreatedAt))
-        .orElseThrow(IllegalArgumentException::new);
+        .filter(o -> Objects.equals(o.getId(), anOpeningId))
+        .findFirst()
+        .orElseThrow(
+            () ->
+                new IllegalArgumentException(
+                    "There is no Opening with id %s in this worktime".formatted(anOpeningId)));
   }
 
-  public Overrule getLastCreatedOverrule() {
+  public Overrule getOverruleById(OverruleId anOverruleId) {
     return overrules.stream()
-        .max(Comparator.comparing(Overrule::getCreatedAt))
-        .orElseThrow(IllegalArgumentException::new);
+        .filter(o -> Objects.equals(o.getId(), anOverruleId))
+        .findFirst()
+        .orElseThrow(
+            () ->
+                new IllegalArgumentException(
+                    "There is no Overrule with id %s in this worktime".formatted(anOverruleId)));
+  }
+
+  // ####################################################
+  // Lombok's Builder Override
+  // ####################################################
+
+  public static WorktimeBuilder builder() {
+    return new Worktime.CustomBuilder();
+  }
+
+  /*
+   * Customized builder class, extends the Lombok generated builder class and overrides method
+   * implementations.
+   */
+  private static class CustomBuilder extends WorktimeBuilder {
+
+    /* Adding validations as part of build() method. */
+    public Worktime build() {
+
+      if (super.id == null || super.id.id() == null) {
+        throw new IllegalArgumentException("a Worktime cannot be created with a NULL id");
+      }
+
+      return super.build();
+    }
   }
 }

@@ -16,6 +16,8 @@ import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "WORKTIMES")
@@ -30,6 +32,7 @@ public class WorktimeJpaEntity {
 
   @OneToOne
   @JoinColumn(name = "RESTAURANT_ID")
+  @OnDelete(action = OnDeleteAction.CASCADE)
   private RestaurantJpaEntity restaurant;
 
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

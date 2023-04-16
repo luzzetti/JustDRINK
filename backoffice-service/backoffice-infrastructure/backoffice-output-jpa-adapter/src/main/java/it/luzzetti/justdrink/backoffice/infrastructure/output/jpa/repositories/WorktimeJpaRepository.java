@@ -5,7 +5,6 @@ import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
@@ -24,12 +23,4 @@ public interface WorktimeJpaRepository
       """)
   @EntityGraph(attributePaths = {"restaurant", "openings", "overrules"})
   Optional<WorktimeJpaEntity> findWorktimeByRestaurantId(@Param("restaurantId") UUID restaurantId);
-
-  @Query(
-      """
-      DELETE FROM WorktimeJpaEntity w
-      where w.restaurant.id = :restaurantId
-      """)
-  @Modifying
-  void deleteWorktimeByRestaurantId(@Param("restaurantId") UUID restaurantId);
 }

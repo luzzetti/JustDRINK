@@ -2,12 +2,19 @@ package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.adapters;
 
 import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.DeleteWorktimePort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.FindWorktimePort;
+import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.GenerateOpeningIdPort;
+import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.GenerateOverruleIdPort;
+import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.GenerateWorktimeIdsPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.SaveWorktimePort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Worktime;
+import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.OpeningId;
+import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.OverruleId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
+import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.WorktimeId;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.mappers.WorktimeJpaMapper;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.repositories.RestaurantJpaRepository;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.repositories.WorktimeJpaRepository;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
@@ -15,7 +22,13 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 @RequiredArgsConstructor
-public class WorktimeJpaAdapter implements FindWorktimePort, SaveWorktimePort, DeleteWorktimePort {
+public class WorktimeJpaAdapter
+    implements FindWorktimePort,
+        SaveWorktimePort,
+        DeleteWorktimePort,
+        GenerateWorktimeIdsPort,
+        GenerateOverruleIdPort,
+        GenerateOpeningIdPort {
 
   // Repositories
   private final WorktimeJpaRepository worktimeJpaRepository;
@@ -46,6 +59,23 @@ public class WorktimeJpaAdapter implements FindWorktimePort, SaveWorktimePort, D
 
   @Override
   public void deleteWorktimeByRestaurantId(RestaurantId restaurantId) {
-    worktimeJpaRepository.deleteWorktimeByRestaurantId(restaurantId.id());
+    worktimeJpaRepository
+        .findWorktimeByRestaurantId(restaurantId.id())
+        .ifPresent(worktimeJpaRepository::delete);
+  }
+
+  @Override
+  public OpeningId nextOpeningIdentifier() {
+    return OpeningId.from(UUID.randomUUID());
+  }
+
+  @Override
+  public OverruleId nextOverruleIdentifier() {
+    return OverruleId.from(UUID.randomUUID());
+  }
+
+  @Override
+  public WorktimeId nextWorktimeIdentifier() {
+    return WorktimeId.from(UUID.randomUUID());
   }
 }

@@ -1,10 +1,10 @@
 package it.luzzetti.justdrink.backoffice.domain.aggregates.worktime;
 
+import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.OverruleId;
 import it.luzzetti.justdrink.backoffice.domain.shared.value_objects.DatePeriod;
 import it.luzzetti.justdrink.backoffice.domain.shared.value_objects.Timeslot;
 import java.time.DayOfWeek;
 import java.time.Instant;
-import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -13,7 +13,7 @@ import lombok.ToString;
 @Builder
 @ToString
 public class Overrule {
-  private UUID id;
+  private OverruleId id;
   private final DatePeriod validity;
   private final DayOfWeek dayOfWeek;
   private final Timeslot alternativeShift;
