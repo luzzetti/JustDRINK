@@ -16,6 +16,10 @@ import lombok.Getter;
 @Builder
 public class Menu {
 
+  /*
+   * TODO: Seguire l'idea di WorkTime per una generazione 'early' degli ID.
+   * con buone probabilità, manterremo questa strategia per tutto il progetto
+   */
   private MenuId id;
   private RestaurantId restaurantId;
 

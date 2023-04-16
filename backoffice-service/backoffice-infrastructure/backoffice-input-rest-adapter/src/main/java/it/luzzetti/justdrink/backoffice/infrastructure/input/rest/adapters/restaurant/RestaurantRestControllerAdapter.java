@@ -18,7 +18,9 @@ import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.menu.MenuRestControllerAdapter;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant.dto.RestaurantResource;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.RestaurantWebMapper;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -124,7 +126,7 @@ public class RestaurantRestControllerAdapter {
   @Operation(summary = "Esegue la creazione di un nuovo ristorante")
   @PostMapping
   public ResponseEntity<RestaurantResource> createRestaurant(
-      @RequestBody RestaurantCreationRequest request) {
+      @RequestBody @Valid RestaurantCreationRequest request) {
     // Creating the command
     var command = CreateRestaurantCommand.builder().name(request.name()).build();
 
@@ -158,7 +160,7 @@ public class RestaurantRestControllerAdapter {
 
   public record RestaurantListElement(UUID id, String name) {}
 
-  public record RestaurantCreationRequest(@NotBlank String name) {}
+  public record RestaurantCreationRequest(@NotNull @NotBlank String name) {}
 
   private record PageTokenCodec() {
     static Integer decode(String encodedString) {

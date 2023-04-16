@@ -6,6 +6,7 @@ import it.luzzetti.justdrink.backoffice.domain.aggregates.menu.Menu;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.menu.Product;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.MenuSectionId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.ProductId;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ public class ShowProductFromMenuSectionApplicationService
   private final FindMenuPort findMenuPort;
 
   @Override
-  public Product showProductOfMenuSection(ShowProductOfMenuSectionCommand command) {
+  public Product showProductOfMenuSection(@Valid ShowProductOfMenuSectionCommand command) {
     // Fetching resources
     Menu menu = findMenuPort.findMenuByRestaurantIdMandatory(command.restaurantId());
     MenuSectionId theMenuSectionId = command.menuSectionId();

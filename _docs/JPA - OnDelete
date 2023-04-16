@@ -1,0 +1,6 @@
+@OnDelete(action = OnDeleteAction.CASCADE)
+
+Bello, tutto bello, specie sulle ManyToOne, specie con il cascade nella DDL del database...
+...ma mesà che non passa dall'entityManager.
+
+Probabilmente devo rivoltare tutte le oneToMany.
