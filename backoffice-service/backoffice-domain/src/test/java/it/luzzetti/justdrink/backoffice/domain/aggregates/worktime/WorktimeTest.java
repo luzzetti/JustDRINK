@@ -2,6 +2,7 @@ package it.luzzetti.justdrink.backoffice.domain.aggregates.worktime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.OpeningId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.WorktimeId;
 import it.luzzetti.justdrink.backoffice.domain.shared.validation.ValidationException;
@@ -26,7 +27,7 @@ class WorktimeTest {
   public void setup() {
     aTestWorktime =
         Worktime.builder()
-            .id(WorktimeId.empty())
+            .id(WorktimeId.from(UUID.randomUUID()))
             .restaurantId(RestaurantId.empty())
             .overrules(new ArrayList<>())
             .openings(new ArrayList<>())
@@ -41,7 +42,7 @@ class WorktimeTest {
 
     Opening aValidOpening =
         Opening.builder()
-            .id(UUID.randomUUID())
+            .id(OpeningId.from(UUID.randomUUID()))
             .createdAt(Instant.now())
             .shift(Timeslot.builder().from(openingTime).through(closingTime).build())
             .build();
@@ -107,7 +108,7 @@ class WorktimeTest {
     // Setting up phase
     Opening firstValidOpening =
         Opening.builder()
-            .id(UUID.randomUUID())
+            .id(OpeningId.from(UUID.randomUUID()))
             .createdAt(Instant.now())
             .shift(
                 Timeslot.builder()
@@ -126,5 +127,4 @@ class WorktimeTest {
         () -> aTestWorktime.addOpening(opening),
         "Not validation throws!");
   }
-
 }

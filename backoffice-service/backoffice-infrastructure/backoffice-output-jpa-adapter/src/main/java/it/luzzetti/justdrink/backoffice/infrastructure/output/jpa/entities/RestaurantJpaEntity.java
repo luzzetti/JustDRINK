@@ -20,5 +20,6 @@ public class RestaurantJpaEntity {
   private UUID id;
 
   @NotNull @NotBlank private String name;
+  @NotNull private AddressJpaEmbeddable address;
   private boolean enabled;
 }

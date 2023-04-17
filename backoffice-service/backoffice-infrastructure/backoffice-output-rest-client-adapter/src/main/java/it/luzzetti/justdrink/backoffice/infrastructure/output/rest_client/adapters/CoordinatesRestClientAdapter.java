@@ -5,7 +5,6 @@ import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates.Latitude;
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates.Longitude;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -46,12 +45,16 @@ public class CoordinatesRestClientAdapter implements FindCoordinatesPort {
             .bodyToMono(Place[].class)
             .block();
 
-    List<Place> placesList = Arrays.stream(responses).toList();
+    Place theGeocodedPlace =
+        Arrays.stream(responses)
+            .findFirst()
+            .orElseThrow(
+                () -> new IllegalArgumentException("Oh sheeet, the geocoding didn't geocode!"));
 
-    log.debug(() -> placesList);
+    log.debug(() -> theGeocodedPlace);
 
     Coordinates theFoundCoordinates =
-        Coordinates.builder().latitude(Latitude.of(13.6)).longitude(Longitude.of(13.5)).build();
+        Coordinates.of(Latitude.of(theGeocodedPlace.lat()), Longitude.of(theGeocodedPlace.lon()));
 
     return Optional.of(theFoundCoordinates);
   }

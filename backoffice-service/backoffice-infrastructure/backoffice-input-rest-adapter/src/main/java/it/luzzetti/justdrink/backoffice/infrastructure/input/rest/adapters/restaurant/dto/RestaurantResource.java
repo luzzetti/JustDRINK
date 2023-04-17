@@ -1,5 +1,6 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant.dto;
 
+import it.luzzetti.justdrink.backoffice.domain.vo.Address;
 import java.util.UUID;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -14,5 +15,6 @@ import org.springframework.hateoas.RepresentationModel;
 public class RestaurantResource extends RepresentationModel<RestaurantResource> {
   private UUID id;
   private String name;
+  private Address address;
   private boolean enabled;
 }

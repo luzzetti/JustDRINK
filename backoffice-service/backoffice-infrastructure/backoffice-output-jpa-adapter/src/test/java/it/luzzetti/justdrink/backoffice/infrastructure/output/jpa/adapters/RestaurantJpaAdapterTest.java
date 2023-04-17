@@ -73,7 +73,7 @@ class RestaurantJpaAdapterTest {
 
     Restaurant aRestaurant = Restaurant.builder().name("aName").build();
 
-    Restaurant theCreatedRestaurant = theAdapterUnderTest.createRestaurant(aRestaurant);
+    Restaurant theCreatedRestaurant = theAdapterUnderTest.saveRestaurant(aRestaurant);
 
     assertNotNull(aRestaurant);
     assertNotNull(aRestaurant.getId());

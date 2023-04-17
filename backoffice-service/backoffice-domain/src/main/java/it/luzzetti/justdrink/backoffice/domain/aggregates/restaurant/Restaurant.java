@@ -17,6 +17,15 @@ public class Restaurant {
 
   @Builder.Default private Boolean enabled = Boolean.FALSE;
 
+  // Aggregate Public methods
+
+  public void changeAddress(Address newAddress) {
+    // Validations
+    this.address = newAddress;
+  }
+
+  // Aggregate Private methods
+
   // ##########################//
   // Lombok's Builder Override //
   // ##########################//
@@ -40,6 +49,11 @@ public class Restaurant {
 
       if (super.name == null || super.name.isBlank()) {
         throw new IllegalArgumentException("A Restaurant name cannot be null nor empty");
+      }
+
+      if (super.address == null) {
+        throw new IllegalArgumentException(
+            "The restaurant address cannot be null. It has to be somewhere.");
       }
 
       return super.build();

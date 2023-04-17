@@ -23,7 +23,7 @@ public class RestaurantJpaAdapter
   private final RestaurantJpaMapper restaurantJpaMapper;
 
   @Override
-  public Restaurant createRestaurant(Restaurant aNewRestaurant) {
+  public Restaurant saveRestaurant(Restaurant aNewRestaurant) {
     RestaurantJpaEntity aNewEntity = restaurantJpaMapper.toEntity(aNewRestaurant);
 
     RestaurantJpaEntity theCreatedEntity = restaurantJpaRepository.save(aNewEntity);

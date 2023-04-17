@@ -41,7 +41,11 @@ public class MenuJpaAdapter implements FindMenuPort, SaveMenuPort, UpdateMenuPor
     return menuJpaRepository
         .findMenuByRestaurantId(restaurantId.id())
         .map(menuJpaMapper::toDomain)
-        .orElseThrow(() -> new IllegalArgumentException("Change this exception"));
+        .orElseThrow(
+            () ->
+                new IllegalArgumentException(
+                    "There is no Menu associated with a restaurantId of %s"
+                        .formatted(restaurantId)));
   }
 
   @Override

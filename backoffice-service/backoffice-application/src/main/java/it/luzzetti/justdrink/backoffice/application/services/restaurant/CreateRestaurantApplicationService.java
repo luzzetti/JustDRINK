@@ -1,6 +1,7 @@
 package it.luzzetti.justdrink.backoffice.application.services.restaurant;
 
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.CreateRestaurantUseCase;
+import it.luzzetti.justdrink.backoffice.application.ports.output.FindCoordinatesPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.menu.SaveMenuPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.SaveRestaurantPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.GenerateWorktimeIdsPort;
@@ -9,6 +10,8 @@ import it.luzzetti.justdrink.backoffice.domain.aggregates.menu.Menu;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Worktime;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.WorktimeId;
+import it.luzzetti.justdrink.backoffice.domain.vo.Address;
+import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -20,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CreateRestaurantApplicationService implements CreateRestaurantUseCase {
 
+  private final FindCoordinatesPort findCoordinatesPort;
   private final SaveRestaurantPort saveRestaurantPort;
   private final SaveMenuPort saveMenuPort;
   private final SaveWorktimePort saveWorktimePort;
@@ -29,9 +33,27 @@ public class CreateRestaurantApplicationService implements CreateRestaurantUseCa
   @Transactional
   public Restaurant createRestaurant(@Valid CreateRestaurantCommand command) {
 
-    // Use-Case
-    Restaurant aNewRestaurant = Restaurant.builder().name(command.name()).build();
-    Restaurant theCreatedRestaurant = saveRestaurantPort.createRestaurant(aNewRestaurant);
+    // Fetching / Creating required values
+    String displayName = command.addressName();
+
+    Coordinates coordinates =
+        command
+            .coordinates()
+            .or(() -> findCoordinatesPort.findCoordinatesByAddressName(displayName))
+            .orElseThrow(
+                () ->
+                    new IllegalArgumentException(
+                        "It has not been possible to retrieve the coordinates related to the address %s"
+                            .formatted(displayName)));
+
+    // Calling UseCase
+    Address theAddress =
+        Address.builder().displayName(displayName).coordinates(coordinates).build();
+
+    Restaurant aNewRestaurant =
+        Restaurant.builder().name(command.name()).address(theAddress).build();
+
+    Restaurant theCreatedRestaurant = saveRestaurantPort.saveRestaurant(aNewRestaurant);
 
     /*
      * FIXME:

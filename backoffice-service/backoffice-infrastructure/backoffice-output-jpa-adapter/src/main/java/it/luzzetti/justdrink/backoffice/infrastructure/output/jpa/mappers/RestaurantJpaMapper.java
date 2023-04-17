@@ -6,7 +6,7 @@ import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.Resta
 import java.util.UUID;
 import org.mapstruct.Mapper;
 
-@Mapper
+@Mapper(uses = {AddressJpaMapper.class})
 public interface RestaurantJpaMapper {
   Restaurant toDomain(RestaurantJpaEntity theCreatedEntity);
 

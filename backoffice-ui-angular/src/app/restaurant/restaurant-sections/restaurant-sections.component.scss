@@ -16,7 +16,7 @@
   .p-menuitem {
     background: none;
     // Trick!
-    // Simula un border-left, ma cresce veros l'esterno anziché verso l'interno;
+    // Simula un border-left, ma cresce verso l'esterno anziché verso l'interno;
     // Simula un outset, ma su un solo lato
     box-shadow: -1px 0px 0px 0px #d9d7d5;
     outline: none;

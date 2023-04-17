@@ -5,6 +5,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import io.swagger.v3.oas.annotations.Operation;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ChangeRestaurantAddressUseCase;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ChangeRestaurantAddressUseCase.ChangeRestaurantAddressCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.CreateRestaurantUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.CreateRestaurantUseCase.CreateRestaurantCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.DeleteRestaurantUseCase;
@@ -15,6 +17,7 @@ import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ShowR
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ShowRestaurantQuery.ShowRestaurantCommand;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
+import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.menu.MenuRestControllerAdapter;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant.dto.RestaurantResource;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.RestaurantWebMapper;
@@ -34,6 +37,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,6 +56,7 @@ public class RestaurantRestControllerAdapter {
 
   // UseCases
   private final CreateRestaurantUseCase createRestaurantUseCase;
+  private final ChangeRestaurantAddressUseCase changeRestaurantAddressUseCase;
   private final DeleteRestaurantUseCase deleteRestaurantUseCase;
 
   // Queries
@@ -123,12 +128,39 @@ public class RestaurantRestControllerAdapter {
     return ResponseEntity.ok(resource);
   }
 
+  @PutMapping("/{restaurantId}/address")
+  public ResponseEntity<RestaurantResource> changeRestaurantAddress(
+      @PathVariable UUID restaurantId, @RequestBody @Valid ChangeRestaurantAddressRequest request) {
+
+    var command =
+        ChangeRestaurantAddressCommand.builder()
+            .restaurantId(RestaurantId.from(restaurantId))
+            .addressName(request.addressName())
+            .coordinates(request.coordinates())
+            .build();
+
+    Restaurant thePartiallyUpdatedRestaurant =
+        changeRestaurantAddressUseCase.changeRestaurantAddress(command);
+
+    // Crafting response
+    var response = restaurantWebMapper.toResource(thePartiallyUpdatedRestaurant);
+    return ResponseEntity.ok(response);
+  }
+
+  public record ChangeRestaurantAddressRequest(
+      @NotNull @NotBlank String addressName, Optional<Coordinates> coordinates) {}
+
   @Operation(summary = "Esegue la creazione di un nuovo ristorante")
   @PostMapping
   public ResponseEntity<RestaurantResource> createRestaurant(
       @RequestBody @Valid RestaurantCreationRequest request) {
     // Creating the command
-    var command = CreateRestaurantCommand.builder().name(request.name()).build();
+    var command =
+        CreateRestaurantCommand.builder()
+            .name(request.name())
+            .addressName(request.addressName())
+            .coordinates(request.coordinates())
+            .build();
 
     // Executing Use-Case
     Restaurant theCreatedRestaurant = createRestaurantUseCase.createRestaurant(command);
@@ -160,7 +192,10 @@ public class RestaurantRestControllerAdapter {
 
   public record RestaurantListElement(UUID id, String name) {}
 
-  public record RestaurantCreationRequest(@NotNull @NotBlank String name) {}
+  public record RestaurantCreationRequest(
+      @NotNull @NotBlank String name,
+      @NotNull @NotBlank String addressName,
+      Optional<Coordinates> coordinates) {}
 
   private record PageTokenCodec() {
     static Integer decode(String encodedString) {

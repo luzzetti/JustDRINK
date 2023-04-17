@@ -12,8 +12,6 @@ public interface CreateProductUseCase {
 
   Product createProduct(CreateProductCommand command);
 
-  // TODO: Generating a validator for Typed Ids
-
   @Builder
   record CreateProductCommand(
       @NotNull @NotEmpty String name,

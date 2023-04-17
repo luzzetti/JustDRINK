@@ -54,7 +54,11 @@ public class WorktimeJpaAdapter
     return worktimeJpaRepository
         .findWorktimeByRestaurantId(restaurantId.id())
         .map(worktimeJpaMapper::toDomain)
-        .orElseThrow(() -> new IllegalArgumentException("Change this exception."));
+        .orElseThrow(
+            () ->
+                new IllegalArgumentException(
+                    "There is no worktime associated with a restaurantId of %s"
+                        .formatted(restaurantId)));
   }
 
   @Override
