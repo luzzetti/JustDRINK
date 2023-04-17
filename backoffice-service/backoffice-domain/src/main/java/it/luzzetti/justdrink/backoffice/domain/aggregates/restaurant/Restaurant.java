@@ -1,6 +1,7 @@
 package it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant;
 
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
+import it.luzzetti.justdrink.backoffice.domain.vo.Address;
 import lombok.*;
 
 @Getter
@@ -11,7 +12,9 @@ public class Restaurant {
    * con buone probabilità, manterremo questa strategia per tutto il progetto
    */
   @Builder.Default private final RestaurantId id = RestaurantId.empty();
-  private String name;
+  private String name; // Must be a required/mandatory field
+  private Address address;
+
   @Builder.Default private Boolean enabled = Boolean.FALSE;
 
   // ##########################//
