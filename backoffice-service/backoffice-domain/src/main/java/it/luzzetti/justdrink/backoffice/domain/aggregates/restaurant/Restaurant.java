@@ -7,11 +7,8 @@ import lombok.*;
 @Getter
 @Builder
 public class Restaurant {
-  /*
-   * TODO: Seguire l'idea di WorkTime per una generazione 'early' degli ID.
-   * con buone probabilità, manterremo questa strategia per tutto il progetto
-   */
-  @Builder.Default private final RestaurantId id = RestaurantId.empty();
+
+  private final RestaurantId id;
   private String name; // Must be a required/mandatory field
   private Address address;
 
@@ -46,6 +43,9 @@ public class Restaurant {
 
     /* Adding validations as part of build() method. */
     public Restaurant build() {
+      if (super.id == null || super.id.id() == null) {
+        throw new IllegalArgumentException("a Worktime cannot be created with a NULL id");
+      }
 
       if (super.name == null || super.name.isBlank()) {
         throw new IllegalArgumentException("A Restaurant name cannot be null nor empty");
