@@ -3,6 +3,7 @@ package it.luzzetti.justdrink.backoffice.application.services.restaurant;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.CreateRestaurantUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.output.FindCoordinatesPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.menu.SaveMenuPort;
+import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.GenerateRestaurantIdPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.SaveRestaurantPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.GenerateWorktimeIdsPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.SaveWorktimePort;
@@ -28,6 +29,7 @@ public class CreateRestaurantApplicationService implements CreateRestaurantUseCa
   private final SaveMenuPort saveMenuPort;
   private final SaveWorktimePort saveWorktimePort;
   private final GenerateWorktimeIdsPort generateWorktimeIdsPort;
+  private final GenerateRestaurantIdPort generateRestaurantIdPort;
 
   @Override
   @Transactional
@@ -50,8 +52,14 @@ public class CreateRestaurantApplicationService implements CreateRestaurantUseCa
     Address theAddress =
         Address.builder().displayName(displayName).coordinates(coordinates).build();
 
+    var aGeneratedRestaurantId = generateRestaurantIdPort.generateRestaurantIdentifier();
+
     Restaurant aNewRestaurant =
-        Restaurant.builder().name(command.name()).address(theAddress).build();
+        Restaurant.builder()
+            .id(aGeneratedRestaurantId)
+            .name(command.name())
+            .address(theAddress)
+            .build();
 
     Restaurant theCreatedRestaurant = saveRestaurantPort.saveRestaurant(aNewRestaurant);
 
