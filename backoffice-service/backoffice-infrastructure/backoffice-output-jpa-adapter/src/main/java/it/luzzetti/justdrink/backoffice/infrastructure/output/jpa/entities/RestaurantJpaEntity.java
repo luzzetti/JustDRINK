@@ -16,7 +16,6 @@ import lombok.Setter;
 public class RestaurantJpaEntity {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
 
   @NotNull @NotBlank private String name;

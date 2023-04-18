@@ -1,8 +1,6 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
@@ -19,9 +17,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ProductJpaEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
-  private UUID id;
+  @Id private UUID id;
 
   private String name;
   private BigDecimal price;

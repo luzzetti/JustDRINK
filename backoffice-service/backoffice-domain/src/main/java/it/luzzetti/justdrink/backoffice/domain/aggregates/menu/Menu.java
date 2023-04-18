@@ -6,7 +6,6 @@ import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.ProductId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import lombok.Builder;
@@ -16,28 +15,13 @@ import lombok.Getter;
 @Builder
 public class Menu {
 
-  /*
-   * TODO: Seguire l'idea di WorkTime per una generazione 'early' degli ID.
-   * con buone probabilità, manterremo questa strategia per tutto il progetto
-   */
   private MenuId id;
   private RestaurantId restaurantId;
-
   @Builder.Default private List<MenuSection> sections = new ArrayList<>();
 
-  // Non sono sicuro che debba essere possibile creare un menu senza associarlo ad un ristorante
-  public static Menu newMenu() {
-    return Menu.builder().restaurantId(RestaurantId.empty()).id(MenuId.empty()).build();
-  }
-
-  public static Menu newMenuForRestaurant(RestaurantId restaurantId) {
-    return Menu.builder().restaurantId(restaurantId).id(MenuId.empty()).build();
-  }
-
-  public void createSection(String sectionTitle) {
-    MenuSection aNewMenuSection = MenuSection.newMenuSection(sectionTitle);
+  public void addSection(MenuSection aMenuSection) {
     // Validations
-    sections.add(aNewMenuSection);
+    sections.add(aMenuSection);
   }
 
   public void removeSectionById(MenuSectionId menuSectionIdToRemove) {
@@ -50,30 +34,17 @@ public class Menu {
     return Collections.unmodifiableList(sections);
   }
 
-  public MenuSection getLastCreatedSection() {
-    return sections.stream()
-        .max(Comparator.comparing(MenuSection::getCreatedAt))
-        .orElseThrow(IllegalArgumentException::new);
-  }
-
   public void addProductToSection(Product theNewProduct, MenuSectionId sectionId) {
     MenuSection theSection = getSectionByIdMandatory(sectionId);
     theSection.addProduct(theNewProduct);
   }
 
-  private MenuSection getSectionByIdMandatory(MenuSectionId sectionId) {
+  public MenuSection getSectionByIdMandatory(MenuSectionId sectionId) {
     return sections.stream()
         .filter(o -> sectionId.equals(o.getId()))
         .findFirst()
         .orElseThrow(
             () -> new IllegalArgumentException("Non esiste nessuna sezione con questo id"));
-  }
-
-  public Product getLastCreatedProduct() {
-    return sections.stream()
-        .flatMap(o -> o.getProducts().stream())
-        .max(Comparator.comparing(Product::getCreatedAt))
-        .orElseThrow(() -> new IllegalArgumentException("Non ci sono prodotti"));
   }
 
   public List<Product> listProductsFromSection(MenuSectionId sectionId) {
@@ -87,8 +58,40 @@ public class Menu {
     return sectionByIdMandatory.getProductById(productId);
   }
 
-  public void removeProductFromSection(MenuSectionId sectionId, ProductId productId){
+  public void removeProductFromSection(MenuSectionId sectionId, ProductId productId) {
     MenuSection sectionByIdMandatory = getSectionByIdMandatory(sectionId);
     sectionByIdMandatory.removeProductById(productId);
+  }
+
+  // Lombok's Builder Override
+
+  public static MenuBuilder builder() {
+    return new Menu.CustomBuilder();
+  }
+
+  public void moveProductBetweenSections(
+      ProductId productId, MenuSectionId sourceSectionId, MenuSectionId targetSectionId) {
+
+    Product theProductToBeMoved = getProductFromSection(sourceSectionId, productId);
+
+    this.getSectionByIdMandatory(sourceSectionId).removeProduct(theProductToBeMoved);
+    this.getSectionByIdMandatory(targetSectionId).addProduct(theProductToBeMoved);
+  }
+
+  /*
+   * Customized builder class, extends the Lombok generated builder class and overrides method
+   * implementations.
+   */
+  private static class CustomBuilder extends MenuBuilder {
+
+    /* Adding validations as part of build() method. */
+    public Menu build() {
+
+      if (super.id == null || super.id.id() == null) {
+        throw new IllegalArgumentException("a Menu cannot be created with a NULL id");
+      }
+
+      return super.build();
+    }
   }
 }

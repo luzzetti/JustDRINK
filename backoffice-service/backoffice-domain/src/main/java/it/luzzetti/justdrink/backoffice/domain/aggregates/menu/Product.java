@@ -9,14 +9,32 @@ import lombok.Getter;
 @Getter
 @Builder
 public class Product {
-  @Builder.Default private ProductId id = ProductId.empty();
+  private ProductId id;
   private String name;
   private BigDecimal price;
 
   @Builder.Default private Instant createdAt = Instant.now();
 
-  public static Product newProduct(String name, BigDecimal price) {
-    return Product.builder().name(name).price(price).build();
+  // Lombok's Builder Override
+
+  public static ProductBuilder builder() {
+    return new Product.CustomBuilder();
   }
 
+  /*
+   * Customized builder class, extends the Lombok generated builder class and overrides method
+   * implementations.
+   */
+  private static class CustomBuilder extends ProductBuilder {
+
+    /* Adding validations as part of build() method. */
+    public Product build() {
+
+      if (super.id == null || super.id.id() == null) {
+        throw new IllegalArgumentException("a Product cannot be created with a NULL id");
+      }
+
+      return super.build();
+    }
+  }
 }

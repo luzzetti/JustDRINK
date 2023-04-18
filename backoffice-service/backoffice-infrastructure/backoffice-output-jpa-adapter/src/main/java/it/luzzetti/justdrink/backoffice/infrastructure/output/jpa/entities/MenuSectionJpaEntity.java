@@ -3,8 +3,6 @@ package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -23,9 +21,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class MenuSectionJpaEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
-  private UUID id;
+  @Id private UUID id;
 
   private String title;
 

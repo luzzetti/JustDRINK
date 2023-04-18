@@ -3,8 +3,6 @@ package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
@@ -24,9 +22,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class WorktimeJpaEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
-  private UUID id;
+  @Id private UUID id;
 
   @OneToOne
   @JoinColumn(name = "RESTAURANT_ID")

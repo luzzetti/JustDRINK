@@ -2,7 +2,7 @@ package it.luzzetti.justdrink.backoffice.application.services.menu;
 
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.DeleteMenuSectionUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.output.menu.FindMenuPort;
-import it.luzzetti.justdrink.backoffice.application.ports.output.menu.UpdateMenuPort;
+import it.luzzetti.justdrink.backoffice.application.ports.output.menu.SaveMenuPort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.menu.Menu;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.MenuSectionId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DeleteMenuSectionApplicationService implements DeleteMenuSectionUseCase {
 
   private final FindMenuPort findMenuPort;
-  private final UpdateMenuPort updateMenuPort;
+  private final SaveMenuPort saveMenuPort;
 
   @Override
   @Transactional
@@ -33,6 +33,6 @@ public class DeleteMenuSectionApplicationService implements DeleteMenuSectionUse
     theMenu.removeSectionById(theMenuSectionId);
 
     // Persisting data
-    updateMenuPort.updateMenu(theMenu);
+    saveMenuPort.saveMenu(theMenu);
   }
 }
