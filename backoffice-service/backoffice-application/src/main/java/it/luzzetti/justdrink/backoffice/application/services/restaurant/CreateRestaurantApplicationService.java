@@ -59,6 +59,7 @@ public class CreateRestaurantApplicationService implements CreateRestaurantUseCa
             .id(aGeneratedRestaurantId)
             .name(command.name())
             .address(theAddress)
+            .cuisines(command.cuisines())
             .build();
 
     Restaurant theCreatedRestaurant = saveRestaurantPort.saveRestaurant(aNewRestaurant);

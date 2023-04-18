@@ -3,6 +3,11 @@ package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.adapters;
 import static org.junit.jupiter.api.Assertions.*;
 
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
+import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
+import it.luzzetti.justdrink.backoffice.domain.vo.Address;
+import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
+import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates.Latitude;
+import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates.Longitude;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.GenerateRestaurants;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.SpringDataConfiguration;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.RestaurantJpaEntity;
@@ -10,6 +15,7 @@ import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.mappers.Restau
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.repositories.RestaurantJpaRepository;
 import jakarta.persistence.EntityManager;
 import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -71,7 +77,16 @@ class RestaurantJpaAdapterTest {
   @DisplayName("Create Restaurant - Happy Case")
   void whenCreatingRestaurant_thenItGetsCreated() {
 
-    Restaurant aRestaurant = Restaurant.builder().name("aName").build();
+    Restaurant aRestaurant =
+        Restaurant.builder()
+            .id(RestaurantId.from(UUID.randomUUID()))
+            .name("aName")
+            .address(
+                Address.builder()
+                    .displayName("via")
+                    .coordinates(Coordinates.of(Latitude.of(0.0), Longitude.of(0.0)))
+                    .build())
+            .build();
 
     Restaurant theCreatedRestaurant = theAdapterUnderTest.saveRestaurant(aRestaurant);
 
