@@ -6,9 +6,9 @@
             <div class="d-flex flex-column w-25 mt-4">
                 <h2 class="mt-2" for="">Inserisci nome prodotto</h2>
                 <label for="">Nome</label>
-                <input type="text w-25" v-model="name" placeholder="inserisci nome prodotto">
+                <input type="text" v-model="name" placeholder="inserisci nome prodotto">
                 <label for="">Prezzo</label>
-                <input type="number w-25" v-model="price" placeholder="inserisci prezzo prodotto">
+                <input type="number" v-model="price" placeholder="inserisci prezzo prodotto">
                 <button class="btn btn-secondary mt-2" @click.prevent="InviaProdotto()">Crea prodotto</button>
             </div>
         </form>

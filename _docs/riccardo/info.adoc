@@ -1,0 +1,12 @@
+= Aggiornare la versione del Backend su Docker
+
+- Spegnere la versione di backoffice-service attualmente in esecuzione
+- Rimuovere il container 
+- Rimuovere l'immagine
+- Spostarsi nella cartella di progetto .../docker-compose
+
+- Controllare di aver commentato le cose che non ci servono (Il frontend)
+
+- Dare il comando: `docker compose up`
+- Verificare che venga effettuato il download di ...qualcosa
+- In caso di aggiornamento versione cambia la parte dopo i : nel file docker-compose.yml
