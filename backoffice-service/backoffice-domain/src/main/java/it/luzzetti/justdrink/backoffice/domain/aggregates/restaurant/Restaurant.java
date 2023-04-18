@@ -4,7 +4,6 @@ import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.domain.vo.Address;
 import it.luzzetti.justdrink.backoffice.domain.vo.Cuisine;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import lombok.*;
 
