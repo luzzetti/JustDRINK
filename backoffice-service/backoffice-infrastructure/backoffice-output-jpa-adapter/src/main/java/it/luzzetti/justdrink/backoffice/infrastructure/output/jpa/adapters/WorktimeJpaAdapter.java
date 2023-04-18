@@ -4,7 +4,7 @@ import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.Delete
 import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.FindWorktimePort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.GenerateOpeningIdPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.GenerateOverruleIdPort;
-import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.GenerateWorktimeIdsPort;
+import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.GenerateWorktimeIdPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.SaveWorktimePort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Worktime;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.OpeningId;
@@ -26,7 +26,7 @@ public class WorktimeJpaAdapter
     implements FindWorktimePort,
         SaveWorktimePort,
         DeleteWorktimePort,
-        GenerateWorktimeIdsPort,
+        GenerateWorktimeIdPort,
         GenerateOverruleIdPort,
         GenerateOpeningIdPort {
 

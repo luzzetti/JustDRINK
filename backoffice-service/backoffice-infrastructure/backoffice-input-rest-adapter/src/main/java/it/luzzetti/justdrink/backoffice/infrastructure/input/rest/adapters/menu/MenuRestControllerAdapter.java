@@ -15,6 +15,8 @@ import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ListMenuSec
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ListMenuSectionsQuery.ListMenuSectionsCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ListProductsOfMenuSectionQuery;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ListProductsOfMenuSectionQuery.ListProductsOfMenuSectionCommand;
+import it.luzzetti.justdrink.backoffice.application.ports.input.menu.MoveProductUseCase;
+import it.luzzetti.justdrink.backoffice.application.ports.input.menu.MoveProductUseCase.MoveProductCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ShowMenuQuery;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ShowMenuQuery.ShowMenuCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.menu.ShowProductFromMenuSectionQuery;
@@ -70,6 +72,7 @@ public class MenuRestControllerAdapter implements MenuRestController {
   private final DeleteMenuSectionUseCase deleteMenuSectionUseCase;
   private final CreateProductUseCase createProductUseCase;
   private final DeleteProductFromMenuSectionUseCase deleteProductFromMenuSectionUseCase;
+  private final MoveProductUseCase moveProductUseCase;
 
   // Queries
   private final ShowMenuQuery showMenuQuery;
@@ -235,8 +238,21 @@ public class MenuRestControllerAdapter implements MenuRestController {
       @PathVariable UUID sectionId,
       @RequestBody ProductMoveRequest request) {
 
-    // TODO: da implementare
-    throw new UnsupportedOperationException("NOT YET IMPLEMENTED");
+    // Fetching Data - (Creating the command from the Http request)
+    var command =
+        MoveProductCommand.builder()
+            .restaurantId(RestaurantId.from(restaurantId))
+            .sourceSectionId(MenuSectionId.from(sectionId))
+            .targetSectionId(MenuSectionId.from(request.targetMenuSectionId()))
+            .productId(ProductId.from(request.productId()))
+            .build();
+
+    // Calling the UseCase
+    Product product = moveProductUseCase.moveProduct(command);
+
+    // Crafting a response
+    var response = productWebMapper.toResource(product);
+    return ResponseEntity.ok(response);
   }
 
   @Override

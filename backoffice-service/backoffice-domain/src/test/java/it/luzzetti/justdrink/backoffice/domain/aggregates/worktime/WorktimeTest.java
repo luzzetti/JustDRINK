@@ -28,7 +28,7 @@ class WorktimeTest {
     aTestWorktime =
         Worktime.builder()
             .id(WorktimeId.from(UUID.randomUUID()))
-            .restaurantId(RestaurantId.empty())
+            .restaurantId(RestaurantId.from(UUID.randomUUID()))
             .overrules(new ArrayList<>())
             .openings(new ArrayList<>())
             .build();

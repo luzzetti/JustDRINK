@@ -19,10 +19,6 @@ public class MenuSection {
 
   @Builder.Default private Instant createdAt = Instant.now();
 
-  public static MenuSection newMenuSection(String title) {
-    return MenuSection.builder().title(title).build();
-  }
-
   public void addProduct(Product product) {
     if (containsProductWithName(product.getName())) {
       throw new IllegalArgumentException("Esiste già un prodotto con questo nome");
@@ -47,4 +43,8 @@ public class MenuSection {
     products.removeIf(p -> Objects.equals(p.getId(), productIdToRemove));
   }
 
+  // Syntactic sugar
+  public void removeProduct(Product aProduct) {
+    this.removeProductById(aProduct.getId());
+  }
 }

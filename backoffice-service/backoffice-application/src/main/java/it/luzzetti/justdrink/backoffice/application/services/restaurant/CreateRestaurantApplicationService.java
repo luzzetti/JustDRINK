@@ -5,11 +5,13 @@ import it.luzzetti.justdrink.backoffice.application.ports.output.FindCoordinates
 import it.luzzetti.justdrink.backoffice.application.ports.output.menu.SaveMenuPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.GenerateRestaurantIdPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.SaveRestaurantPort;
-import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.GenerateWorktimeIdsPort;
+import it.luzzetti.justdrink.backoffice.application.ports.output.menu.GenerateMenuIdPort;
+import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.GenerateWorktimeIdPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.SaveWorktimePort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.menu.Menu;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Worktime;
+import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.MenuId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.WorktimeId;
 import it.luzzetti.justdrink.backoffice.domain.vo.Address;
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
@@ -28,8 +30,10 @@ public class CreateRestaurantApplicationService implements CreateRestaurantUseCa
   private final SaveRestaurantPort saveRestaurantPort;
   private final SaveMenuPort saveMenuPort;
   private final SaveWorktimePort saveWorktimePort;
-  private final GenerateWorktimeIdsPort generateWorktimeIdsPort;
+
   private final GenerateRestaurantIdPort generateRestaurantIdPort;
+  private final GenerateWorktimeIdPort generateWorktimeIdPort;
+  private final GenerateMenuIdPort generateMenuIdPort;
 
   @Override
   @Transactional
@@ -64,15 +68,11 @@ public class CreateRestaurantApplicationService implements CreateRestaurantUseCa
 
     Restaurant theCreatedRestaurant = saveRestaurantPort.saveRestaurant(aNewRestaurant);
 
-    /*
-     * FIXME:
-     * Once 'early ID generation' and 'Domain Events' are implemented,
-     * Menu and Worktime creation, are probably gonna be moved in their own UseCases
-     * uncoupled from here
-     */
+    MenuId aGeneratedMenuId = generateMenuIdPort.nextMenuIdentifier();
+    Menu aNewMenu =
+        Menu.builder().id(aGeneratedMenuId).restaurantId(theCreatedRestaurant.getId()).build();
+    Menu theCreatedMenu = saveMenuPort.saveMenu(aNewMenu);
 
-    Menu aNewMenu = Menu.newMenuForRestaurant(theCreatedRestaurant.getId());
-    Menu theCreatedMenu = saveMenuPort.createMenu(aNewMenu);
     log.debug(
         () ->
             String.format(
@@ -80,7 +80,8 @@ public class CreateRestaurantApplicationService implements CreateRestaurantUseCa
                 theCreatedMenu.getId(), theCreatedMenu.getRestaurantId()));
 
     //
-    WorktimeId aGeneratedWorktimeId = generateWorktimeIdsPort.nextWorktimeIdentifier();
+
+    WorktimeId aGeneratedWorktimeId = generateWorktimeIdPort.nextWorktimeIdentifier();
     Worktime aNewWorktime =
         Worktime.builder()
             .id(aGeneratedWorktimeId)
