@@ -2,15 +2,17 @@ package it.luzzetti.justdrink.backoffice.application.services.restaurant;
 
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.CreateRestaurantUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.output.FindCoordinatesPort;
+import it.luzzetti.justdrink.backoffice.application.ports.output.menu.GenerateMenuIdPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.menu.SaveMenuPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.GenerateRestaurantIdPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.SaveRestaurantPort;
-import it.luzzetti.justdrink.backoffice.application.ports.output.menu.GenerateMenuIdPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.GenerateWorktimeIdPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.SaveWorktimePort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.menu.Menu;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
+import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.RestaurantErrors;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Worktime;
+import it.luzzetti.justdrink.backoffice.domain.shared.DomainException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.MenuId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.WorktimeId;
 import it.luzzetti.justdrink.backoffice.domain.vo.Address;
@@ -39,6 +41,8 @@ public class CreateRestaurantApplicationService implements CreateRestaurantUseCa
   @Transactional
   public Restaurant createRestaurant(@Valid CreateRestaurantCommand command) {
 
+    // Mmmm...
+
     // Fetching / Creating required values
     String displayName = command.addressName();
 
@@ -48,9 +52,8 @@ public class CreateRestaurantApplicationService implements CreateRestaurantUseCa
             .or(() -> findCoordinatesPort.findCoordinatesByAddressName(displayName))
             .orElseThrow(
                 () ->
-                    new IllegalArgumentException(
-                        "It has not been possible to retrieve the coordinates related to the address %s"
-                            .formatted(displayName)));
+                    new DomainException(RestaurantErrors.IMPOSSIBLE_TO_GEOCODE)
+                        .putInfo("address", displayName));
 
     // Calling UseCase
     Address theAddress =

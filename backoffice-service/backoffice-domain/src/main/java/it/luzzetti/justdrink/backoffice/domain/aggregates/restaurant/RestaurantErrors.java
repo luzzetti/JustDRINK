@@ -3,11 +3,14 @@ package it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant;
 import it.luzzetti.justdrink.backoffice.domain.shared.ErrorCode;
 
 public enum RestaurantErrors implements ErrorCode {
-  NAME_REQUIRED("restaurant.name.required"),
-  ADDRESS_REQUIRED("restaurant.address.required"),
-  ID_REQUIRED("restaurant.id.required"),
-  CUISINE_NOT_EXISTING("restaurant.cuisine.not.contained"),
-  CUISINE_ALREADY_EXISTING("restaurant.cuisine.already.contained");
+  NOT_FOUND("domain.restaurant.not_found"),
+  NOT_IMPLEMENTED_FEATURE("domain.restaurant.feature_not_implemented"),
+  NAME_REQUIRED("domain.restaurant.name.required"),
+  ADDRESS_REQUIRED("domain.restaurant.address.required"),
+  ID_REQUIRED("domain.restaurant.id.required"),
+  CUISINE_NOT_EXISTING("domain.restaurant.cuisine.not.contained"),
+  CUISINE_ALREADY_EXISTING("domain.restaurant.cuisine.already.contained"),
+  IMPOSSIBLE_TO_GEOCODE("domain.restaurant.address.geocoding.impossible=");
 
   private final String code;
 

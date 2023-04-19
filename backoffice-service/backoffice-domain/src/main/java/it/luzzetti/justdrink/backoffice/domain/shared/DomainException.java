@@ -16,6 +16,7 @@ public class DomainException extends RuntimeException {
   @Getter private final Map<String, Object> properties = new HashMap<>();
 
   public DomainException(ErrorCode errorCode) {
+    // TECHNICAL-DEBT Il message è Null.
     super();
     this.errorCode = errorCode;
   }

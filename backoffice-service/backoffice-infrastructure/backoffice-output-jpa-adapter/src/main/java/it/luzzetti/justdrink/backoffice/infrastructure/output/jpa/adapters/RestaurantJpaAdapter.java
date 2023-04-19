@@ -6,6 +6,8 @@ import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.Gene
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.ListRestaurantsPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.SaveRestaurantPort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
+import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.RestaurantErrors;
+import it.luzzetti.justdrink.backoffice.domain.shared.DomainException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.RestaurantJpaEntity;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.mappers.RestaurantJpaMapper;
@@ -20,8 +22,11 @@ import org.springframework.stereotype.Component;
 @Log4j2
 @RequiredArgsConstructor
 public class RestaurantJpaAdapter
-    implements FindRestaurantPort, ListRestaurantsPort, SaveRestaurantPort, DeleteRestaurantPort,
-    GenerateRestaurantIdPort {
+    implements FindRestaurantPort,
+        ListRestaurantsPort,
+        SaveRestaurantPort,
+        DeleteRestaurantPort,
+        GenerateRestaurantIdPort {
   private final RestaurantJpaRepository restaurantJpaRepository;
   private final RestaurantJpaMapper restaurantJpaMapper;
 
@@ -52,7 +57,8 @@ public class RestaurantJpaAdapter
     return restaurantJpaRepository
         .findById(restaurantId.id())
         .map(restaurantJpaMapper::toDomain)
-        .orElseThrow(() -> new IllegalArgumentException("Create a custom Exception for this"));
+        .orElseThrow(
+            () -> new DomainException(RestaurantErrors.NOT_FOUND).putInfo("id", restaurantId));
   }
 
   public Restaurant findRestaurantByName(String restaurantName) {
@@ -60,9 +66,7 @@ public class RestaurantJpaAdapter
         .findRestaurantByName(restaurantName)
         .map(restaurantJpaMapper::toDomain)
         .orElseThrow(
-            () ->
-                new IllegalArgumentException(
-                    "There is no restaurant named %s".formatted(restaurantName)));
+            () -> new DomainException(RestaurantErrors.NOT_FOUND).putInfo("name", restaurantName));
   }
 
   @Override
