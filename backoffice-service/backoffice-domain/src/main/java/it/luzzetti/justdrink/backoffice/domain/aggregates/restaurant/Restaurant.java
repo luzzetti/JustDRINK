@@ -1,5 +1,6 @@
 package it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant;
 
+import it.luzzetti.justdrink.backoffice.domain.shared.DomainException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.domain.vo.Address;
 import it.luzzetti.justdrink.backoffice.domain.vo.Cuisine;
@@ -18,17 +19,19 @@ public class Restaurant {
   @Builder.Default private Boolean enabled = Boolean.FALSE;
 
   // Aggregate Public methods
-
   public void changeAddress(Address newAddress) {
     // Validations
+    if (newAddress == null) {
+      throw new DomainException(RestaurantErrors.ADDRESS_REQUIRED);
+    }
+    
     this.address = newAddress;
   }
 
   // Aggregate Private methods
 
-  // ##########################//
+
   // Lombok's Builder Override //
-  // ##########################//
 
   /**
    * Override the builder() method to return our custom builder instead of the Lombok generated
@@ -40,14 +43,14 @@ public class Restaurant {
 
   public void addCuisine(Cuisine theNewCuisine) {
     if (this.cuisines.contains(theNewCuisine)) {
-      throw new IllegalArgumentException("Cannot add a cuisine with the same name");
+      throw new DomainException(RestaurantErrors.CUISINE_ALREADY_EXISTING);
     }
     this.cuisines.add(theNewCuisine);
   }
 
   public void removeCuisine(Cuisine theCuisine) {
     if(!this.cuisines.contains(theCuisine)){
-      throw new IllegalArgumentException("Cannot remove this cuisine - the restaurant not contain this cuisine");
+      throw new DomainException(RestaurantErrors.CUISINE_NOT_EXISTING);
     }
     this.cuisines.remove(theCuisine);
   }
@@ -61,16 +64,15 @@ public class Restaurant {
     /* Adding validations as part of build() method. */
     public Restaurant build() {
       if (super.id == null || super.id.id() == null) {
-        throw new IllegalArgumentException("a Worktime cannot be created with a NULL id");
+        throw new DomainException(RestaurantErrors.ID_REQUIRED);
       }
 
       if (super.name == null || super.name.isBlank()) {
-        throw new IllegalArgumentException("A Restaurant name cannot be null nor empty");
+        throw new DomainException(RestaurantErrors.NAME_REQUIRED);
       }
 
       if (super.address == null) {
-        throw new IllegalArgumentException(
-            "The restaurant address cannot be null. It has to be somewhere.");
+        throw new DomainException(RestaurantErrors.ADDRESS_REQUIRED);
       }
 
       return super.build();
