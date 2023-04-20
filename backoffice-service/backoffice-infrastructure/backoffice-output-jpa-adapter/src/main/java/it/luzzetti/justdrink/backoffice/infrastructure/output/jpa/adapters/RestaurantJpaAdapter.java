@@ -4,7 +4,9 @@ import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.Dele
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.FindRestaurantPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.GenerateRestaurantIdPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.ListRestaurantsPort;
+import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.SaveLogoRestaurantPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.SaveRestaurantPort;
+import it.luzzetti.justdrink.backoffice.domain.FileImage;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.RestaurantErrors;
 import it.luzzetti.justdrink.backoffice.domain.shared.DomainException;
@@ -12,10 +14,18 @@ import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.RestaurantJpaEntity;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.mappers.RestaurantJpaMapper;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.repositories.RestaurantJpaRepository;
+import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.FileStore;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -26,7 +36,10 @@ public class RestaurantJpaAdapter
         ListRestaurantsPort,
         SaveRestaurantPort,
         DeleteRestaurantPort,
-        GenerateRestaurantIdPort {
+        GenerateRestaurantIdPort,
+        SaveLogoRestaurantPort {
+  private final Path rootUploadImage = Paths.get("uploads");
+
   private final RestaurantJpaRepository restaurantJpaRepository;
   private final RestaurantJpaMapper restaurantJpaMapper;
 
@@ -77,5 +90,41 @@ public class RestaurantJpaAdapter
   @Override
   public RestaurantId generateRestaurantIdentifier() {
     return RestaurantId.from(UUID.randomUUID());
+  }
+
+  @Override
+  public String saveLogo(FileImage image) {
+
+    initDirectoryUploadImage();
+
+
+    try {
+      //TODO implementare le varie validazioni ed i vari controlli, esempio file con lo stesso nome, stesso file ecc ecc.
+
+      Path path = this.rootUploadImage.resolve(image.getName());
+
+      Files.copy(image.getInputStream(), path);
+
+      log.warn("TEST path nel jpa adapter: "+path.toString());
+
+      return path.toUri().toString();
+
+    } catch (Exception e) {
+
+      throw new RuntimeException(e.getMessage());
+    }
+
+
+  }
+
+  private void initDirectoryUploadImage() {
+    if (!rootUploadImage.toFile().exists()) {
+      try {
+        Files.createDirectories(rootUploadImage);
+      } catch (IOException e) {
+        throw new RuntimeException(
+            "Non è stato possibile inizializzare la directory per l'upload delle immagini!");
+      }
+    }
   }
 }

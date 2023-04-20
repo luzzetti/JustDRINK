@@ -15,15 +15,19 @@ import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListR
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsQuery.ListRestaurantsCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ShowRestaurantQuery;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ShowRestaurantQuery.ShowRestaurantCommand;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.UploadLogoRestaurantUseCase;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.UploadLogoRestaurantUseCase.UploadFileImageCommand;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.menu.MenuRestControllerAdapter;
+import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant.dto.LogoRestaurantResources;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant.dto.RestaurantResource;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.RestaurantWebMapper;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.io.InputStream;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -42,6 +46,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/1.0/restaurants")
@@ -58,6 +63,7 @@ public class RestaurantRestControllerAdapter {
   private final CreateRestaurantUseCase createRestaurantUseCase;
   private final ChangeRestaurantAddressUseCase changeRestaurantAddressUseCase;
   private final DeleteRestaurantUseCase deleteRestaurantUseCase;
+  private final UploadLogoRestaurantUseCase uploadLogoRestaurantUseCase;
 
   // Queries
   private final ListRestaurantsQuery listRestaurantsQuery;
@@ -209,6 +215,40 @@ public class RestaurantRestControllerAdapter {
     static String encode(Integer decodedValue) {
       String decodedString = decodedValue.toString();
       return Base64.getEncoder().encodeToString(decodedString.getBytes());
+    }
+  }
+
+  @PostMapping("/{restaurantId}/upload")
+  public ResponseEntity<Void> uploadFile(@PathVariable UUID restaurantId,@RequestParam("image") MultipartFile file) {
+    String message = "";
+    try {
+      // storageService.save(file);
+
+
+      UploadFileImageCommand command = UploadFileImageCommand.builder()
+          .restaurantId(RestaurantId.from(restaurantId))
+          .inputStream(file.getInputStream())
+          .name(file.getOriginalFilename())
+          .build();
+
+      String urlLogo = uploadLogoRestaurantUseCase.updateLogo(command);
+
+      message = "Caricamento immagine avvenuto correttamente: " + file.getOriginalFilename();
+
+      log.warn(()-> "Url logo: "+urlLogo);
+
+      return ResponseEntity.noContent().build();
+
+    } catch (Exception e) {
+      String error =
+          "Non è stato possibile caricare il file: "
+              + file.getOriginalFilename()
+              + ". Error: "
+              + e.getMessage();
+
+      log.warn(()-> error);
+
+      return ResponseEntity.badRequest().build();
     }
   }
 }
