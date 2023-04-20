@@ -18,6 +18,8 @@ import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ShowR
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.UploadLogoRestaurantUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.UploadLogoRestaurantUseCase.UploadFileImageCommand;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
+import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.RestaurantErrors;
+import it.luzzetti.justdrink.backoffice.domain.shared.DomainException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.menu.MenuRestControllerAdapter;
@@ -30,6 +32,7 @@ import jakarta.validation.constraints.NotNull;
 import java.io.InputStream;
 import java.util.Base64;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.Builder;
@@ -218,37 +221,28 @@ public class RestaurantRestControllerAdapter {
     }
   }
 
-  @PostMapping("/{restaurantId}/upload")
-  public ResponseEntity<Void> uploadFile(@PathVariable UUID restaurantId,@RequestParam("image") MultipartFile file) {
-    String message = "";
-    try {
-      // storageService.save(file);
+  @PostMapping("/{restaurantId}/logo:upload")
+  public ResponseEntity<Void> uploadFile(
+      @PathVariable UUID restaurantId, @RequestParam("image") MultipartFile file) {
+    try (InputStream inputStream = file.getInputStream()) {
 
-
-      UploadFileImageCommand command = UploadFileImageCommand.builder()
-          .restaurantId(RestaurantId.from(restaurantId))
-          .inputStream(file.getInputStream())
-          .name(file.getOriginalFilename())
-          .build();
+      UploadFileImageCommand command =
+          UploadFileImageCommand.builder()
+              .restaurantId(RestaurantId.from(restaurantId))
+              .inputStream(inputStream)
+              .name(Objects.requireNonNullElse(file.getOriginalFilename(), "logoVuoto"))
+              .build();
 
       String urlLogo = uploadLogoRestaurantUseCase.updateLogo(command);
 
-      message = "Caricamento immagine avvenuto correttamente: " + file.getOriginalFilename();
 
-      log.warn(()-> "Url logo: "+urlLogo);
+      log.debug(() -> "Url logo: " + urlLogo);
 
       return ResponseEntity.noContent().build();
 
     } catch (Exception e) {
-      String error =
-          "Non è stato possibile caricare il file: "
-              + file.getOriginalFilename()
-              + ". Error: "
-              + e.getMessage();
 
-      log.warn(()-> error);
-
-      return ResponseEntity.badRequest().build();
+      throw new DomainException(RestaurantErrors.IMPOSSIBLE_TO_UPLOAD);
     }
   }
 }

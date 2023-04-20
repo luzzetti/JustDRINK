@@ -16,6 +16,7 @@ import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.Resta
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.mappers.RestaurantJpaMapper;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.repositories.RestaurantJpaRepository;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileStore;
 import java.nio.file.Files;
@@ -99,32 +100,17 @@ public class RestaurantJpaAdapter
 
     initDirectoryUploadImage();
 
-    try {
+    try(InputStream inputStream = image.getInputStream()) {
       // TODO implementare le varie validazioni ed i vari controlli, esempio file con lo stesso
       // nome, stesso file ecc ecc.
 
       Path path = this.rootUploadImage.resolve(image.getName());
 
-      Files.copy(image.getInputStream(), path);
+      Files.copy(inputStream, path);
 
       log.warn("TEST path nel jpa adapter: " + path.toString());
 
-      String urlImage = path.toUri().toString();
-
-      Restaurant restaurant =
-          restaurantJpaRepository
-              .findById(image.getRestaurantId().id())
-              .map(restaurantJpaMapper::toDomain)
-              .orElseThrow(
-                  () ->
-                      new DomainException(RestaurantErrors.NOT_FOUND)
-                          .putInfo("id", image.getRestaurantId()));
-
-      Restaurant restaurantWithImage = restaurant.toBuilder().logoUrl(urlImage).build();
-
-      saveRestaurant(restaurantWithImage);
-
-      return urlImage;
+      return path.toUri().toString();
 
     } catch (Exception e) {
 
