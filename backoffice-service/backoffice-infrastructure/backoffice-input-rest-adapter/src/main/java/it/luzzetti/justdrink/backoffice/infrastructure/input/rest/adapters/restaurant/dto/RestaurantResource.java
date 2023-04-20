@@ -1,6 +1,8 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant.dto;
 
 import it.luzzetti.justdrink.backoffice.domain.vo.Address;
+import it.luzzetti.justdrink.backoffice.domain.vo.Cuisine;
+import java.util.Set;
 import java.util.UUID;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -17,4 +19,5 @@ public class RestaurantResource extends RepresentationModel<RestaurantResource> 
   private String name;
   private Address address;
   private boolean enabled;
+  private Set<CuisineResource> cuisines;
 }
