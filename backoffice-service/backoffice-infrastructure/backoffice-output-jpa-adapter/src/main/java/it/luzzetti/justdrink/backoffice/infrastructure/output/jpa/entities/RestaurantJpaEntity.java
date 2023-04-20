@@ -22,5 +22,5 @@ public class RestaurantJpaEntity {
   @NotNull private AddressJpaEmbeddable address;
   private boolean enabled;
 
-  private String url;
+  private String logoUrl;
 }

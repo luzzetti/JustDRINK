@@ -8,6 +8,7 @@ import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.Save
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.SaveRestaurantPort;
 import it.luzzetti.justdrink.backoffice.domain.FileImage;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
+import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant.RestaurantBuilder;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.RestaurantErrors;
 import it.luzzetti.justdrink.backoffice.domain.shared.DomainException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
@@ -21,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -97,24 +99,37 @@ public class RestaurantJpaAdapter
 
     initDirectoryUploadImage();
 
-
     try {
-      //TODO implementare le varie validazioni ed i vari controlli, esempio file con lo stesso nome, stesso file ecc ecc.
+      // TODO implementare le varie validazioni ed i vari controlli, esempio file con lo stesso
+      // nome, stesso file ecc ecc.
 
       Path path = this.rootUploadImage.resolve(image.getName());
 
       Files.copy(image.getInputStream(), path);
 
-      log.warn("TEST path nel jpa adapter: "+path.toString());
+      log.warn("TEST path nel jpa adapter: " + path.toString());
 
-      return path.toUri().toString();
+      String urlImage = path.toUri().toString();
+
+      Restaurant restaurant =
+          restaurantJpaRepository
+              .findById(image.getRestaurantId().id())
+              .map(restaurantJpaMapper::toDomain)
+              .orElseThrow(
+                  () ->
+                      new DomainException(RestaurantErrors.NOT_FOUND)
+                          .putInfo("id", image.getRestaurantId()));
+
+      Restaurant restaurantWithImage = restaurant.toBuilder().logoUrl(urlImage).build();
+
+      saveRestaurant(restaurantWithImage);
+
+      return urlImage;
 
     } catch (Exception e) {
 
       throw new RuntimeException(e.getMessage());
     }
-
-
   }
 
   private void initDirectoryUploadImage() {

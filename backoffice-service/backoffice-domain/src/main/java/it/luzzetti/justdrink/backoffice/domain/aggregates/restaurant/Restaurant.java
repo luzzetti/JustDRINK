@@ -9,7 +9,7 @@ import java.util.Set;
 import lombok.*;
 
 @Getter
-@Builder
+@Builder(toBuilder = true)
 public class Restaurant {
 
   private final RestaurantId id;
@@ -17,6 +17,8 @@ public class Restaurant {
   private Address address;
   @Builder.Default private Set<Cuisine> cuisines = new HashSet<>();
   @Builder.Default private Boolean enabled = Boolean.FALSE;
+
+  private String logoUrl;
 
   // Aggregate Public methods
   public void changeAddress(Address newAddress) {
