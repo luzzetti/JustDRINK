@@ -1,6 +1,9 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.errors;
 
 import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ApplicationException;
+import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotFoundException;
+import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotUniqueException;
+import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotValidException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.Locale;
@@ -55,6 +58,18 @@ public class RestExceptionHandler {
         "whatIsThis?",
         "PossoScrivereQuelloCheVoglio? Aggiungere lo StackTrace SOLO se sto con profilo Local/stage");
 
-    return ResponseEntity.badRequest().body(theProblem);
+    // Vabè...questa poi la sistemiamo
+    if (ex instanceof ElementNotFoundException) {
+      return new ResponseEntity<>(theProblem, HttpStatus.NOT_FOUND);
+
+    } else if (ex instanceof ElementNotValidException) {
+      return new ResponseEntity<>(theProblem, HttpStatus.BAD_REQUEST);
+
+    } else if (ex instanceof ElementNotUniqueException) {
+      return new ResponseEntity<>(theProblem, HttpStatus.CONFLICT);
+
+    } else {
+      return new ResponseEntity<>(theProblem, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }
