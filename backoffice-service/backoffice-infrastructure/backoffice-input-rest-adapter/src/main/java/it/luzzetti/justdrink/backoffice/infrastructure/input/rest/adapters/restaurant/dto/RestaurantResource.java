@@ -1,7 +1,6 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant.dto;
 
 import it.luzzetti.justdrink.backoffice.domain.vo.Address;
-import it.luzzetti.justdrink.backoffice.domain.vo.Cuisine;
 import java.util.Set;
 import java.util.UUID;
 import lombok.EqualsAndHashCode;
