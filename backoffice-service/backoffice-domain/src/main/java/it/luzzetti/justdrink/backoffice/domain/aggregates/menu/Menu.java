@@ -1,5 +1,6 @@
 package it.luzzetti.justdrink.backoffice.domain.aggregates.menu;
 
+import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotValidException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.MenuId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.MenuSectionId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.ProductId;
@@ -88,7 +89,7 @@ public class Menu {
     public Menu build() {
 
       if (super.id == null || super.id.id() == null) {
-        throw new IllegalArgumentException("a Menu cannot be created with a NULL id");
+        throw new ElementNotValidException(MenuErrors.MENU_ID_REQUIRED);
       }
 
       return super.build();

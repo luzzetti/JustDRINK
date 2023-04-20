@@ -142,6 +142,35 @@ public class RestaurantRestControllerAdapter {
     return ResponseEntity.ok(resource);
   }
 
+  /* TODO:
+  Al momento le coordinate di un ristorante arrivano in questo formato:
+   "address": {
+        "displayName": "Via Orazio Coccanari, 25",
+        "coordinates": {
+            "latitude": {
+                "latitudeValue": 50.9585226
+            },
+            "longitude": {
+                "longitudeValue": 0.0
+            }
+        }
+    }
+
+    Questo perché è stato usato il VO Coordinates (di dominio) anche nella parte web.
+    Questa cosa non è necessariamente MALE, però è probabile che il Frontendista preferisca
+    un formato più semplice, ad esempio:
+    "address" : {
+      "coordinates": {
+        "latitude" :  50.9585226,
+        "longitude" : 15.0
+      }
+    }
+
+    A. Creare un'apposita risorsa (AddressResource) da restituire al Frontend.
+    B. Se non è troppo difficile, sistemare ADDRESS e COORDINATES rendendoli dei veri ValueObjects
+        seguendo le stesse convenzioni usate per altri VO
+   */
+
   @PutMapping("/{restaurantId}/address")
   public ResponseEntity<RestaurantResource> changeRestaurantAddress(
       @PathVariable UUID restaurantId, @RequestBody @Valid ChangeRestaurantAddressRequest request) {
@@ -169,8 +198,8 @@ public class RestaurantRestControllerAdapter {
   public ResponseEntity<RestaurantResource> createRestaurant(
       @RequestBody @Valid RestaurantCreationRequest request) {
 
-    Set<Cuisine> theCuisines = request.cuisines().stream().map(cuisineWebMapper::toDomain)
-        .collect(Collectors.toSet());
+    Set<Cuisine> theCuisines =
+        request.cuisines().stream().map(cuisineWebMapper::toDomain).collect(Collectors.toSet());
 
     // Creating the command
     var command =

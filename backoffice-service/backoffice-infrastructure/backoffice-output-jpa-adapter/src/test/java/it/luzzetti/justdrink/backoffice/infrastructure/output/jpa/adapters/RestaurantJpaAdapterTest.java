@@ -3,7 +3,7 @@ package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.adapters;
 import static org.junit.jupiter.api.Assertions.*;
 
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
-import it.luzzetti.justdrink.backoffice.domain.shared.DomainException;
+import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ApplicationException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.domain.vo.Address;
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
@@ -105,7 +105,7 @@ class RestaurantJpaAdapterTest {
     theAdapterUnderTest.deleteRestaurantById(anExistingRestaurant.getId());
 
     assertThrows(
-        DomainException.class,
+        ApplicationException.class,
         () -> theAdapterUnderTest.findRestaurantByName(EXISTING_NAME),
         "the restaurant shouldn't exist anymore in the database");
   }

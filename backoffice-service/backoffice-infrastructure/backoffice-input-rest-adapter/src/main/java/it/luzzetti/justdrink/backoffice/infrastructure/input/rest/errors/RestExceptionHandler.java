@@ -1,14 +1,26 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.errors;
 
-import it.luzzetti.justdrink.backoffice.domain.shared.DomainException;
+import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ApplicationException;
 import jakarta.servlet.http.HttpServletRequest;
+import java.net.URI;
 import java.util.Locale;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+/*
+ * https://howtodoinjava.com/spring-mvc/spring-problemdetail-errorresponse/
+ *
+ * https://shekhargulati.com/2019/12/10/problem-details-for-http-apis-with-spring-boot/
+ * https://docs.spring.io/spring-hateoas/docs/current/api/org/springframework/hateoas/mediatype/problem/Problem.html
+ * https://datatracker.ietf.org/doc/html/rfc7807
+ * https://docs.spring.io/spring-hateoas/docs/current/reference/html/#mediatypes.http-problem
+ */
 
 @RestControllerAdvice
 @Log4j2
@@ -17,9 +29,9 @@ public class RestExceptionHandler {
 
   private final MessageSource messageSource;
 
-  @ExceptionHandler(value = {DomainException.class})
-  public ResponseEntity<ApiError> handleDomainException(
-      DomainException ex, Locale locale, HttpServletRequest request) {
+  @ExceptionHandler(value = {ApplicationException.class})
+  public ResponseEntity<ProblemDetail> handleDomainException(
+      ApplicationException ex, Locale locale, HttpServletRequest request) {
 
     // Dopo leggo: https://phrase.com/blog/posts/detecting-a-users-locale/
 
@@ -35,8 +47,14 @@ public class RestExceptionHandler {
                     theLocalizedMessage,
                     ex.getProperties()));
 
-    ApiError theError = ApiError.builder().message(theLocalizedMessage).build();
+    ProblemDetail theProblem =
+        ProblemDetail.forStatusAndDetail(HttpStatus.I_AM_A_TEAPOT, theLocalizedMessage);
+    theProblem.setType(URI.create("http://ancora-da-implementare/errors/not-found"));
+    theProblem.setTitle(ex.getErrorCode().toString());
+    theProblem.setProperty(
+        "whatIsThis?",
+        "PossoScrivereQuelloCheVoglio? Aggiungere lo StackTrace SOLO se sto con profilo Local/stage");
 
-    return ResponseEntity.badRequest().body(theError);
+    return ResponseEntity.badRequest().body(theProblem);
   }
 }
