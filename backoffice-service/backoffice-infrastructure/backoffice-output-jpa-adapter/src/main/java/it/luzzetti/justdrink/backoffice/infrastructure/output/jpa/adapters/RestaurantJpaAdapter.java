@@ -32,9 +32,6 @@ public class RestaurantJpaAdapter
 
   @Override
   public Restaurant saveRestaurant(Restaurant aNewRestaurant) {
-
-    // TODO: da fare!!! modifica entity e mapper
-
     RestaurantJpaEntity aNewEntity = restaurantJpaMapper.toEntity(aNewRestaurant);
 
     RestaurantJpaEntity theCreatedEntity = restaurantJpaRepository.save(aNewEntity);
