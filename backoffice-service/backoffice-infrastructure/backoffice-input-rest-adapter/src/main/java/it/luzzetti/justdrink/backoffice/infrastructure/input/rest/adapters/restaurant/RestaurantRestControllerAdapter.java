@@ -129,6 +129,8 @@ public class RestaurantRestControllerAdapter {
     // Calling Use-Case
     Restaurant theFoundRestaurant = showRestaurantQuery.showRestaurant(command);
 
+    log.debug(() -> "TEST logo: " + theFoundRestaurant.getLogoUrl());
+
     // Crafting a HATEOAS response
     RestaurantResource resource = restaurantWebMapper.toResource(theFoundRestaurant);
 
@@ -222,7 +224,7 @@ public class RestaurantRestControllerAdapter {
   }
 
   @PostMapping("/{restaurantId}/logo:upload")
-  public ResponseEntity<Void> uploadFile(
+  public ResponseEntity<LogoRestaurantResources> uploadFile(
       @PathVariable UUID restaurantId, @RequestParam("image") MultipartFile file) {
     try (InputStream inputStream = file.getInputStream()) {
 
@@ -230,15 +232,16 @@ public class RestaurantRestControllerAdapter {
           UploadFileImageCommand.builder()
               .restaurantId(RestaurantId.from(restaurantId))
               .inputStream(inputStream)
-              .name(Objects.requireNonNullElse(file.getOriginalFilename(), "logoVuoto"))
+              .name(Objects.requireNonNullElse(file.getOriginalFilename(), "name logo absent"))
               .build();
 
       String urlLogo = uploadLogoRestaurantUseCase.updateLogo(command);
+      log.debug(() -> String.format("Url logo: %s", urlLogo));
 
+      LogoRestaurantResources resources =
+          LogoRestaurantResources.builder().logoUrl(urlLogo).id(restaurantId).build();
 
-      log.debug(() -> "Url logo: " + urlLogo);
-
-      return ResponseEntity.noContent().build();
+      return ResponseEntity.accepted().body(resources);
 
     } catch (Exception e) {
 

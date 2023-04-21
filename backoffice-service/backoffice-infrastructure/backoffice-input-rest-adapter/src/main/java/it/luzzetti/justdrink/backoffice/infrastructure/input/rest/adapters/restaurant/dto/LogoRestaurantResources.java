@@ -1,5 +1,6 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant.dto;
 
+import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -7,7 +8,7 @@ import lombok.Getter;
 @Getter
 public class LogoRestaurantResources {
 
-  private String message;
-  private String url;
+  private UUID id;
+  private String logoUrl;
 
 }

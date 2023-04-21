@@ -22,6 +22,7 @@ import java.nio.file.FileStore;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -101,20 +102,15 @@ public class RestaurantJpaAdapter
     initDirectoryUploadImage();
 
     try(InputStream inputStream = image.getInputStream()) {
-      // TODO implementare le varie validazioni ed i vari controlli, esempio file con lo stesso
-      // nome, stesso file ecc ecc.
 
       Path path = this.rootUploadImage.resolve(image.getName());
 
       Files.copy(inputStream, path);
 
-      log.warn("TEST path nel jpa adapter: " + path.toString());
-
       return path.toUri().toString();
-
     } catch (Exception e) {
 
-      throw new RuntimeException(e.getMessage());
+      throw new DomainException(RestaurantErrors.IMPOSSIBLE_TO_UPLOAD);
     }
   }
 
@@ -123,8 +119,8 @@ public class RestaurantJpaAdapter
       try {
         Files.createDirectories(rootUploadImage);
       } catch (IOException e) {
-        throw new RuntimeException(
-            "Non è stato possibile inizializzare la directory per l'upload delle immagini!");
+        log.warn(()-> String.format("Impossibile inizializzare la directory per l'upload"));
+        throw new DomainException(RestaurantErrors.IMPOSSIBLE_TO_UPLOAD);
       }
     }
   }

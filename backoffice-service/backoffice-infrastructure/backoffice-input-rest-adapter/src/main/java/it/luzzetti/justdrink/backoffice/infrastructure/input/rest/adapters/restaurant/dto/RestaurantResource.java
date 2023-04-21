@@ -17,6 +17,5 @@ public class RestaurantResource extends RepresentationModel<RestaurantResource> 
   private String name;
   private Address address;
   private boolean enabled;
-
-  //TODO aggingere url logo
+  private String logoUrl;
 }
