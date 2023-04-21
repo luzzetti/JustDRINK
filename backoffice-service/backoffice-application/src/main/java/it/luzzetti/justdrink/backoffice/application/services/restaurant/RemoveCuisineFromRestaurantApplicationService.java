@@ -1,6 +1,5 @@
 package it.luzzetti.justdrink.backoffice.application.services.restaurant;
 
-import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.RemoveCuisineFromRestaurantUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.FindRestaurantPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.SaveRestaurantPort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
@@ -13,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Log4j2
 public class RemoveCuisineFromRestaurantApplicationService implements
-    RemoveCuisineFromRestaurantUseCase {
+    it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.RemoveCuisineFromRestaurantUseCase {
 
   private final FindRestaurantPort findRestaurantPort;
   private final SaveRestaurantPort saveRestaurantPort;
