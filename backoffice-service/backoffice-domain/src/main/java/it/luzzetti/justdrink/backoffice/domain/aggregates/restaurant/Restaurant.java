@@ -1,6 +1,8 @@
 package it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant;
 
-import it.luzzetti.justdrink.backoffice.domain.shared.DomainException;
+import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotFoundException;
+import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotUniqueException;
+import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotValidException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.domain.vo.Address;
 import it.luzzetti.justdrink.backoffice.domain.vo.Cuisine;
@@ -24,14 +26,13 @@ public class Restaurant {
   public void changeAddress(Address newAddress) {
     // Validations
     if (newAddress == null) {
-      throw new DomainException(RestaurantErrors.ADDRESS_REQUIRED);
+      throw new ElementNotValidException(RestaurantErrors.ADDRESS_REQUIRED);
     }
-    
+
     this.address = newAddress;
   }
 
   // Aggregate Private methods
-
 
   // Lombok's Builder Override //
 
@@ -45,14 +46,14 @@ public class Restaurant {
 
   public void addCuisine(Cuisine theNewCuisine) {
     if (this.cuisines.contains(theNewCuisine)) {
-      throw new DomainException(RestaurantErrors.CUISINE_ALREADY_EXISTING);
+      throw new ElementNotUniqueException(RestaurantErrors.CUISINE_ALREADY_EXISTING);
     }
     this.cuisines.add(theNewCuisine);
   }
 
   public void removeCuisine(Cuisine theCuisine) {
-    if(!this.cuisines.contains(theCuisine)){
-      throw new DomainException(RestaurantErrors.CUISINE_NOT_EXISTING);
+    if (!this.cuisines.contains(theCuisine)) {
+      throw new ElementNotFoundException(RestaurantErrors.CUISINE_NOT_EXISTING);
     }
     this.cuisines.remove(theCuisine);
   }
@@ -66,15 +67,15 @@ public class Restaurant {
     /* Adding validations as part of build() method. */
     public Restaurant build() {
       if (super.id == null || super.id.id() == null) {
-        throw new DomainException(RestaurantErrors.ID_REQUIRED);
+        throw new ElementNotValidException(RestaurantErrors.ID_REQUIRED);
       }
 
       if (super.name == null || super.name.isBlank()) {
-        throw new DomainException(RestaurantErrors.NAME_REQUIRED);
+        throw new ElementNotValidException(RestaurantErrors.NAME_REQUIRED);
       }
 
       if (super.address == null) {
-        throw new DomainException(RestaurantErrors.ADDRESS_REQUIRED);
+        throw new ElementNotValidException(RestaurantErrors.ADDRESS_REQUIRED);
       }
 
       return super.build();

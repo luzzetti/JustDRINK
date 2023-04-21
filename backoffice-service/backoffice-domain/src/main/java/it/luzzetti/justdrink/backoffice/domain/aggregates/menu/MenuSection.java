@@ -1,5 +1,6 @@
 package it.luzzetti.justdrink.backoffice.domain.aggregates.menu;
 
+import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotUniqueException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.MenuSectionId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.ProductId;
 import java.time.Instant;
@@ -21,7 +22,7 @@ public class MenuSection {
 
   public void addProduct(Product product) {
     if (containsProductWithName(product.getName())) {
-      throw new IllegalArgumentException("Esiste già un prodotto con questo nome");
+      throw new ElementNotUniqueException(MenuErrors.PRODUCT_NAME_EXISTING);
     }
     products.add(product);
   }

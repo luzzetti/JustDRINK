@@ -1,5 +1,6 @@
 package it.luzzetti.justdrink.backoffice.domain.aggregates.menu;
 
+import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotValidException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.ProductId;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -31,7 +32,7 @@ public class Product {
     public Product build() {
 
       if (super.id == null || super.id.id() == null) {
-        throw new IllegalArgumentException("a Product cannot be created with a NULL id");
+        throw new ElementNotValidException(MenuErrors.PRODUCT_ID_REQUIRED);
       }
 
       return super.build();

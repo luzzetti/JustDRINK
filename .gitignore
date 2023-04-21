@@ -1,3 +1,7 @@
+
+_database
+.dev.env
+
 ##############################
 ## Java
 ##############################
@@ -149,3 +153,4 @@ coverage
 *.njsproj
 *.sln
 *.sw?
+/docker-compose/database.dev.env

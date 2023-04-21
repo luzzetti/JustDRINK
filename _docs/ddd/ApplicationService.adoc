@@ -1,0 +1,30 @@
+= Orchestration
+
+Getting the orchestration right is perhaps the most difficult part of designing a good application service. This is because you need to make sure you are not accidentally introducing business logic into the application service even though you think you are only doing orchestration. So what does orchestration mean in this context?
+
+By orchestration, I mean looking up and invoking the correct domain objects in the correct order, passing in the correct input parameters and returning the correct output. In its simplest form, an application service may look up an aggregate based on an ID, invoke a method on that aggregate, save it and return. However, in more complex cases, the method may have to look up multiple aggregates, interact with domain services, perform input validation and so on. If you find yourself writing long application service methods, you should ask yourself the following questions:
+
+Is the method making a business decision or asking the domain model to make the decision?
+
+Should some of the code be moved to domain event listeners?
+
+This being said, having some business logic ending up in an application service method is not the end of the world. It is still pretty close to the domain model and well encapsulated and should be pretty easy to refactor into the domain model at a later time. Don’t waste too much precious time thinking about whether something should go into the domain model or into the application service if it is not immediately clear to you.
+
+
+== Example
+
+https://vaadin.com/blog/ddd-part-3-domain-driven-design-and-the-hexagonal-architecture
+
+----
+customerDuplicateLocator.checkForDuplicates(request);
+----
+Mmm...ok che sta nell'application service.
+Ok che chiami un DomainService (più o meno)
+ma...devo passare il repository al DomainService?
+
+Oooof. Ho aperto un vaso di Pandora
+https://stackoverflow.com/questions/67254749/ddd-the-problem-with-domain-services-that-need-to-fetch-data-as-part-of-their-b
+
+
+Ooof 2
+https://stackoverflow.com/questions/67148194/domain-driven-design-ddd-domain-event-handlers-where-to-place-them

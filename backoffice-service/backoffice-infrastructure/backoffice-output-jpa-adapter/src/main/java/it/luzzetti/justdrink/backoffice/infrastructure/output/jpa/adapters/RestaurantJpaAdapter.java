@@ -10,7 +10,7 @@ import it.luzzetti.justdrink.backoffice.domain.FileImage;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant.RestaurantBuilder;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.RestaurantErrors;
-import it.luzzetti.justdrink.backoffice.domain.shared.DomainException;
+import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotFoundException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.RestaurantJpaEntity;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.mappers.RestaurantJpaMapper;
@@ -49,9 +49,6 @@ public class RestaurantJpaAdapter
 
   @Override
   public Restaurant saveRestaurant(Restaurant aNewRestaurant) {
-
-    // TODO: da fare!!! modifica entity e mapper
-
     RestaurantJpaEntity aNewEntity = restaurantJpaMapper.toEntity(aNewRestaurant);
 
     RestaurantJpaEntity theCreatedEntity = restaurantJpaRepository.save(aNewEntity);
@@ -75,7 +72,9 @@ public class RestaurantJpaAdapter
         .findById(restaurantId.id())
         .map(restaurantJpaMapper::toDomain)
         .orElseThrow(
-            () -> new DomainException(RestaurantErrors.NOT_FOUND).putInfo("id", restaurantId));
+            () ->
+                new ElementNotFoundException(RestaurantErrors.NOT_FOUND)
+                    .putInfo("id", restaurantId));
   }
 
   public Restaurant findRestaurantByName(String restaurantName) {
@@ -83,7 +82,9 @@ public class RestaurantJpaAdapter
         .findRestaurantByName(restaurantName)
         .map(restaurantJpaMapper::toDomain)
         .orElseThrow(
-            () -> new DomainException(RestaurantErrors.NOT_FOUND).putInfo("name", restaurantName));
+            () ->
+                new ElementNotFoundException(RestaurantErrors.NOT_FOUND)
+                    .putInfo("name", restaurantName));
   }
 
   @Override
