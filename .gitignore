@@ -1,6 +1,7 @@
 
 _database
 .dev.env
+*/application-dev.yml
 
 ##############################
 ## Java

@@ -5,6 +5,7 @@ package it.luzzetti.justdrink.backoffice.domain.aggregates.worktime;
 
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.validators.ClashingOpeningsChecker;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.validators.ClashingOverrulesChecker;
+import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotFoundException;
 import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotValidException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.OpeningId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.OverruleId;
@@ -59,8 +60,8 @@ public class Worktime {
         .findFirst()
         .orElseThrow(
             () ->
-                new IllegalArgumentException(
-                    "There is no Opening with id %s in this worktime".formatted(anOpeningId)));
+                new ElementNotFoundException(WorktimeErrors.OPENING_NOT_FOUND)
+                    .putInfo("Opening Id", anOpeningId));
   }
 
   public Overrule getOverruleById(OverruleId anOverruleId) {
@@ -69,8 +70,8 @@ public class Worktime {
         .findFirst()
         .orElseThrow(
             () ->
-                new IllegalArgumentException(
-                    "There is no Overrule with id %s in this worktime".formatted(anOverruleId)));
+                new ElementNotFoundException(WorktimeErrors.OVERRULE_NOT_FOUND)
+                    .putInfo("Overrule Id", anOverruleId));
   }
 
   // ####################################################

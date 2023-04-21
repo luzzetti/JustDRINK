@@ -3,7 +3,9 @@ package it.luzzetti.justdrink.backoffice.domain.aggregates.worktime;
 import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ErrorCode;
 
 public enum WorktimeErrors implements ErrorCode {
-  ID_REQUIRED("domain.worktime.id.required");
+  ID_REQUIRED("domain.worktime.id.required"),
+  OPENING_NOT_FOUND("domain.worktime.opening.opening_not_found"),
+  OVERRULE_NOT_FOUND("domain.worktime.overrule.overrule_not_found");
   private final String code;
 
   WorktimeErrors(String code) {

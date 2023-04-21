@@ -1,5 +1,6 @@
 package it.luzzetti.justdrink.backoffice.domain.aggregates.menu;
 
+import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotFoundException;
 import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotUniqueException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.MenuSectionId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.ProductId;
@@ -36,7 +37,7 @@ public class MenuSection {
         .filter(product -> product.getId().equals(productId))
         .findFirst()
         .orElseThrow(
-            () -> new IllegalArgumentException("Non esiste nessun prodotto con questo id"));
+            () -> new ElementNotFoundException(MenuErrors.PRODUCT_NOT_FOUND));
   }
 
   public void removeProductById(ProductId productIdToRemove) {

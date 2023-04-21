@@ -1,5 +1,6 @@
 package it.luzzetti.justdrink.backoffice.domain.aggregates.menu;
 
+import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotFoundException;
 import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotValidException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.MenuId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.MenuSectionId;
@@ -45,7 +46,7 @@ public class Menu {
         .filter(o -> sectionId.equals(o.getId()))
         .findFirst()
         .orElseThrow(
-            () -> new IllegalArgumentException("Non esiste nessuna sezione con questo id"));
+            () -> new ElementNotFoundException(MenuErrors.SECTION_NOT_FOUND_ON_MENU));
   }
 
   public List<Product> listProductsFromSection(MenuSectionId sectionId) {

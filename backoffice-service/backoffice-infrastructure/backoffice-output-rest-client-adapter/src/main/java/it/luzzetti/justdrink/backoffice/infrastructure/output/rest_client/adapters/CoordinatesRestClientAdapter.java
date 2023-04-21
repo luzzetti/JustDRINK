@@ -1,6 +1,8 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.output.rest_client.adapters;
 
 import it.luzzetti.justdrink.backoffice.application.ports.output.FindCoordinatesPort;
+import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.RestaurantErrors;
+import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotProcessableException;
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates.Latitude;
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates.Longitude;
@@ -52,14 +54,10 @@ public class CoordinatesRestClientAdapter implements FindCoordinatesPort {
 
       return Optional.of(theFoundCoordinates);
     } catch (Exception ex) {
+      throw new ElementNotProcessableException(RestaurantErrors.IMPOSSIBLE_TO_GEOCODE);
       /*
-       * TODO: basta. Oggi basta exception.
-       * Domani la creo.
-       * Questa tornerà un 422
-       * throw new ElementNotProcessableException("");
        * https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/422
        */
-      return Optional.empty();
     }
   }
 
