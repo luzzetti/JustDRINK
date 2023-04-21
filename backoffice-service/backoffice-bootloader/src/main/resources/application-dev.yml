@@ -2,17 +2,18 @@ server:
   port: 9090
 
 spring:
+
   datasource:
-    url: jdbc:h2:file:~/database_h2/justDRINK_backoffice;AUTO_SERVER=TRUE
-    driver-class-name: org.h2.Driver
-    username: sa
-    password: password
+    username: DATABASE_USERNAME
+    password: DATABASE_PASSWORD
 
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    show_sql: true
+    properties:
+      hibernate:
+        format_sql: false
     hibernate:
-      ddl-auto: update
-    show-sql: true
+      ddl-auto: create-drop
 
 logging:
   level:
