@@ -4,10 +4,13 @@ import it.luzzetti.justdrink.backoffice.application.ports.output.FindCoordinates
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates.Latitude;
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates.Longitude;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -25,9 +28,6 @@ public class CoordinatesRestClientAdapter implements FindCoordinatesPort {
    * Vedere se utile: https://httptoolkit.com/java/
    */
 
-  /*
-   * FIXME: this is a POC (Proof Of Concept) not ready for production
-   */
   @Override
   public Optional<Coordinates> findCoordinatesByAddressName(String addressName) {
 
@@ -37,26 +37,30 @@ public class CoordinatesRestClientAdapter implements FindCoordinatesPort {
             .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .build();
 
-    Place[] responses =
+    List<Place> responses =
         webClient
             .get()
             .uri(uriBuilder -> uriBuilder.path("/search").queryParam("q", addressName).build())
             .retrieve()
-            .bodyToMono(Place[].class)
+            .bodyToMono(new ParameterizedTypeReference<List<Place>>() {})
             .block();
 
-    Place theGeocodedPlace =
-        Arrays.stream(responses)
-            .findFirst()
-            .orElseThrow(
-                () -> new IllegalArgumentException("Oh sheeet, the geocoding didn't geocode!"));
+    try {
+      Place theGeocodedPlace = Objects.requireNonNullElse(responses, new ArrayList<Place>()).get(0);
+      Coordinates theFoundCoordinates =
+          Coordinates.of(Latitude.of(theGeocodedPlace.lat()), Longitude.of(theGeocodedPlace.lon()));
 
-    log.debug(() -> theGeocodedPlace);
-
-    Coordinates theFoundCoordinates =
-        Coordinates.of(Latitude.of(theGeocodedPlace.lat()), Longitude.of(theGeocodedPlace.lon()));
-
-    return Optional.of(theFoundCoordinates);
+      return Optional.of(theFoundCoordinates);
+    } catch (Exception ex) {
+      /*
+       * TODO: basta. Oggi basta exception.
+       * Domani la creo.
+       * Questa tornerà un 422
+       * throw new ElementNotProcessableException("");
+       * https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/422
+       */
+      return Optional.empty();
+    }
   }
 
   record Place(Long place_id, String display_name, Double lat, Double lon) {}

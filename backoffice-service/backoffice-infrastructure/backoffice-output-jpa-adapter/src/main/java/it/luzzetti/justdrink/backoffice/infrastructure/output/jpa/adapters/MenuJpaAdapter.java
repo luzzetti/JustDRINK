@@ -7,6 +7,8 @@ import it.luzzetti.justdrink.backoffice.application.ports.output.menu.GenerateMe
 import it.luzzetti.justdrink.backoffice.application.ports.output.menu.GenerateProductIdPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.menu.SaveMenuPort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.menu.Menu;
+import it.luzzetti.justdrink.backoffice.domain.aggregates.menu.MenuErrors;
+import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotFoundException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.MenuId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.MenuSectionId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.ProductId;
@@ -39,11 +41,7 @@ public class MenuJpaAdapter
     return menuJpaRepository
         .findMenuByRestaurantId(restaurantId.id())
         .map(menuJpaMapper::toDomain)
-        .orElseThrow(
-            () ->
-                new IllegalArgumentException(
-                    "There is no Menu associated with a restaurantId of %s"
-                        .formatted(restaurantId)));
+        .orElseThrow(() -> new ElementNotFoundException(MenuErrors.MENU_NOT_FOUND_ON_RESTAURANT));
   }
 
   @Override

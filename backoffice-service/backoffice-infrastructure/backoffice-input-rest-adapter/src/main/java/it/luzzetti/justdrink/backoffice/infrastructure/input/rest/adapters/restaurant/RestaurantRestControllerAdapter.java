@@ -5,6 +5,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import io.swagger.v3.oas.annotations.Operation;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.AddCuisineToRestaurantUseCase;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.AddCuisineToRestaurantUseCase.AddCuisineToRestaurantCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ChangeRestaurantAddressUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ChangeRestaurantAddressUseCase.ChangeRestaurantAddressCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.CreateRestaurantUseCase;
@@ -13,21 +15,30 @@ import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.Delet
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.DeleteRestaurantUseCase.DeleteRestaurantCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsQuery;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsQuery.ListRestaurantsCommand;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.RemoveCuisineFromRestaurantUseCase;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.RemoveCuisineFromRestaurantUseCase.RemoveCuisineFromRestaurantCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ShowRestaurantQuery;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ShowRestaurantQuery.ShowRestaurantCommand;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
+import it.luzzetti.justdrink.backoffice.domain.vo.Cuisine;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.menu.MenuRestControllerAdapter;
+import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant.dto.CuisineResource;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant.dto.RestaurantResource;
+import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.CuisineWebMapper;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.RestaurantWebMapper;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.util.Base64;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -58,6 +69,8 @@ public class RestaurantRestControllerAdapter {
   private final CreateRestaurantUseCase createRestaurantUseCase;
   private final ChangeRestaurantAddressUseCase changeRestaurantAddressUseCase;
   private final DeleteRestaurantUseCase deleteRestaurantUseCase;
+  private final AddCuisineToRestaurantUseCase addCuisineToRestaurantUseCase;
+  private final RemoveCuisineFromRestaurantUseCase removeCuisineFromRestaurantUseCase;
 
   // Queries
   private final ListRestaurantsQuery listRestaurantsQuery;
@@ -65,6 +78,7 @@ public class RestaurantRestControllerAdapter {
 
   // Mappers
   private final RestaurantWebMapper restaurantWebMapper;
+  private final CuisineWebMapper cuisineWebMapper;
 
   private static void addStandardHateoasLinks(UUID restaurantId, RestaurantResource resource) {
 
@@ -128,6 +142,35 @@ public class RestaurantRestControllerAdapter {
     return ResponseEntity.ok(resource);
   }
 
+  /* TODO:
+  Al momento le coordinate di un ristorante arrivano in questo formato:
+   "address": {
+        "displayName": "Via Orazio Coccanari, 25",
+        "coordinates": {
+            "latitude": {
+                "latitudeValue": 50.9585226
+            },
+            "longitude": {
+                "longitudeValue": 0.0
+            }
+        }
+    }
+
+    Questo perché è stato usato il VO Coordinates (di dominio) anche nella parte web.
+    Questa cosa non è necessariamente MALE, però è probabile che il Frontendista preferisca
+    un formato più semplice, ad esempio:
+    "address" : {
+      "coordinates": {
+        "latitude" :  50.9585226,
+        "longitude" : 15.0
+      }
+    }
+
+    A. Creare un'apposita risorsa (AddressResource) da restituire al Frontend.
+    B. Se non è troppo difficile, sistemare ADDRESS e COORDINATES rendendoli dei veri ValueObjects
+        seguendo le stesse convenzioni usate per altri VO
+   */
+
   @PutMapping("/{restaurantId}/address")
   public ResponseEntity<RestaurantResource> changeRestaurantAddress(
       @PathVariable UUID restaurantId, @RequestBody @Valid ChangeRestaurantAddressRequest request) {
@@ -154,12 +197,17 @@ public class RestaurantRestControllerAdapter {
   @PostMapping
   public ResponseEntity<RestaurantResource> createRestaurant(
       @RequestBody @Valid RestaurantCreationRequest request) {
+
+    Set<Cuisine> theCuisines =
+        request.cuisines().stream().map(cuisineWebMapper::toDomain).collect(Collectors.toSet());
+
     // Creating the command
     var command =
         CreateRestaurantCommand.builder()
             .name(request.name())
             .addressName(request.addressName())
             .coordinates(request.coordinates())
+            .cuisines(theCuisines)
             .build();
 
     // Executing Use-Case
@@ -186,6 +234,40 @@ public class RestaurantRestControllerAdapter {
     return ResponseEntity.noContent().build();
   }
 
+  @Operation(summary = "Esegue l'aggiunta di una cuisine ad un ristorante")
+  @PostMapping("/{restaurantId}/cuisines")
+  public ResponseEntity<Void> addCuisineToRestaurant(
+      @PathVariable UUID restaurantId, @RequestBody @Valid AddCuisineRequest request) {
+
+    var command =
+        AddCuisineToRestaurantCommand.builder()
+            .restaurantId(RestaurantId.from(restaurantId))
+            .theCuisineToAdd(Cuisine.of(request.name))
+            .build();
+
+    addCuisineToRestaurantUseCase.addCuisineToRestaurant(command);
+
+    return ResponseEntity.noContent().build();
+  }
+
+  @Operation(summary = "Esegue l'aggiunta di una cuisine ad un ristorante")
+  @DeleteMapping("/{restaurantId}/cuisines/{cuisineName}")
+  public ResponseEntity<Void> removeCuisineFromRestaurant(
+      @PathVariable UUID restaurantId, @PathVariable String cuisineName) {
+
+    var command =
+        RemoveCuisineFromRestaurantCommand.builder()
+            .restaurantId(RestaurantId.from(restaurantId))
+            .cuisineToRemove(Cuisine.of(cuisineName))
+            .build();
+
+    removeCuisineFromRestaurantUseCase.removeCuisineFromRestaurant(command);
+
+    return ResponseEntity.noContent().build();
+  }
+
+  public record AddCuisineRequest(@NotNull @NotBlank String name) {}
+
   @Builder
   public record ListRestaurantsResponse(
       List<RestaurantListElement> restaurants, String nextPageToken) {}
@@ -195,7 +277,14 @@ public class RestaurantRestControllerAdapter {
   public record RestaurantCreationRequest(
       @NotNull @NotBlank String name,
       @NotNull @NotBlank String addressName,
-      Optional<Coordinates> coordinates) {}
+      Optional<Coordinates> coordinates,
+      Set<CuisineResource> cuisines) {
+
+    @Override
+    public Set<CuisineResource> cuisines() {
+      return Objects.requireNonNullElseGet(cuisines, HashSet::new);
+    }
+  }
 
   private record PageTokenCodec() {
     static Integer decode(String encodedString) {

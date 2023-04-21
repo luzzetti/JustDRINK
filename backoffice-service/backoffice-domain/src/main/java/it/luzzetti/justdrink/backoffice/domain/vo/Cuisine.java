@@ -1,8 +1,10 @@
 package it.luzzetti.justdrink.backoffice.domain.vo;
 
+import lombok.Builder;
 import lombok.Value;
 
 @Value
+@Builder
 public class Cuisine {
   String name;
 

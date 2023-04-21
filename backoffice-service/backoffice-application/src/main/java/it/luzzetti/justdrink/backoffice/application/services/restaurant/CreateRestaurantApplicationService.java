@@ -12,7 +12,7 @@ import it.luzzetti.justdrink.backoffice.domain.aggregates.menu.Menu;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.RestaurantErrors;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.Worktime;
-import it.luzzetti.justdrink.backoffice.domain.shared.DomainException;
+import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotValidException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.MenuId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.WorktimeId;
 import it.luzzetti.justdrink.backoffice.domain.vo.Address;
@@ -52,7 +52,7 @@ public class CreateRestaurantApplicationService implements CreateRestaurantUseCa
             .or(() -> findCoordinatesPort.findCoordinatesByAddressName(displayName))
             .orElseThrow(
                 () ->
-                    new DomainException(RestaurantErrors.IMPOSSIBLE_TO_GEOCODE)
+                    new ElementNotValidException(RestaurantErrors.IMPOSSIBLE_TO_GEOCODE)
                         .putInfo("address", displayName));
 
     // Calling UseCase

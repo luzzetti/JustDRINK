@@ -5,6 +5,8 @@ import it.luzzetti.justdrink.backoffice.application.ports.output.FindCoordinates
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.FindRestaurantPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.SaveRestaurantPort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
+import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.RestaurantErrors;
+import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotValidException;
 import it.luzzetti.justdrink.backoffice.domain.vo.Address;
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
 import lombok.RequiredArgsConstructor;
@@ -37,8 +39,8 @@ public class UpdateRestaurantApplicationService implements ChangeRestaurantAddre
             .or(() -> findCoordinatesPort.findCoordinatesByAddressName(displayName))
             .orElseThrow(
                 () ->
-                    new IllegalArgumentException(
-                        "It has not been possible to retrieve the coordinates related to this address"));
+                    new ElementNotValidException(RestaurantErrors.IMPOSSIBLE_TO_GEOCODE)
+                        .putInfo("address", displayName));
 
     // Calling UseCase
     Address theNewAddress = Address.builder().displayName(displayName).coordinates(coordinates).build();

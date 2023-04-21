@@ -5,6 +5,7 @@ package it.luzzetti.justdrink.backoffice.domain.aggregates.worktime;
 
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.validators.ClashingOpeningsChecker;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.validators.ClashingOverrulesChecker;
+import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotValidException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.OpeningId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.OverruleId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
@@ -90,7 +91,7 @@ public class Worktime {
     public Worktime build() {
 
       if (super.id == null || super.id.id() == null) {
-        throw new IllegalArgumentException("a Worktime cannot be created with a NULL id");
+        throw new ElementNotValidException(WorktimeErrors.ID_REQUIRED);
       }
 
       return super.build();
