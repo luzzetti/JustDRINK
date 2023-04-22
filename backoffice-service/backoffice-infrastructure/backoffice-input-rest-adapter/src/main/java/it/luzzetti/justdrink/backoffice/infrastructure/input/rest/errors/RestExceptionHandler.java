@@ -2,6 +2,7 @@ package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.errors;
 
 import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ApplicationException;
 import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotFoundException;
+import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotProcessableException;
 import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotUniqueException;
 import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotValidException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -67,6 +68,9 @@ public class RestExceptionHandler {
 
     } else if (ex instanceof ElementNotUniqueException) {
       return new ResponseEntity<>(theProblem, HttpStatus.CONFLICT);
+
+    } else if (ex instanceof ElementNotProcessableException) {
+      return new ResponseEntity<>(theProblem, HttpStatus.UNPROCESSABLE_ENTITY);
 
     } else {
       return new ResponseEntity<>(theProblem, HttpStatus.INTERNAL_SERVER_ERROR);
