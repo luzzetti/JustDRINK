@@ -1,0 +1,1 @@
+https://refactorfirst.com/spring-cloud-gateway-keycloak-rbac-resource-server.html
