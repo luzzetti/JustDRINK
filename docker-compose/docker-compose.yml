@@ -24,6 +24,20 @@ services:
     ports:
       - "10020:80"
 
+  justdrink-keycloak:
+    image: quay.io/keycloak/keycloak:20.0.3
+    command: start-dev
+    depends_on:
+      justdrink-database:
+        condition: service_completed_successfully
+    env_file:
+      - ./keycloak.dev.env
+    ports:
+      - "8080:8080"
+      - "8787:8787"
+    networks:
+      - justdrink
+
   backoffice-service:
     image: luzzetti/backoffice-bootloader:latest
     ports:

@@ -27,4 +27,6 @@ public class RestaurantJpaEntity {
   @CollectionTable(name = "CUISINE", joinColumns = @JoinColumn(name = "RESTAURANT_ID"))
   @Column(name = "RESTAURANT_ID")
   private Set<CuisineJpaEmbeddable> cuisines;
+
+  private String logoUrl;
 }

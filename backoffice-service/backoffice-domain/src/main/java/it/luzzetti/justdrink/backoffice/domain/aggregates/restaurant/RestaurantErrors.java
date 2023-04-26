@@ -10,7 +10,8 @@ public enum RestaurantErrors implements ErrorCode {
   ID_REQUIRED("domain.restaurant.id.required"),
   CUISINE_NOT_EXISTING("domain.restaurant.cuisine.not.contained"),
   CUISINE_ALREADY_EXISTING("domain.restaurant.cuisine.already.contained"),
-  IMPOSSIBLE_TO_GEOCODE("domain.restaurant.address.geocoding.impossible");
+  IMPOSSIBLE_TO_GEOCODE("domain.restaurant.address.geocoding.impossible"),
+  IMPOSSIBLE_TO_UPLOAD("domain.restaurant.logo.impossible_to_upload");
 
   private final String code;
 
