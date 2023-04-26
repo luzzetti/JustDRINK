@@ -1,6 +1,6 @@
 
-_database
-.dev.env
+/docker-compose/database.dev.env
+/docker-compose/keycloak.dev.env
 */application-dev.yml
 
 ##############################
@@ -154,4 +154,3 @@ coverage
 *.njsproj
 *.sln
 *.sw?
-/docker-compose/database.dev.env
