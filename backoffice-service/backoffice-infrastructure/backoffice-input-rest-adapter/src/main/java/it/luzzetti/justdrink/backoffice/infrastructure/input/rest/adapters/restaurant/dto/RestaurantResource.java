@@ -19,5 +19,4 @@ public class RestaurantResource extends RepresentationModel<RestaurantResource> 
   private Address address;
   private boolean enabled;
   private Set<CuisineResource> cuisines;
-  private String logoUrl;
 }

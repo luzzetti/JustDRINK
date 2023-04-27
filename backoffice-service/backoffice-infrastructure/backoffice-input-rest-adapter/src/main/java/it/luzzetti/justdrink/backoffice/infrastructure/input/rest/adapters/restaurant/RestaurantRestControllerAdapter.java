@@ -15,27 +15,22 @@ import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.Delet
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.DeleteRestaurantUseCase.DeleteRestaurantCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsQuery;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsQuery.ListRestaurantsCommand;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.RemoveCuisineFromRestaurantUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.RemoveCuisineFromRestaurantUseCase.RemoveCuisineFromRestaurantCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ShowRestaurantQuery;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ShowRestaurantQuery.ShowRestaurantCommand;
-import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.UploadLogoRestaurantUseCase;
-import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.UploadLogoRestaurantUseCase.UploadFileImageCommand;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
-import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.RestaurantErrors;
-import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotValidException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
 import it.luzzetti.justdrink.backoffice.domain.vo.Cuisine;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.menu.MenuRestControllerAdapter;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant.dto.CuisineResource;
-import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant.dto.LogoRestaurantResources;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant.dto.RestaurantResource;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.CuisineWebMapper;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.RestaurantWebMapper;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import java.io.InputStream;
 import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
@@ -58,7 +53,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/1.0/restaurants")
@@ -76,10 +70,7 @@ public class RestaurantRestControllerAdapter {
   private final ChangeRestaurantAddressUseCase changeRestaurantAddressUseCase;
   private final DeleteRestaurantUseCase deleteRestaurantUseCase;
   private final AddCuisineToRestaurantUseCase addCuisineToRestaurantUseCase;
-  private final it.luzzetti.justdrink.backoffice.application.ports.input.restaurant
-          .RemoveCuisineFromRestaurantUseCase
-      removeCuisineFromRestaurantUseCase;
-  private final UploadLogoRestaurantUseCase uploadLogoRestaurantUseCase;
+  private final RemoveCuisineFromRestaurantUseCase removeCuisineFromRestaurantUseCase;
 
   // Queries
   private final ListRestaurantsQuery listRestaurantsQuery;
@@ -143,8 +134,6 @@ public class RestaurantRestControllerAdapter {
     // Calling Use-Case
     Restaurant theFoundRestaurant = showRestaurantQuery.showRestaurant(command);
 
-    log.debug(() -> "TEST logo: " + theFoundRestaurant.getLogoUrl());
-
     // Crafting a HATEOAS response
     RestaurantResource resource = restaurantWebMapper.toResource(theFoundRestaurant);
 
@@ -200,6 +189,9 @@ public class RestaurantRestControllerAdapter {
     var response = restaurantWebMapper.toResource(thePartiallyUpdatedRestaurant);
     return ResponseEntity.ok(response);
   }
+
+  public record ChangeRestaurantAddressRequest(
+      @NotNull @NotBlank String addressName, Optional<Coordinates> coordinates) {}
 
   @Operation(summary = "Esegue la creazione di un nuovo ristorante")
   @PostMapping
@@ -273,35 +265,6 @@ public class RestaurantRestControllerAdapter {
 
     return ResponseEntity.noContent().build();
   }
-
-  @PostMapping("/{restaurantId}/logo:upload")
-  public ResponseEntity<LogoRestaurantResources> uploadFile(
-      @PathVariable UUID restaurantId, @RequestParam("image") MultipartFile file) {
-    try (InputStream inputStream = file.getInputStream()) {
-
-      UploadFileImageCommand command =
-          UploadFileImageCommand.builder()
-              .restaurantId(RestaurantId.from(restaurantId))
-              .inputStream(inputStream)
-              .name(Objects.requireNonNullElse(file.getOriginalFilename(), "name logo absent"))
-              .build();
-
-      String urlLogo = uploadLogoRestaurantUseCase.updateLogo(command);
-      log.debug(() -> String.format("Url logo: %s", urlLogo));
-
-      LogoRestaurantResources resources =
-          LogoRestaurantResources.builder().logoUrl(urlLogo).id(restaurantId).build();
-
-      return ResponseEntity.accepted().body(resources);
-
-    } catch (Exception e) {
-
-      throw new ElementNotValidException(RestaurantErrors.IMPOSSIBLE_TO_UPLOAD);
-    }
-  }
-
-  public record ChangeRestaurantAddressRequest(
-      @NotNull @NotBlank String addressName, Optional<Coordinates> coordinates) {}
 
   public record AddCuisineRequest(@NotNull @NotBlank String name) {}
 
