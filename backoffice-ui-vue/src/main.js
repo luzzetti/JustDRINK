@@ -5,4 +5,6 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 import './assets/styles/main.scss'
 
-createApp(App).use(router).mount('#app')
+import CarouoselComponent from './components/CarouoselComponent.vue'
+
+createApp(App).component('CarouoselComponent',CarouoselComponent).use(router).mount('#app')
