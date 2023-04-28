@@ -42,6 +42,9 @@ class MenuJpaAdapterTest {
   public void setup() {
     MockitoAnnotations.openMocks(this);
 
+    // Al momento, inizializzo i mapper composti così:
+    // https://github.com/mapstruct/mapstruct/issues/1261
+
     MenuJpaMapper menuJpaMapper = new MenuJpaMapperImpl();
     ReflectionTestUtils.setField(
         menuJpaMapper, "restaurantJpaMapper", Mappers.getMapper(RestaurantJpaMapper.class));
