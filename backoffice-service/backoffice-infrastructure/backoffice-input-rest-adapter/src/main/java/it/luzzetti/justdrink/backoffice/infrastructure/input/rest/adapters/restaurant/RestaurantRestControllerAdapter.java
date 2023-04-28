@@ -15,11 +15,18 @@ import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.Delet
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.DeleteRestaurantUseCase.DeleteRestaurantCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsQuery;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsQuery.ListRestaurantsCommand;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.LoadLogoRestaurantUseCase;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.LoadLogoRestaurantUseCase.LoadLogoCommand;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.LoadLogoRestaurantUseCase.LoadLogoCommand.LoadLogoCommandBuilder;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.RemoveCuisineFromRestaurantUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.RemoveCuisineFromRestaurantUseCase.RemoveCuisineFromRestaurantCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ShowRestaurantQuery;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ShowRestaurantQuery.ShowRestaurantCommand;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.UploadLogoUsecase;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.UploadLogoUsecase.UploadLogoRetaurantCommand;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
+import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.RestaurantErrors;
+import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotValidException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
 import it.luzzetti.justdrink.backoffice.domain.vo.Cuisine;
@@ -31,6 +38,10 @@ import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.Restau
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
@@ -42,6 +53,8 @@ import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -53,6 +66,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/1.0/restaurants")
@@ -71,6 +85,9 @@ public class RestaurantRestControllerAdapter {
   private final DeleteRestaurantUseCase deleteRestaurantUseCase;
   private final AddCuisineToRestaurantUseCase addCuisineToRestaurantUseCase;
   private final RemoveCuisineFromRestaurantUseCase removeCuisineFromRestaurantUseCase;
+  private final UploadLogoUsecase uploadLogoUsecase;
+
+  private final LoadLogoRestaurantUseCase loadLogoRestaurantUseCase;
 
   // Queries
   private final ListRestaurantsQuery listRestaurantsQuery;
@@ -298,6 +315,44 @@ public class RestaurantRestControllerAdapter {
     static String encode(Integer decodedValue) {
       String decodedString = decodedValue.toString();
       return Base64.getEncoder().encodeToString(decodedString.getBytes());
+    }
+  }
+
+  @PostMapping("/{restaurantId}/upload/logo")
+  public void uploadLogo(
+      @PathVariable UUID restaurantId, @RequestParam("logo") MultipartFile multipartFile)
+      throws IOException {
+
+    final Path root = Paths.get("uploads");
+
+    String fullPath = root + multipartFile.getOriginalFilename() + restaurantId;
+
+    multipartFile.transferTo(new File(fullPath));
+
+    UploadLogoRetaurantCommand command =
+        UploadLogoRetaurantCommand.builder()
+            .restaurantId(RestaurantId.from(restaurantId))
+            .nomeFile(multipartFile.getOriginalFilename())
+            .path(fullPath)
+            .build();
+
+    uploadLogoUsecase.uploadLogoRestaurant(command);
+  }
+
+  @GetMapping("/{restaurantId}/load/logo")
+  public ResponseEntity<byte[]> loadLogoRestautant(@PathVariable UUID restaurantId) {
+
+    LoadLogoCommand command =
+        LoadLogoCommand.builder().restaurantId(RestaurantId.from(restaurantId)).build();
+
+    try {
+
+      byte[] logo = loadLogoRestaurantUseCase.loadLogo(command);
+
+      return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.ALL).body(logo);
+    } catch (IOException e) {
+      throw new ElementNotValidException(RestaurantErrors.NOT_FOUND)
+          .putInfo("id", restaurantId);
     }
   }
 }
