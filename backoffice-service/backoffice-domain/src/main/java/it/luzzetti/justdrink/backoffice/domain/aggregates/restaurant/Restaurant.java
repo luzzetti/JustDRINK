@@ -6,7 +6,9 @@ import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotValid
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.domain.vo.Address;
 import it.luzzetti.justdrink.backoffice.domain.vo.Cuisine;
+import it.luzzetti.justdrink.backoffice.domain.vo.Owner;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import lombok.*;
 
@@ -17,6 +19,7 @@ public class Restaurant {
   private final RestaurantId id;
   private String name; // Must be a required/mandatory field
   private Address address;
+  private Owner owner;
   @Builder.Default private Set<Cuisine> cuisines = new HashSet<>();
   @Builder.Default private Boolean enabled = Boolean.FALSE;
 
@@ -31,17 +34,6 @@ public class Restaurant {
   }
 
   // Aggregate Private methods
-
-  // Lombok's Builder Override //
-
-  /**
-   * Override the builder() method to return our custom builder instead of the Lombok generated
-   * builder class.
-   */
-  public static RestaurantBuilder builder() {
-    return new CustomBuilder();
-  }
-
   public void addCuisine(Cuisine theNewCuisine) {
     if (this.cuisines.contains(theNewCuisine)) {
       throw new ElementNotUniqueException(RestaurantErrors.CUISINE_ALREADY_EXISTING);
@@ -56,13 +48,22 @@ public class Restaurant {
     this.cuisines.remove(theCuisine);
   }
 
-  /*
-   * Customized builder class, extends the Lombok generated builder class and overrides method
-   * implementations.
-   */
+  public boolean isOwnedBy(Owner anOwner) {
+    return Objects.equals(this.owner, anOwner);
+  }
+
+  public void changeOwnership(Owner aNewOwner) {
+    this.owner = aNewOwner;
+  }
+
+  /* Builder Override */
+  public static RestaurantBuilder builder() {
+    return new CustomBuilder();
+  }
+
   private static class CustomBuilder extends RestaurantBuilder {
 
-    /* Adding validations as part of build() method. */
+    /* Validations as part of build() method. */
     public Restaurant build() {
       if (super.id == null || super.id.id() == null) {
         throw new ElementNotValidException(RestaurantErrors.ID_REQUIRED);

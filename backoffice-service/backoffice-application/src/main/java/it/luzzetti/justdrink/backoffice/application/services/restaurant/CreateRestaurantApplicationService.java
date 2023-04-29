@@ -2,6 +2,7 @@ package it.luzzetti.justdrink.backoffice.application.services.restaurant;
 
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.CreateRestaurantUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.output.FindCoordinatesPort;
+import it.luzzetti.justdrink.backoffice.application.ports.output.SecurityPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.menu.GenerateMenuIdPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.menu.SaveMenuPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.GenerateRestaurantIdPort;
@@ -33,6 +34,8 @@ public class CreateRestaurantApplicationService implements CreateRestaurantUseCa
   private final SaveMenuPort saveMenuPort;
   private final SaveWorktimePort saveWorktimePort;
 
+  private final SecurityPort securityPort;
+
   private final GenerateRestaurantIdPort generateRestaurantIdPort;
   private final GenerateWorktimeIdPort generateWorktimeIdPort;
   private final GenerateMenuIdPort generateMenuIdPort;
@@ -40,8 +43,9 @@ public class CreateRestaurantApplicationService implements CreateRestaurantUseCa
   @Override
   @Transactional
   public Restaurant createRestaurant(@Valid CreateRestaurantCommand command) {
+    log.debug(() -> "createRestaurant(%s)".formatted(command));
 
-    // Mmmm...
+    securityPort.assertThatUserHasPermissionToCreateRestaurant();
 
     // Fetching / Creating required values
     String displayName = command.addressName();
