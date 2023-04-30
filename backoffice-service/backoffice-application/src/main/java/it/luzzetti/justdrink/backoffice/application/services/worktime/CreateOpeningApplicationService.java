@@ -1,8 +1,6 @@
 package it.luzzetti.justdrink.backoffice.application.services.worktime;
 
 import it.luzzetti.justdrink.backoffice.application.ports.input.worktime.CreateOpeningUseCase;
-import it.luzzetti.justdrink.backoffice.application.ports.output.SecurityPort;
-import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.FindRestaurantPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.FindWorktimePort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.GenerateOpeningIdPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.worktime.SaveWorktimePort;
@@ -22,10 +20,8 @@ public class CreateOpeningApplicationService implements CreateOpeningUseCase {
 
   // Ports
   private final FindWorktimePort findWorktimePort;
-  private final FindRestaurantPort findRestaurantPort;
   private final GenerateOpeningIdPort generateOpeningIdPort;
   private final SaveWorktimePort saveWorktimePort;
-  private final SecurityPort securityPort;
 
   @Override
   @Transactional

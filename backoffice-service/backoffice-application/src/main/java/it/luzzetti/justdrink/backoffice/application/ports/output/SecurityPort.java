@@ -4,7 +4,6 @@ import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ApplicationException;
 import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ErrorCode;
 import it.luzzetti.justdrink.backoffice.domain.vo.Owner;
-import java.util.List;
 
 public interface SecurityPort {
 
@@ -13,8 +12,6 @@ public interface SecurityPort {
   Owner mySelf();
 
   boolean iHaveTheRole(String role);
-
-  List<String> myRoles();
 
   // Policies
 
