@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /*
  * https://howtodoinjava.com/spring-mvc/spring-problemdetail-errorresponse/
- *
+ * https://phrase.com/blog/posts/detecting-a-users-locale/
  * https://shekhargulati.com/2019/12/10/problem-details-for-http-apis-with-spring-boot/
  * https://docs.spring.io/spring-hateoas/docs/current/api/org/springframework/hateoas/mediatype/problem/Problem.html
  * https://datatracker.ietf.org/doc/html/rfc7807
@@ -38,8 +38,6 @@ public class RestExceptionHandler {
   @ExceptionHandler(value = {ApplicationException.class})
   public ResponseEntity<ProblemDetail> handleDomainException(
       ApplicationException ex, Locale locale, HttpServletRequest request) {
-
-    // Dopo leggo: https://phrase.com/blog/posts/detecting-a-users-locale/
 
     String theLocalizedMessage =
         messageSource.getMessage(ex.getErrorCode().getCode(), null, locale);

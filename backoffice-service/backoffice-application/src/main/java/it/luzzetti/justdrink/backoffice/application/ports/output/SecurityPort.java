@@ -6,24 +6,37 @@ import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ErrorCode;
 import it.luzzetti.justdrink.backoffice.domain.vo.Owner;
 import java.util.List;
 
-/*
- * TODO: Raffinare
- * https://lostechies.com/derickbailey/2011/05/24/dont-do-role-based-authorization-checks-do-activity-based-checks/
- */
 public interface SecurityPort {
 
-  // ritrovo il principal. (Il buon vecchio 'Utente sessione')
+  String ROLE_ADMIN = "ADMIN";
+
   Owner mySelf();
 
-  // Altri metodi utili ad estrarre principal e ruoli
   boolean iHaveTheRole(String role);
 
-  // ritrovo i ruoli del principal
   List<String> myRoles();
 
-  void assertThatUserHasPermissionToCreateRestaurant();
+  // Policies
 
-  void assertThatUserHasPermissionToDeleteRestaurant(Restaurant theRestaurant);
+  default void assertThatUserHasPermissionToCreateRestaurant() {
+    if (iHaveTheRole(ROLE_ADMIN)) {
+      return;
+    }
+
+    throw new OwnerNotAuthorizedException(SecurityErrors.UNAUTHORIZED_RESTAURANT_CREATION);
+  }
+
+  default void assertThatUserHasPermissionToDeleteRestaurant(Restaurant theRestaurant) {
+    if (iHaveTheRole(ROLE_ADMIN)) {
+      return;
+    }
+
+    if (theRestaurant.isOwnedBy(mySelf())) {
+      return;
+    }
+
+    throw new OwnerNotAuthorizedException(SecurityErrors.UNAUTHORIZED_RESTAURANT_DELETION);
+  }
 
   // Security related exceptions
 
