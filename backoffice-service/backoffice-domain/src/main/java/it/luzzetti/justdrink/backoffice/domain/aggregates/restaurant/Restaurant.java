@@ -17,7 +17,7 @@ import lombok.*;
 public class Restaurant {
 
   private final RestaurantId id;
-  private String name; // Must be a required/mandatory field
+  private String name;
   private Address address;
   private Owner owner;
   @Builder.Default private Set<Cuisine> cuisines = new HashSet<>();
@@ -34,6 +34,18 @@ public class Restaurant {
   }
 
   // Aggregate Private methods
+
+  /*
+   * TODO: Simone
+   * tu hai gestito le Cuisines, ma quali sono le 'regole'?
+   * Può esistere un ristorante senza cuisines? (Non vedo validazioni qui)
+   * chi usa le API (Il frontendista), come fa a sapere quali sono le cuisines disponibili?
+   * Le scrivi nella documentazione? (In tal caso, tanto valeva fare una enum)
+   * O altrimenti, è il caso di fare un endpoint da cui (fetchare) le cuisines esistenti, no?
+   *
+   * Come si comporta JustEAT? Hai mai trovato un ristorante senza cuisines?
+   * Serve un po' di analisi :)
+   */
   public void addCuisine(Cuisine theNewCuisine) {
     if (this.cuisines.contains(theNewCuisine)) {
       throw new ElementNotUniqueException(RestaurantErrors.CUISINE_ALREADY_EXISTING);
@@ -50,10 +62,6 @@ public class Restaurant {
 
   public boolean isOwnedBy(Owner anOwner) {
     return Objects.equals(this.owner, anOwner);
-  }
-
-  public void changeOwnership(Owner aNewOwner) {
-    this.owner = aNewOwner;
   }
 
   /* Builder Override */

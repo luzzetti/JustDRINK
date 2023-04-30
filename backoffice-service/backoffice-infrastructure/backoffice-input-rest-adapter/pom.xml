@@ -18,6 +18,13 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
+
+    <!-- GeoJSON Jackson library -->
+    <dependency>
+      <groupId>com.graphhopper.external</groupId>
+      <artifactId>jackson-datatype-jts</artifactId>
+    </dependency>
+
     <!-- Hateoas -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
