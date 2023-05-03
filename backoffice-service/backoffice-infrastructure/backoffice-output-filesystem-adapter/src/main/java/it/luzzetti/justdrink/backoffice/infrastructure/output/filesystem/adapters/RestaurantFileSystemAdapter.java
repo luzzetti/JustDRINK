@@ -20,8 +20,7 @@ import org.springframework.stereotype.Component;
 public class RestaurantFileSystemAdapter implements UpdateFileRestaurantPort {
 
   @Value("${filesystem.upload.restaurant:uploadsDefault}")
-  private  String directoryFileSystem;
-
+  private String directoryFileSystem;
 
   @Override
   public String updateLogo(UploadLogoRetaurantCommand command) {
@@ -44,5 +43,4 @@ public class RestaurantFileSystemAdapter implements UpdateFileRestaurantPort {
       throw new RuntimeException(String.format("Impossibile caricare il logo: %s", e.getMessage()));
     }
   }
-
 }

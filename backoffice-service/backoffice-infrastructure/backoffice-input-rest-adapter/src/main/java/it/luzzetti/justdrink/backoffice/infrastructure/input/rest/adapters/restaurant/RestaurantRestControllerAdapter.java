@@ -356,8 +356,6 @@ public class RestaurantRestControllerAdapter {
       return ResponseEntity.status(HttpStatus.OK).body(logo);
     } catch (IOException e) {
 
-      e.printStackTrace();
-
       throw new ElementNotProcessableException(RestaurantErrors.IMPOSSIBLE_DOWNLAOD_LOGO).putInfo("id", restaurantId);
     }
   }
