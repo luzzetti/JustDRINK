@@ -8,7 +8,8 @@ import it.luzzetti.justdrink.backoffice.domain.vo.Address;
 import it.luzzetti.justdrink.backoffice.domain.vo.Cuisine;
 import java.util.HashSet;
 import java.util.Set;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
 
 @Getter
 @Builder(toBuilder = true)
@@ -30,6 +31,15 @@ public class Restaurant {
     }
 
     this.address = newAddress;
+  }
+
+  public void changeLogo(String newPathLogo) {
+
+    if (newPathLogo == null) {
+      throw new ElementNotValidException(RestaurantErrors.PATH_REQUIRED);
+    }
+
+    this.logoPath = newPathLogo;
   }
 
   // Aggregate Private methods

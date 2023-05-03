@@ -17,7 +17,6 @@ import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListR
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsQuery.ListRestaurantsCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.LoadLogoRestaurantUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.LoadLogoRestaurantUseCase.LoadLogoCommand;
-import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.LoadLogoRestaurantUseCase.LoadLogoCommand.LoadLogoCommandBuilder;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.RemoveCuisineFromRestaurantUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.RemoveCuisineFromRestaurantUseCase.RemoveCuisineFromRestaurantCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ShowRestaurantQuery;
@@ -26,7 +25,6 @@ import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.Uploa
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.UploadLogoUsecase.UploadLogoRetaurantCommand;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.RestaurantErrors;
-import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotFoundException;
 import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotProcessableException;
 import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotValidException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
@@ -40,11 +38,7 @@ import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.Restau
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
@@ -68,7 +62,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -356,7 +349,8 @@ public class RestaurantRestControllerAdapter {
       return ResponseEntity.status(HttpStatus.OK).body(logo);
     } catch (IOException e) {
 
-      throw new ElementNotProcessableException(RestaurantErrors.IMPOSSIBLE_DOWNLAOD_LOGO).putInfo("id", restaurantId);
+      throw new ElementNotProcessableException(RestaurantErrors.IMPOSSIBLE_DOWNLAOD_LOGO)
+          .putInfo("id", restaurantId);
     }
   }
 }

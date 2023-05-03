@@ -5,8 +5,6 @@ import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.Find
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.SaveRestaurantPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.UpdateFileRestaurantPort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -28,8 +26,8 @@ public class UploadLogoRestaurantApplicationService implements UploadLogoUsecase
 
     String pathLogo = transferLogoRestaurantPort.updateLogo(command);
 
-    Restaurant ristoranteConLogo = restaurant.toBuilder().logoPath(pathLogo).build();
+    restaurant.changeLogo(pathLogo);
 
-    saveRestaurantPort.saveRestaurant(ristoranteConLogo);
+    saveRestaurantPort.saveRestaurant(restaurant);
   }
 }
