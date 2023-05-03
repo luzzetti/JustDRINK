@@ -29,6 +29,11 @@
       <artifactId>backoffice-output-rest-client-adapter</artifactId>
       <version>${revision}</version>
     </dependency>
+    <dependency>
+      <groupId>it.luzzetti.justdrink</groupId>
+      <artifactId>backoffice-output-filesystem-adapter</artifactId>
+      <version>${revision}</version>
+    </dependency>
     <!-- Other dependencies -->
     <dependency>
       <groupId>org.springframework.boot</groupId>

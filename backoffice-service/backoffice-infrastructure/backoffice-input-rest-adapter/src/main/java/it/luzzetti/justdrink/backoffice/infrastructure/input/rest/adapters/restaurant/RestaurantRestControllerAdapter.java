@@ -26,6 +26,8 @@ import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.Uploa
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.UploadLogoUsecase.UploadLogoRetaurantCommand;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.RestaurantErrors;
+import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotFoundException;
+import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotProcessableException;
 import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotValidException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
@@ -40,6 +42,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Base64;
@@ -65,6 +68,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -319,27 +323,27 @@ public class RestaurantRestControllerAdapter {
   }
 
   @PostMapping("/{restaurantId}/upload/logo")
-  public void uploadLogo(
-      @PathVariable UUID restaurantId, @RequestParam("logo") MultipartFile multipartFile)
+  public void uploadLogo(@PathVariable UUID restaurantId, @RequestParam("logo") MultipartFile file)
       throws IOException {
 
-    final Path root = Paths.get("uploads");
-
-    String fullPath = root + multipartFile.getOriginalFilename() + restaurantId;
-
-    multipartFile.transferTo(new File(fullPath));
+    if (!file.getContentType().startsWith("image/")) {
+      throw new ElementNotValidException(RestaurantErrors.IMPOSSIBLE_UPLOAD_LOGO)
+          .putInfo("logo", file.getOriginalFilename());
+    }
 
     UploadLogoRetaurantCommand command =
         UploadLogoRetaurantCommand.builder()
             .restaurantId(RestaurantId.from(restaurantId))
-            .nomeFile(multipartFile.getOriginalFilename())
-            .path(fullPath)
+            .file(file.getBytes())
+            .contentType(file.getContentType())
             .build();
 
     uploadLogoUsecase.uploadLogoRestaurant(command);
   }
 
-  @GetMapping("/{restaurantId}/load/logo")
+  @GetMapping(
+      value = "/{restaurantId}/load/logo",
+      produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
   public ResponseEntity<byte[]> loadLogoRestautant(@PathVariable UUID restaurantId) {
 
     LoadLogoCommand command =
@@ -349,10 +353,12 @@ public class RestaurantRestControllerAdapter {
 
       byte[] logo = loadLogoRestaurantUseCase.loadLogo(command);
 
-      return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.ALL).body(logo);
+      return ResponseEntity.status(HttpStatus.OK).body(logo);
     } catch (IOException e) {
-      throw new ElementNotValidException(RestaurantErrors.NOT_FOUND)
-          .putInfo("id", restaurantId);
+
+      e.printStackTrace();
+
+      throw new ElementNotProcessableException(RestaurantErrors.IMPOSSIBLE_DOWNLAOD_LOGO).putInfo("id", restaurantId);
     }
   }
 }
