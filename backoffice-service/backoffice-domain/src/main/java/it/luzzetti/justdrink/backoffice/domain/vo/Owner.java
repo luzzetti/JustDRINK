@@ -7,6 +7,5 @@ import lombok.Value;
 @Value
 @Builder
 public class Owner implements Serializable {
-
   String username;
 }

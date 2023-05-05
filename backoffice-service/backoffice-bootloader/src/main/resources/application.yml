@@ -31,8 +31,8 @@ spring:
             scope: openid
         provider:
           keycloak:
-            issuer-uri: http://localhost:8080/realms/justdrink
+            issuer-uri: http://justdrink-keycloak:8080/realms/justdrink
             user-name-attribute: preferred_username
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8080/realms/justdrink
+          issuer-uri: http://justdrink-keycloak:8080/realms/justdrink

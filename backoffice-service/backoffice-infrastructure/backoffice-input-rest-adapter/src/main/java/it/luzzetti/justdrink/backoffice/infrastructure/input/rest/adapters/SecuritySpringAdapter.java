@@ -39,7 +39,7 @@ public class SecuritySpringAdapter implements SecurityPort {
   public boolean iHaveTheRole(String role) {
     return getAuthentication().getAuthorities().stream()
         .map(GrantedAuthority::getAuthority)
-        .map(authority -> authority.replaceFirst("ROLE_", ""))
+        .map(authority -> authority.replaceFirst("ROLE_", "").toUpperCase())
         .anyMatch(authority -> authority.equals(role.toUpperCase()));
   }
 

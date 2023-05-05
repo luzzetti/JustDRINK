@@ -14,7 +14,6 @@ public interface SecurityPort {
   boolean iHaveTheRole(String role);
 
   // Policies
-
   default void assertThatUserHasPermissionToCreateRestaurant() {
     if (iHaveTheRole(ROLE_ADMIN)) {
       return;
