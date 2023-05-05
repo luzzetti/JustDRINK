@@ -1,4 +1,4 @@
-
+/_database
 /docker-compose/database.dev.env
 /docker-compose/keycloak.dev.env
 */application-dev.yml
