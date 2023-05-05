@@ -45,7 +45,8 @@ public class CreateRestaurantApplicationService implements CreateRestaurantUseCa
   public Restaurant createRestaurant(@Valid CreateRestaurantCommand command) {
     log.debug(() -> "createRestaurant(%s)".formatted(command));
 
-    securityPort.assertThatUserHasPermissionToCreateRestaurant();
+    // TODO: reimplementare dopo aver fixato i roles
+    //    securityPort.assertThatUserHasPermissionToCreateRestaurant();
 
     // Fetching / Creating required values
     String displayName = command.addressName();
