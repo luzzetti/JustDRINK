@@ -27,7 +27,6 @@ public class DeliveryAreaJpaAdapter implements SaveDeliveryAreaPort, GenerateDel
 
   @Override
   public DeliveryArea saveDeliveryArea(DeliveryArea aNewDeliveryArea) {
-
     DeliveryAreaJpaEntity theEntity = deliveryAreaJpaMapper.toEntity(aNewDeliveryArea);
     DeliveryAreaJpaEntity theSavedEntity = deliveryAreaJpaRepository.save(theEntity);
     return deliveryAreaJpaMapper.toDomain(theSavedEntity);

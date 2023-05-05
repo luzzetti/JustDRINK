@@ -18,6 +18,6 @@ public class DeliveryAreaJpaEntity {
 
   @Id private UUID id;
 
-  //  @Column(columnDefinition = "geography")
+  // Riusciamo a capire come zittire questo warning? Temo di aver saltato qualche config.
   private Polygon polygon;
 }
