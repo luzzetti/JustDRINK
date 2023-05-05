@@ -155,3 +155,4 @@ coverage
 *.sln
 *.sw?
 /backoffice-service/backoffice-bootloader/src/main/resources/application-dev.yml
+/docker-compose/backoffice.dev-env

@@ -5,9 +5,10 @@ spring:
   application:
     name: backoffice
 
+  # These OBVIOUSLY aren't the production passwords.
+  # These are injected, once the system will be hardened
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:10010/backoffice
 
   jpa:
     properties:
@@ -17,7 +18,7 @@ spring:
           time_zone: UTC
         format_sql: false
     hibernate:
-      ddl-auto: none
+      ddl-auto: ${SPRING_JPA_HIBERNATE_GENERATION}
     database-platform: org.hibernate.spatial.dialect.postgis.PostgisDialect
 
   # OVVIAMENTE...vanno configurati per prod. E i valori iniettati dall'esterno (Env?)
@@ -31,8 +32,17 @@ spring:
             scope: openid
         provider:
           keycloak:
-            issuer-uri: http://justdrink-keycloak/realms/justdrink
+            issuer-uri: ${ISSUER_URI}
             user-name-attribute: preferred_username
+
       resourceserver:
         jwt:
-          issuer-uri: http://justdrink-keycloak/realms/justdrink
+          issuer-uri: ${ISSUER_URI}
+
+logging:
+  level:
+    org.springframework.security: debug
+    it:
+      luzzetti:
+        justdrink:
+          backoffice: DEBUG

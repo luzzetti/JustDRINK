@@ -52,6 +52,8 @@ services:
 
   backoffice-service:
     image: luzzetti/backoffice-bootloader:latest
+    env_file:
+      - ./backoffice.dev.env
     ports:
       - "9090:8080"
     networks:
