@@ -154,3 +154,4 @@ coverage
 *.njsproj
 *.sln
 *.sw?
+/backoffice-service/backoffice-bootloader/src/main/resources/application-dev.yml
