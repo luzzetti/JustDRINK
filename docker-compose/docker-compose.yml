@@ -58,13 +58,13 @@ services:
       - justdrink
     mem_limit: 500m
 
-  # backoffice-ui-vue:
-  #   image: luzzetti/backoffice-ui-vue:latest
-  #   ports:
-  #     - "7070:80"
-  #   networks:
-  #     - justdrink
-  #   mem_limit: 50mb
+  backoffice-ui-vue:
+    image: luzzetti/backoffice-ui-vue:latest
+    ports:
+      - "7070:80"
+    networks:
+      - justdrink
+    mem_limit: 50mb
 
 networks:
   justdrink:
