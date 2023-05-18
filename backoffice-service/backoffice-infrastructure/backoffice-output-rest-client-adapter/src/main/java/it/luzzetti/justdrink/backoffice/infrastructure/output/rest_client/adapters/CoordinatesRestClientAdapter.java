@@ -31,7 +31,7 @@ public class CoordinatesRestClientAdapter implements FindCoordinatesPort {
    */
 
   @Override
-  public Optional<Coordinates> findCoordinatesByAddressName(String addressName) {
+  public Optional<Coordinates> displayName(String addressName) {
 
     var webClient =
         WebClient.builder()

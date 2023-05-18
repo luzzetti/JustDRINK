@@ -18,7 +18,10 @@ import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.MenuId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.WorktimeId;
 import it.luzzetti.justdrink.backoffice.domain.vo.Address;
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
+import it.luzzetti.justdrink.backoffice.domain.vo.Cuisine;
 import jakarta.validation.Valid;
+import java.util.Optional;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -47,61 +50,60 @@ public class CreateRestaurantApplicationService implements CreateRestaurantUseCa
 
     securityPort.assertThatUserHasPermissionToCreateRestaurant();
 
-    // Fetching / Creating required values
-    String displayName = command.addressName();
+    // Geocoding the Address
+    Address theAddress = extractValidAddress(command.addressName(), command.coordinates());
 
-    Coordinates coordinates =
-        command
-            .coordinates()
-            .or(() -> findCoordinatesPort.findCoordinatesByAddressName(displayName))
-            .orElseThrow(
-                () ->
-                    new ElementNotValidException(RestaurantErrors.IMPOSSIBLE_TO_GEOCODE)
-                        .putInfo("address", displayName));
+    // Building a Restaurant
+    Restaurant aNewRestaurant = generateRestaurant(theAddress, command.name(), command.cuisines());
+    Restaurant theCreatedRestaurant = saveRestaurantPort.saveRestaurant(aNewRestaurant);
 
-    // Calling UseCase
-    Address theAddress =
-        Address.builder().displayName(displayName).coordinates(coordinates).build();
+    // Building a Menu
+    Menu aNewMenu = generateMenuForRestaurant(theCreatedRestaurant);
+    saveMenuPort.saveMenu(aNewMenu);
+
+    // Building a Worktime
+    Worktime aNewWorktime = generateWorktimeForRestaurant(theCreatedRestaurant);
+    saveWorktimePort.saveWorktime(aNewWorktime);
+
+    return theCreatedRestaurant;
+  }
+
+  private Worktime generateWorktimeForRestaurant(Restaurant theCreatedRestaurant) {
+    WorktimeId aGeneratedWorktimeId = generateWorktimeIdPort.nextWorktimeIdentifier();
+    return Worktime.builder()
+        .id(aGeneratedWorktimeId)
+        .restaurantId(theCreatedRestaurant.getId())
+        .build();
+  }
+
+  private Menu generateMenuForRestaurant(Restaurant theCreatedRestaurant) {
+    MenuId aGeneratedMenuId = generateMenuIdPort.nextMenuIdentifier();
+    return Menu.builder().id(aGeneratedMenuId).restaurantId(theCreatedRestaurant.getId()).build();
+  }
+
+  private Restaurant generateRestaurant(
+      Address theAddress, String providedName, Set<Cuisine> providedCuisines) {
 
     var aGeneratedRestaurantId = generateRestaurantIdPort.generateRestaurantIdentifier();
 
-    Restaurant aNewRestaurant =
-        Restaurant.builder()
-            .id(aGeneratedRestaurantId)
-            .name(command.name())
-            .address(theAddress)
-            .cuisines(command.cuisines())
-            .build();
+    return Restaurant.builder()
+        .id(aGeneratedRestaurantId)
+        .name(providedName)
+        .address(theAddress)
+        .cuisines(providedCuisines)
+        .build();
+  }
 
-    Restaurant theCreatedRestaurant = saveRestaurantPort.saveRestaurant(aNewRestaurant);
+  private Address extractValidAddress(String addressName, Optional<Coordinates> coordinates) {
 
-    MenuId aGeneratedMenuId = generateMenuIdPort.nextMenuIdentifier();
-    Menu aNewMenu =
-        Menu.builder().id(aGeneratedMenuId).restaurantId(theCreatedRestaurant.getId()).build();
-    Menu theCreatedMenu = saveMenuPort.saveMenu(aNewMenu);
+    Coordinates correctCoordinates =
+        coordinates
+            .or(() -> findCoordinatesPort.displayName(addressName))
+            .orElseThrow(
+                () ->
+                    new ElementNotValidException(RestaurantErrors.IMPOSSIBLE_TO_GEOCODE)
+                        .putInfo("address", addressName));
 
-    log.debug(
-        () ->
-            String.format(
-                "The menu %s has been associated with restaurant %s",
-                theCreatedMenu.getId(), theCreatedMenu.getRestaurantId()));
-
-    //
-
-    WorktimeId aGeneratedWorktimeId = generateWorktimeIdPort.nextWorktimeIdentifier();
-    Worktime aNewWorktime =
-        Worktime.builder()
-            .id(aGeneratedWorktimeId)
-            .restaurantId(theCreatedRestaurant.getId())
-            .build();
-    Worktime theCreatedWorktime = saveWorktimePort.saveWorktime(aNewWorktime);
-
-    log.debug(
-        () ->
-            String.format(
-                "The worktime %s has been associated with restaurant %s",
-                theCreatedWorktime.getId(), theCreatedMenu.getRestaurantId()));
-
-    return theCreatedRestaurant;
+    return Address.builder().displayName(addressName).coordinates(correctCoordinates).build();
   }
 }

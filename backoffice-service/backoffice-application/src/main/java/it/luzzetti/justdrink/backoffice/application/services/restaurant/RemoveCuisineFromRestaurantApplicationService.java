@@ -22,8 +22,8 @@ public class RemoveCuisineFromRestaurantApplicationService implements
   @Transactional
   public void removeCuisineFromRestaurant(RemoveCuisineFromRestaurantCommand command) {
 
-    Restaurant theRestaurant = findRestaurantPort.findRestaurantByIdMandatory(
-        command.restaurantId());
+    Restaurant theRestaurant =
+        findRestaurantPort.findRestaurantByIdMandatory(command.restaurantId());
 
     theRestaurant.removeCuisine(command.cuisineToRemove());
 
