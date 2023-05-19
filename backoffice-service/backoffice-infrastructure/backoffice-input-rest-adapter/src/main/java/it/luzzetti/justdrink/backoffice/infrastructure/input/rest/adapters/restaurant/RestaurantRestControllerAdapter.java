@@ -184,7 +184,7 @@ public class RestaurantRestControllerAdapter {
     B. Se non è troppo difficile, sistemare ADDRESS e COORDINATES rendendoli dei veri ValueObjects
         seguendo le stesse convenzioni usate per altri VO
    */
-
+  @Operation(summary = "Cambia l'indirizzo del ristorante")
   @PutMapping("/{restaurantId}/address")
   public ResponseEntity<RestaurantResource> changeRestaurantAddress(
       @PathVariable UUID restaurantId, @RequestBody @Valid ChangeRestaurantAddressRequest request) {
@@ -314,7 +314,7 @@ public class RestaurantRestControllerAdapter {
       return Base64.getEncoder().encodeToString(decodedString.getBytes());
     }
   }
-
+  @Operation(summary = "Permette l'upload del logo di un ristorante")
   @PostMapping("/{restaurantId}/upload/logo")
   public void uploadLogo(@PathVariable UUID restaurantId, @RequestParam("logo") MultipartFile file)
       throws IOException {
@@ -334,6 +334,7 @@ public class RestaurantRestControllerAdapter {
     uploadLogoUsecase.uploadLogoRestaurant(command);
   }
 
+  @Operation(summary = "Permette il download del logo del ristorante")
   @GetMapping(
       value = "/{restaurantId}/load/logo",
       produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
