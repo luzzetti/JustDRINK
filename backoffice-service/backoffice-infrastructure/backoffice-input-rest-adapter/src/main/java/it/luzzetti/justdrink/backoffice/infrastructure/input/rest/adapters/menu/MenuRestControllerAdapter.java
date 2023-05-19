@@ -228,7 +228,7 @@ public class MenuRestControllerAdapter implements MenuRestController {
 
     // Crafting a response
     var response = productWebMapper.toResource(theCreatedProduct);
-    return new ResponseEntity<>(response, HttpStatus.CREATED);
+    return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
   @Override

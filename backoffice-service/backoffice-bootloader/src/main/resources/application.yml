@@ -24,3 +24,21 @@ spring:
         format_sql: false
     hibernate:
       ddl-auto: none
+    database-platform: org.hibernate.spatial.dialect.postgis.PostgisDialect
+
+  # OVVIAMENTE...vanno configurati per prod. E i valori iniettati dall'esterno (Env?)
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: test-client
+            authorization-grant-type: password
+            scope: openid
+        provider:
+          keycloak:
+            issuer-uri: http://justdrink-keycloak:8080/realms/justdrink
+            user-name-attribute: preferred_username
+      resourceserver:
+        jwt:
+          issuer-uri: http://justdrink-keycloak:8080/realms/justdrink

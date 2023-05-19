@@ -20,13 +20,13 @@ public class CreateOpeningApplicationService implements CreateOpeningUseCase {
 
   // Ports
   private final FindWorktimePort findWorktimePort;
-  private final SaveWorktimePort saveWorktimePort;
   private final GenerateOpeningIdPort generateOpeningIdPort;
+  private final SaveWorktimePort saveWorktimePort;
 
   @Override
   @Transactional
   public Opening createOpening(@Valid CreateOpeningCommand command) {
-    log.debug(() -> String.format("createOpening(%s)", command));
+    log.debug(() -> "createOpening(%s)".formatted(command));
 
     // Fetching resources
     Worktime theWorktime =

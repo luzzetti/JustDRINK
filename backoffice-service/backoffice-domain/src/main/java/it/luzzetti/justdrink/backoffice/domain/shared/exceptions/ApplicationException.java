@@ -16,8 +16,7 @@ public abstract class ApplicationException extends RuntimeException {
   @Getter private final Map<String, Object> properties = new HashMap<>();
 
   protected ApplicationException(ErrorCode errorCode) {
-    // TECHNICAL-DEBT Il message è Null.
-    super();
+    super(errorCode.getCode());
     this.errorCode = errorCode;
   }
 

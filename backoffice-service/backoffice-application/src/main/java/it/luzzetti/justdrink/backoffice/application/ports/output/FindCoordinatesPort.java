@@ -5,5 +5,5 @@ import java.util.Optional;
 
 public interface FindCoordinatesPort {
 
-  Optional<Coordinates> findCoordinatesByAddressName(String addressName);
+  Optional<Coordinates> displayName(String addressName);
 }

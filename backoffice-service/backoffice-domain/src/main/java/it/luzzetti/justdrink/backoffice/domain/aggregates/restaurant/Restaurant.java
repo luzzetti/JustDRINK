@@ -6,7 +6,9 @@ import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotValid
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.domain.vo.Address;
 import it.luzzetti.justdrink.backoffice.domain.vo.Cuisine;
+import it.luzzetti.justdrink.backoffice.domain.vo.Owner;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,8 +18,9 @@ import lombok.Getter;
 public class Restaurant {
 
   private final RestaurantId id;
-  private String name; // Must be a required/mandatory field
+  private String name;
   private Address address;
+  private Owner owner;
   @Builder.Default private Set<Cuisine> cuisines = new HashSet<>();
   @Builder.Default private Boolean enabled = Boolean.FALSE;
 
@@ -44,16 +47,17 @@ public class Restaurant {
 
   // Aggregate Private methods
 
-  // Lombok's Builder Override //
-
-  /**
-   * Override the builder() method to return our custom builder instead of the Lombok generated
-   * builder class.
+  /*
+   * TODO: Simone
+   * tu hai gestito le Cuisines, ma quali sono le 'regole'?
+   * Può esistere un ristorante senza cuisines? (Non vedo validazioni qui)
+   * chi usa le API (Il frontendista), come fa a sapere quali sono le cuisines disponibili?
+   * Le scrivi nella documentazione? (In tal caso, tanto valeva fare una enum)
+   * O altrimenti, è il caso di fare un endpoint da cui (fetchare) le cuisines esistenti, no?
+   *
+   * Come si comporta JustEAT? Hai mai trovato un ristorante senza cuisines?
+   * Serve un po' di analisi :)
    */
-  public static RestaurantBuilder builder() {
-    return new CustomBuilder();
-  }
-
   public void addCuisine(Cuisine theNewCuisine) {
     if (this.cuisines.contains(theNewCuisine)) {
       throw new ElementNotUniqueException(RestaurantErrors.CUISINE_ALREADY_EXISTING);
@@ -68,13 +72,18 @@ public class Restaurant {
     this.cuisines.remove(theCuisine);
   }
 
-  /*
-   * Customized builder class, extends the Lombok generated builder class and overrides method
-   * implementations.
-   */
+  public boolean isOwnedBy(Owner anOwner) {
+    return Objects.equals(this.owner, anOwner);
+  }
+
+  /* Builder Override */
+  public static RestaurantBuilder builder() {
+    return new CustomBuilder();
+  }
+
   private static class CustomBuilder extends RestaurantBuilder {
 
-    /* Adding validations as part of build() method. */
+    /* Validations as part of build() method. */
     public Restaurant build() {
       if (super.id == null || super.id.id() == null) {
         throw new ElementNotValidException(RestaurantErrors.ID_REQUIRED);

@@ -1,7 +1,10 @@
-
+/_database
 /docker-compose/database.dev.env
 /docker-compose/keycloak.dev.env
 */application-dev.yml
+/backoffice-service/backoffice-bootloader/src/main/resources/application-dev.yml
+/docker-compose/backoffice.dev.env
+
 
 ##############################
 ## Java

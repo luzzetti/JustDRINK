@@ -36,7 +36,7 @@ public class UpdateRestaurantApplicationService implements ChangeRestaurantAddre
     Coordinates coordinates =
         command
             .coordinates()
-            .or(() -> findCoordinatesPort.findCoordinatesByAddressName(displayName))
+            .or(() -> findCoordinatesPort.displayName(displayName))
             .orElseThrow(
                 () ->
                     new ElementNotValidException(RestaurantErrors.IMPOSSIBLE_TO_GEOCODE)

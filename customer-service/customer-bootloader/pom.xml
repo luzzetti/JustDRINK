@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>it.luzzetti.justdrink</groupId>
+    <artifactId>customer</artifactId>
+    <version>${revision}</version>
+  </parent>
+
+  <name>:: customer-bootloader ::</name>
+  <artifactId>customer-bootloader</artifactId>
+
+  <dependencies>
+    <!-- Infrastructure modules to activate -->
+    <dependency>
+      <groupId>it.luzzetti.justdrink</groupId>
+      <artifactId>customer-input-rest-adapter</artifactId>
+      <version>${revision}</version>
+    </dependency>
+    <dependency>
+      <groupId>it.luzzetti.justdrink</groupId>
+      <artifactId>customer-output-jpa-adapter</artifactId>
+      <version>${revision}</version>
+    </dependency>
+    <!-- Other dependencies -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+  </dependencies>
+
+  <!-- Attenzione! Il flattened-pom è necessario per lanciare i plugin maven con ${revision} -->
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <mainClass>${start-class}</mainClass>
+          <image>
+            <name>${docker.image.name}</name>
+            <publish>true</publish>
+          </image>
+          <docker>
+            <publishRegistry>
+              <username>${dockerhub.username}</username>
+              <password>${dockerhub.token}</password>
+            </publishRegistry>
+          </docker>
+          <excludes>
+            <exclude>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+            </exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

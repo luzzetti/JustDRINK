@@ -1,5 +1,6 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.input.rest;
 
+import com.bedatadriven.jackson.datatype.jts.JtsModule;
 import java.util.Locale;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,5 +41,10 @@ public class RestConfigurations {
     // Imposta in quale situazione deve caricare il bundle di base
     messageSource.setDefaultLocale(Locale.US);
     return messageSource;
+  }
+
+  @Bean
+  public JtsModule jtsModule() {
+    return new JtsModule();
   }
 }

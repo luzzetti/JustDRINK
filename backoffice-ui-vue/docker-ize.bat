@@ -1,1 +1,0 @@
-docker build -t docker.io/luzzetti/backoffice-ui-vue:latest .

@@ -32,6 +32,7 @@ public class MenuJpaAdapter
         GenerateMenuIdPort,
         GenerateMenuSectionIdPort,
         GenerateProductIdPort {
+
   private final MenuJpaRepository menuJpaRepository;
   private final RestaurantJpaRepository restaurantJpaRepository;
   private final MenuJpaMapper menuJpaMapper;

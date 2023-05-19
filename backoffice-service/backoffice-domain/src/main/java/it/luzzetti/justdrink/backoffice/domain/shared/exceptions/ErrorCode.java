@@ -1,5 +1,7 @@
 package it.luzzetti.justdrink.backoffice.domain.shared.exceptions;
 
-public interface ErrorCode {
+import java.io.Serializable;
+
+public interface ErrorCode extends Serializable {
   String getCode();
 }
