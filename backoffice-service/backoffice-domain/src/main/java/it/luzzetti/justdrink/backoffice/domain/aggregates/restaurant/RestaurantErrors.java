@@ -11,11 +11,10 @@ public enum RestaurantErrors implements ErrorCode {
   CUISINE_NOT_EXISTING("domain.restaurant.cuisine.not.contained"),
   CUISINE_ALREADY_EXISTING("domain.restaurant.cuisine.already.contained"),
   IMPOSSIBLE_TO_GEOCODE("domain.restaurant.address.geocoding.impossible"),
-
-  IMPOSSIBLE_UPLOAD_LOGO("domain.restaurant.logo.impossible.upload"),
-  IMPOSSIBLE_DOWNLAOD_LOGO("domain.restaurant.logo.impossible.download"),
-
-  PATH_REQUIRED("domain.restaurant.logo.path.required");
+  PATH_REQUIRED("domain.restaurant.logo.path.required"),
+  LOGO_WRONG_CONTENT_TYPE("rest.adapter.restaurant.logo.upload.wrong_content_type"),
+  LOGO_UPLOAD_IMPOSSIBLE("domain.restaurant.logo.upload.impossible"),
+  LOGO_DOWNLOAD_IMPOSSIBLE("domain.restaurant.logo.download.impossible");
 
   private final String code;
 

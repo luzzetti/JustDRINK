@@ -2,14 +2,12 @@ package it.luzzetti.justdrink.backoffice.application.ports.input.restaurant;
 
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import jakarta.validation.constraints.NotNull;
-import java.io.IOException;
 import lombok.Builder;
 
-public interface LoadLogoRestaurantUseCase {
+public interface RetrieveRestaurantLogoUseCase {
 
-  byte[] loadLogo(LoadLogoCommand loadLogoCommand) throws IOException;
+  byte[] retrieveRestaurantLogo(RetrieveRestaurantLogoCommand retrieveRestaurantLogoCommand);
 
   @Builder
-  public record LoadLogoCommand(@NotNull RestaurantId restaurantId){}
-
+  record RetrieveRestaurantLogoCommand(@NotNull RestaurantId restaurantId) {}
 }

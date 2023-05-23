@@ -15,14 +15,14 @@ import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.Delet
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.DeleteRestaurantUseCase.DeleteRestaurantCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsQuery;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsQuery.ListRestaurantsCommand;
-import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.LoadLogoRestaurantUseCase;
-import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.LoadLogoRestaurantUseCase.LoadLogoCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.RemoveCuisineFromRestaurantUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.RemoveCuisineFromRestaurantUseCase.RemoveCuisineFromRestaurantCommand;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.RetrieveRestaurantLogoUseCase;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.RetrieveRestaurantLogoUseCase.RetrieveRestaurantLogoCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ShowRestaurantQuery;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ShowRestaurantQuery.ShowRestaurantCommand;
-import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.UploadLogoUsecase;
-import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.UploadLogoUsecase.UploadLogoRetaurantCommand;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.StoreRestaurantLogoUseCase;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.StoreRestaurantLogoUseCase.StoreRestaurantLogoCommand;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.RestaurantErrors;
 import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotProcessableException;
@@ -30,6 +30,7 @@ import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotValid
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
 import it.luzzetti.justdrink.backoffice.domain.vo.Cuisine;
+import it.luzzetti.justdrink.backoffice.domain.vo.Extension;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.menu.MenuRestControllerAdapter;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant.dto.CuisineResource;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant.dto.RestaurantResource;
@@ -50,7 +51,6 @@ import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -82,9 +82,9 @@ public class RestaurantRestControllerAdapter {
   private final DeleteRestaurantUseCase deleteRestaurantUseCase;
   private final AddCuisineToRestaurantUseCase addCuisineToRestaurantUseCase;
   private final RemoveCuisineFromRestaurantUseCase removeCuisineFromRestaurantUseCase;
-  private final UploadLogoUsecase uploadLogoUsecase;
+  private final StoreRestaurantLogoUseCase storeRestaurantLogoUseCase;
 
-  private final LoadLogoRestaurantUseCase loadLogoRestaurantUseCase;
+  private final RetrieveRestaurantLogoUseCase retrieveRestaurantLogoUseCase;
 
   // Queries
   private final ListRestaurantsQuery listRestaurantsQuery;
@@ -314,44 +314,61 @@ public class RestaurantRestControllerAdapter {
       return Base64.getEncoder().encodeToString(decodedString.getBytes());
     }
   }
-  @Operation(summary = "Permette l'upload del logo di un ristorante")
-  @PostMapping("/{restaurantId}/upload/logo")
-  public void uploadLogo(@PathVariable UUID restaurantId, @RequestParam("logo") MultipartFile file)
-      throws IOException {
 
-    if (!file.getContentType().startsWith("image/")) {
-      throw new ElementNotValidException(RestaurantErrors.IMPOSSIBLE_UPLOAD_LOGO)
-          .putInfo("logo", file.getOriginalFilename());
+  @Operation(summary = "Permette l'upload del logo di un ristorante")
+  @PostMapping("/{restaurantId}/logo:upload")
+  public void uploadLogo(
+      @PathVariable UUID restaurantId, @RequestParam("logo") MultipartFile file) {
+
+    String contentType = file.getContentType();
+    String originalFileName = file.getOriginalFilename();
+
+    if (originalFileName == null) {
+      throw new ElementNotProcessableException(RestaurantErrors.LOGO_UPLOAD_IMPOSSIBLE);
     }
 
-    UploadLogoRetaurantCommand command =
-        UploadLogoRetaurantCommand.builder()
+    if (contentType == null) {
+      throw new ElementNotValidException(RestaurantErrors.LOGO_UPLOAD_IMPOSSIBLE);
+    }
+
+    if (!contentType.startsWith("image/")) {
+      throw new ElementNotValidException(RestaurantErrors.LOGO_WRONG_CONTENT_TYPE);
+    }
+
+    byte[] logo;
+    try {
+      logo = file.getBytes();
+    } catch (IOException exception) {
+      throw new ElementNotValidException(RestaurantErrors.LOGO_UPLOAD_IMPOSSIBLE);
+    }
+
+    int indexOfLastDot = originalFileName.lastIndexOf('.');
+    Extension extension = Extension.from(originalFileName.substring(indexOfLastDot));
+
+    StoreRestaurantLogoCommand command =
+        StoreRestaurantLogoCommand.builder()
             .restaurantId(RestaurantId.from(restaurantId))
-            .file(file.getBytes())
-            .contentType(file.getContentType())
+            .file(logo)
+            .extension(extension)
             .build();
 
-    uploadLogoUsecase.uploadLogoRestaurant(command);
+    storeRestaurantLogoUseCase.storeRestaurantLogo(command);
   }
 
   @Operation(summary = "Permette il download del logo del ristorante")
   @GetMapping(
-      value = "/{restaurantId}/load/logo",
+      value = "/{restaurantId}/logo:download",
       produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
-  public ResponseEntity<byte[]> loadLogoRestautant(@PathVariable UUID restaurantId) {
+  public ResponseEntity<byte[]> downloadLogo(@PathVariable UUID restaurantId) {
 
-    LoadLogoCommand command =
-        LoadLogoCommand.builder().restaurantId(RestaurantId.from(restaurantId)).build();
+    RetrieveRestaurantLogoCommand command =
+        RetrieveRestaurantLogoCommand.builder()
+            .restaurantId(RestaurantId.from(restaurantId))
+            .build();
 
-    try {
-
-      byte[] logo = loadLogoRestaurantUseCase.loadLogo(command);
-
-      return ResponseEntity.status(HttpStatus.OK).body(logo);
-    } catch (IOException e) {
-
-      throw new ElementNotProcessableException(RestaurantErrors.IMPOSSIBLE_DOWNLAOD_LOGO)
-          .putInfo("id", restaurantId);
-    }
+    byte[] logo = retrieveRestaurantLogoUseCase.retrieveRestaurantLogo(command);
+    // throw new ElementNotProcessableException(RestaurantErrors.LOGO_DOWNLOAD_IMPOSSIBLE)
+    //          .putInfo("restaurantId", restaurantId);
+    return ResponseEntity.ok(logo);
   }
 }
