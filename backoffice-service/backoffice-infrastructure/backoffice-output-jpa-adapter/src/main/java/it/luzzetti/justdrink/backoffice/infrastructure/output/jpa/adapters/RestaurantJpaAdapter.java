@@ -9,6 +9,7 @@ import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.RestaurantErrors;
 import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotFoundException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
+import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.RestaurantJpaEntity;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.mappers.RestaurantJpaMapper;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.repositories.RestaurantJpaRepository;
@@ -46,6 +47,15 @@ public class RestaurantJpaAdapter
         restaurantJpaRepository.findAll(filter, maxPageSize, offset);
 
     return restaurants.stream().map(restaurantJpaMapper::toDomain).toList();
+  }
+
+  @Override
+  public List<Restaurant> listRestaurantsByClientAdress(Coordinates coordinates) {
+
+
+
+
+    return null;
   }
 
   @Override

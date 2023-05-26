@@ -13,6 +13,8 @@ import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.Creat
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.CreateRestaurantUseCase.CreateRestaurantCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.DeleteRestaurantUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.DeleteRestaurantUseCase.DeleteRestaurantCommand;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.FindRestaurantsByCliendAdressUseCase;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.FindRestaurantsByCliendAdressUseCase.FindRestaurantsByClientAdressCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsQuery;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsQuery.ListRestaurantsCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.RemoveCuisineFromRestaurantUseCase;
@@ -83,6 +85,7 @@ public class RestaurantRestControllerAdapter {
   private final AddCuisineToRestaurantUseCase addCuisineToRestaurantUseCase;
   private final RemoveCuisineFromRestaurantUseCase removeCuisineFromRestaurantUseCase;
   private final StoreRestaurantLogoUseCase storeRestaurantLogoUseCase;
+  private final FindRestaurantsByCliendAdressUseCase findRestaurantsByCliendAdressUseCase;
 
   private final RetrieveRestaurantLogoUseCase retrieveRestaurantLogoUseCase;
 
@@ -137,6 +140,26 @@ public class RestaurantRestControllerAdapter {
             .build();
     return ResponseEntity.ok(response);
   }
+
+  public ResponseEntity<ListRestaurantsResponse> listNearbyRestaurants(
+      @RequestBody @Valid RestaurantSearchByClientAdressRequest request,
+      @RequestParam Optional<Integer> maxPageSize,
+      @RequestParam Optional<String> pageToken) {
+
+    FindRestaurantsByClientAdressCommand command =
+        FindRestaurantsByClientAdressCommand.builder()
+            .addressName(request.addressName())
+            .coordinates(request.coordinates())
+            .build();
+
+    List<Restaurant> restaurantbyClientAdress =
+        findRestaurantsByCliendAdressUseCase.findRestaurantbyClientAdress(command);
+
+    return ResponseEntity.ok(null);
+  }
+
+  public record RestaurantSearchByClientAdressRequest(
+      @NotNull @NotBlank String addressName, Optional<Coordinates> coordinates) {}
 
   @Operation(summary = "Mostra il dettaglio di un ristorante in base al restaurantId")
   @GetMapping("/{restaurantId}")
