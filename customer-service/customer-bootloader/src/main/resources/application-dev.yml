@@ -1,0 +1,23 @@
+server:
+  port: 9091
+
+spring:
+
+  datasource:
+    username: justdrink_usr
+    password: justdrink_pwd
+
+  jpa:
+    show_sql: true
+    properties:
+      hibernate:
+        format_sql: false
+    hibernate:
+      ddl-auto: update
+
+logging:
+  level:
+    it:
+      luzzetti:
+        justdrink:
+          customer: DEBUG
