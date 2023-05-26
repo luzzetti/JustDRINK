@@ -48,7 +48,7 @@ public class DeliveryAreaJpaAdapter
   @Override
   public List<DeliveryArea> findDeliveryAreasByClientAdress(Coordinates coordinates) {
 
-
+//TODO non ho idea se la costruzione di questo point funziona
     CoordinateReferenceSystem<?> crs =
         CoordinateReferenceSystems.WGS84; // Sistema di riferimento delle coordinate
 
