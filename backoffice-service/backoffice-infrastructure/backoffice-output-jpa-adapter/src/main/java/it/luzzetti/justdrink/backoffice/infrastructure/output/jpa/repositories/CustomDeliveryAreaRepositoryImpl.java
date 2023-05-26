@@ -3,19 +3,13 @@ package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.repositories;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.DeliveryAreaJpaEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
-import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
-import java.awt.Point;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.spatial.Spatial;
-import org.hibernate.spatial.contributor.SpatialFunctionContributor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Repository;
 
+@Log4j2
 @Repository
 @RequiredArgsConstructor
 public class CustomDeliveryAreaRepositoryImpl implements CustomDeliveryAreaRepository {
@@ -32,6 +26,8 @@ public class CustomDeliveryAreaRepositoryImpl implements CustomDeliveryAreaRepos
 
     List<DeliveryAreaJpaEntity> resultList = query.getResultList();
 
-    return null;
+    log.warn(() -> String.format("TEST aree con poligoni che contengono un punto %", resultList));
+
+    return resultList;
   }
 }

@@ -141,21 +141,36 @@ public class RestaurantRestControllerAdapter {
     return ResponseEntity.ok(response);
   }
 
+  @Operation(summary = "Mostra la lista dei ristoranti che sono disposti a portarti le bevande")
+  @GetMapping("/nearbyrestaurant")
   public ResponseEntity<ListRestaurantsResponse> listNearbyRestaurants(
       @RequestBody @Valid RestaurantSearchByClientAdressRequest request,
       @RequestParam Optional<Integer> maxPageSize,
       @RequestParam Optional<String> pageToken) {
 
+    Integer offset = pageToken.map(PageTokenCodec::decode).orElse(0);
+
     FindRestaurantsByClientAdressCommand command =
         FindRestaurantsByClientAdressCommand.builder()
             .addressName(request.addressName())
             .coordinates(request.coordinates())
+            .maxPageSize(maxPageSize.orElse(10))
+            .offset(offset)
             .build();
 
     List<Restaurant> restaurantbyClientAdress =
         findRestaurantsByCliendAdressUseCase.findRestaurantbyClientAdress(command);
 
-    return ResponseEntity.ok(null);
+    var restaurants =
+        restaurantbyClientAdress.stream().map(restaurantWebMapper::toListElement).toList();
+
+    var response =
+        ListRestaurantsResponse.builder()
+            .restaurants(restaurants)
+            .nextPageToken(PageTokenCodec.encode(offset + restaurants.size()))
+            .build();
+
+    return ResponseEntity.ok(response);
   }
 
   public record RestaurantSearchByClientAdressRequest(

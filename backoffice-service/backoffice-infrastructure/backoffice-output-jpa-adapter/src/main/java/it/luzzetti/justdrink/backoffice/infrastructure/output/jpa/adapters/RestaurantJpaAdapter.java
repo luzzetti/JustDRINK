@@ -15,6 +15,8 @@ import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.mappers.Restau
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.repositories.RestaurantJpaRepository;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
@@ -50,12 +52,16 @@ public class RestaurantJpaAdapter
   }
 
   @Override
-  public List<Restaurant> listRestaurantsByClientAdress(Coordinates coordinates) {
+  public List<Restaurant> listRestaurantsByIds(List<RestaurantId> restaurantIds) {
 
+    List<UUID> listUUID = restaurantIds.stream().map(r -> r.id()).collect(Collectors.toList());
 
+    List<RestaurantJpaEntity> allById = restaurantJpaRepository.findAllById(listUUID);
 
+    List<Restaurant> restaurants =
+        allById.stream().map(restaurantJpaMapper::toDomain).collect(Collectors.toList());
 
-    return null;
+    return restaurants;
   }
 
   @Override

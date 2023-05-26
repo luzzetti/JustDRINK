@@ -10,12 +10,12 @@ import lombok.Builder;
 
 public interface FindRestaurantsByCliendAdressUseCase {
 
-
   List<Restaurant> findRestaurantbyClientAdress(FindRestaurantsByClientAdressCommand command);
 
   @Builder
   record FindRestaurantsByClientAdressCommand(
       @NotNull @NotEmpty String addressName,
-      Optional<Coordinates> coordinates) {}
-
+      Optional<Coordinates> coordinates,
+      Integer maxPageSize,
+      Integer offset) {}
 }
