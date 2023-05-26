@@ -15,7 +15,12 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.geo.Point;
+import org.geolatte.geom.Point;
+import org.geolatte.geom.Position;
+import org.geolatte.geom.PositionSequenceBuilder;
+import org.geolatte.geom.PositionSequenceBuilders;
+import org.geolatte.geom.crs.CoordinateReferenceSystem;
+import org.geolatte.geom.crs.CoordinateReferenceSystems;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -43,8 +48,20 @@ public class DeliveryAreaJpaAdapter
   @Override
   public List<DeliveryArea> findDeliveryAreasByClientAdress(Coordinates coordinates) {
 
-    Point point =
-        new Point(coordinates.latitude().latitudeValue(), coordinates.longitude().longitudeValue());
+
+    CoordinateReferenceSystem<?> crs =
+        CoordinateReferenceSystems.WGS84; // Sistema di riferimento delle coordinate
+
+    Position position =
+        new Position(
+            coordinates.latitude().latitudeValue(), coordinates.longitude().longitudeValue()) {
+          @Override
+          public int getCoordinateDimension() {
+            return 0;
+          }
+        };
+
+    Point point = new Point(position, crs);
 
     List<DeliveryAreaJpaEntity> deliveryAreasEntity =
         customDeliveryAreaRepository.findByPoint(point);

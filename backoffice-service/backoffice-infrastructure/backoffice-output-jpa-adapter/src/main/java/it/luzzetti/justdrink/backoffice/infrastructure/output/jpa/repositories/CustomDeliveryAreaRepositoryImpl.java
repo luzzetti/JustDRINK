@@ -6,7 +6,7 @@ import jakarta.persistence.Query;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.geo.Point;
+import org.geolatte.geom.Point;
 import org.springframework.stereotype.Repository;
 
 @Log4j2
