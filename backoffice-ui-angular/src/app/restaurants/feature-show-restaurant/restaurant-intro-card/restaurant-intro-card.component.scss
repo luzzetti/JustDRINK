@@ -23,13 +23,18 @@
 
 }
 
+#edit-button {
+  position: absolute;
+  top: -25px;
+  right: 25px;
+}
+
 #restaurant-logo {
   position: absolute;
   top: -36px;
   left: 45%;
 
   // TODO: Calcolare la formula come nei videogiochi.
-
   #avatar-image {
     border: 1px solid #d9d7d5;
     border-radius: inherit;

@@ -1,0 +1,40 @@
+<p-tabView>
+
+  <p-tabPanel header="General">
+
+    <!-- Form molto basilare, solo per testare -->
+    <div class="grid">
+      <div class="col-offset-4 col-4">
+        <div class="card">
+          <h5>Restaurant Information</h5>
+          <div class="field">
+            <label for="restaurantName">Name</label>
+            <input id="restaurantName" type="text"
+                   class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
+          </div>
+
+          <!-- L'indirizzo deve essere geolocalizzato/confermato, prima di proseguire con il salvataggio -->
+          <div class="field">
+            <label for="restaurantAddress">Address</label>
+            <input id="restaurantAddress" type="text"
+                   class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </p-tabPanel>
+
+  <p-tabPanel header="Shipping Area">
+    <p>
+      Creare un componente per disegnare la shipping area (Area di consegna)
+    </p>
+  </p-tabPanel>
+
+  <p-tabPanel header="Working hours">
+    <p>
+      Creare il componente per la gestione delle aperture
+    </p>
+  </p-tabPanel>
+
+</p-tabView>

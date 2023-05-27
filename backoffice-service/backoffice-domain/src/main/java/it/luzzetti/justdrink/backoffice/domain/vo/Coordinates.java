@@ -31,7 +31,7 @@ public record Coordinates(Latitude latitude, Longitude longitude) {
 
   // Lombok's Builder Override
 
-  public static CoordinatesBuilder builder() {
+  private static CoordinatesBuilder builder() {
     return new Coordinates.CustomBuilder();
   }
 
