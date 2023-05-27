@@ -1,4 +1,5 @@
-<p-tabView>
+<!--TEST - Tiene attivo il tab Shipping-->
+<p-tabView [activeIndex]="1">
 
   <p-tabPanel header="General">
 
@@ -26,9 +27,7 @@
   </p-tabPanel>
 
   <p-tabPanel header="Shipping Area">
-    <p>
-      Creare un componente per disegnare la shipping area (Area di consegna)
-    </p>
+    <app-draw-feature></app-draw-feature>
   </p-tabPanel>
 
   <p-tabPanel header="Working hours">

@@ -36,6 +36,7 @@ import {NotFoundComponent} from './not-found/not-found.component';
 import {HttpClientModule} from "@angular/common/http";
 import {FieldsetModule} from "primeng/fieldset";
 import {TabViewModule} from "primeng/tabview";
+import { DrawFeatureComponent } from './restaurants/feature-edit-restaurant/draw-feature/draw-feature.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import {TabViewModule} from "primeng/tabview";
     RestaurantSectionsComponent,
     RestaurantBasketComponent,
     EditRestaurantComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    DrawFeatureComponent
   ],
   imports: [
     BrowserModule,
