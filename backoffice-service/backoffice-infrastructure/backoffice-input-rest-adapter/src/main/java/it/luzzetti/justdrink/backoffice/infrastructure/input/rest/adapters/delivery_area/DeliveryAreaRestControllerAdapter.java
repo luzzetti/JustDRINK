@@ -1,8 +1,7 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.delivery_area;
 
-import it.luzzetti.justdrink.backoffice.application.ports.input.delivery_area.CreateDeliveryAreaUseCase;
-import it.luzzetti.justdrink.backoffice.application.ports.input.delivery_area.CreateDeliveryAreaUseCase.CreateDeliveryAreaCommand;
-import it.luzzetti.justdrink.backoffice.domain.aggregates.delivery_area.DeliveryArea;
+import it.luzzetti.justdrink.backoffice.application.ports.input.delivery_area.SetDeliveryAreaUseCase;
+import it.luzzetti.justdrink.backoffice.application.ports.input.delivery_area.SetDeliveryAreaUseCase.SetDeliveryAreaCommand;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +10,7 @@ import org.locationtech.jts.geom.Polygon;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,22 +26,19 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin("*")
 public class DeliveryAreaRestControllerAdapter {
 
-  private final CreateDeliveryAreaUseCase createDeliveryAreaUseCase;
+  private final SetDeliveryAreaUseCase setDeliveryAreaUseCase;
 
-  @PostMapping("/area")
-  public ResponseEntity<Void> createDeliveryArea(
+  @PutMapping("/area")
+  public ResponseEntity<Void> setDeliveryArea(
       @PathVariable UUID restaurantId, @RequestBody Polygon polygon) {
 
     var command =
-        CreateDeliveryAreaCommand.builder()
+        SetDeliveryAreaCommand.builder()
             .restaurantId(RestaurantId.from(restaurantId))
             .polygon(polygon)
             .build();
 
-    DeliveryArea theCreatedDeliveryArea = createDeliveryAreaUseCase.createDeliveryArea(command);
-
-    log.warn("DeliveryArea: %s".formatted(theCreatedDeliveryArea));
-
+    setDeliveryAreaUseCase.setDeliveryArea(command);
     return ResponseEntity.ok().build();
   }
 }

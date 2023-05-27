@@ -10,7 +10,7 @@ import {MenuItem} from "primeng/api";
 })
 export class EditRestaurantComponent implements OnInit {
 
-  private readonly restaurantId: string;
+  protected readonly restaurantId: string;
   protected readonly pageSections: MenuItem[];
 
   constructor(route: ActivatedRoute, private _restaurantService: RestaurantService) {

@@ -9,7 +9,7 @@ import {
 import {NotFoundComponent} from "./not-found/not-found.component";
 
 const routes: Routes = [
-  {path: '', redirectTo: '/restaurants/6accf60d-94b5-4363-a939-099d7dd67bca', pathMatch: 'full'},
+  {path: '', redirectTo: '/restaurants/87d5953f-95dd-485d-9738-adf679688cd6', pathMatch: 'full'},
   {path: 'restaurants/:restaurantId', component: ShowRestaurantComponent},
   {path: 'restaurants/:restaurantId/edit', component: EditRestaurantComponent},
   {path: '**', component: NotFoundComponent}
