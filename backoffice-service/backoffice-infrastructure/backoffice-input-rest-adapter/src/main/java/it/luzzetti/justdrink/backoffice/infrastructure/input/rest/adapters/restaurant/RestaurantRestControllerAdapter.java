@@ -110,7 +110,6 @@ public class RestaurantRestControllerAdapter {
         linkTo(thisAdapter).withRel("listRestaurants"));
   }
 
-  @Deprecated
   @Operation(summary = "Mostra la lista di ristoranti presenti")
   @GetMapping
   public ResponseEntity<ListRestaurantsResponse> listRestaurants(
@@ -196,34 +195,6 @@ public class RestaurantRestControllerAdapter {
     return ResponseEntity.ok(resource);
   }
 
-  /* TODO:
-  Al momento le coordinate di un ristorante arrivano in questo formato:
-   "address": {
-        "displayName": "Via Orazio Coccanari, 25",
-        "coordinates": {
-            "latitude": {
-                "latitudeValue": 50.9585226
-            },
-            "longitude": {
-                "longitudeValue": 0.0
-            }
-        }
-    }
-
-    Questo perché è stato usato il VO Coordinates (di dominio) anche nella parte web.
-    Questa cosa non è necessariamente MALE, però è probabile che il Frontendista preferisca
-    un formato più semplice, ad esempio:
-    "address" : {
-      "coordinates": {
-        "latitude" :  50.9585226,
-        "longitude" : 15.0
-      }
-    }
-
-    A. Creare un'apposita risorsa (AddressResource) da restituire al Frontend.
-    B. Se non è troppo difficile, sistemare ADDRESS e COORDINATES rendendoli dei veri ValueObjects
-        seguendo le stesse convenzioni usate per altri VO
-   */
   @Operation(summary = "Cambia l'indirizzo del ristorante")
   @PutMapping("/{restaurantId}/address")
   public ResponseEntity<RestaurantResource> changeRestaurantAddress(
@@ -391,8 +362,7 @@ public class RestaurantRestControllerAdapter {
             .build();
 
     byte[] logo = retrieveRestaurantLogoUseCase.retrieveRestaurantLogo(command);
-    // throw new ElementNotProcessableException(RestaurantErrors.LOGO_DOWNLOAD_IMPOSSIBLE)
-    //          .putInfo("restaurantId", restaurantId);
+
     return ResponseEntity.ok(logo);
   }
 }

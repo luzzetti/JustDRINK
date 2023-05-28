@@ -9,14 +9,17 @@ import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.RestaurantErrors;
 import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotFoundException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
+import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.RestaurantJpaEntity;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.mappers.RestaurantJpaMapper;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.repositories.RestaurantJpaRepository;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -50,19 +53,6 @@ public class RestaurantJpaAdapter
   }
 
   @Override
-  public List<Restaurant> listRestaurantsByIds(List<RestaurantId> restaurantIds) {
-
-    List<UUID> listUUID = restaurantIds.stream().map(r -> r.id()).collect(Collectors.toList());
-
-    List<RestaurantJpaEntity> allById = restaurantJpaRepository.findAllById(listUUID);
-
-    List<Restaurant> restaurants =
-        allById.stream().map(restaurantJpaMapper::toDomain).collect(Collectors.toList());
-
-    return restaurants;
-  }
-
-  @Override
   public Restaurant findRestaurantByIdMandatory(RestaurantId restaurantId) {
 
     return restaurantJpaRepository
@@ -72,6 +62,25 @@ public class RestaurantJpaAdapter
             () ->
                 new ElementNotFoundException(RestaurantErrors.NOT_FOUND)
                     .putInfo("id", restaurantId));
+  }
+
+  @Override
+  public List<Restaurant> findRestaurantByCoordinateContainedInShippingArea(
+      Coordinates coordinate) {
+
+    /*
+     * Converto le mie coordinate, in un Point di JTS
+     * Ci ha detto culo che viene utilizzato lo stesso sistema di coordinate.
+     */
+    GeometryFactory gm = new GeometryFactory();
+    Point point =
+        gm.createPoint(
+            new Coordinate(
+                coordinate.latitude().latitudeValue(), coordinate.longitude().longitudeValue()));
+
+    return restaurantJpaRepository.findByPointContainedInDeliveryArea(point).stream()
+        .map(restaurantJpaMapper::toDomain)
+        .toList();
   }
 
   public Restaurant findRestaurantByName(String restaurantName) {
