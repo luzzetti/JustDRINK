@@ -19,9 +19,9 @@ public class ListRestaurantsApplicationService implements ListRestaurantsQuery {
   public List<Restaurant> listRestaurants(ListRestaurantsCommand command) {
 
     String filter = command.filter();
-    Integer maxPageSize = command.maxPageSize();
-    Integer offset = command.offset();
+    int pageSize = command.pageSize();
+    int offset = command.offset();
 
-    return listRestaurantsPort.listRestaurants(filter, maxPageSize, offset);
+    return listRestaurantsPort.listRestaurants(filter, pageSize, offset);
   }
 }

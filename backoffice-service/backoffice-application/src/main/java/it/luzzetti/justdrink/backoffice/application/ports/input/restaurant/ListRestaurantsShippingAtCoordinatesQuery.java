@@ -4,12 +4,12 @@ import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import java.util.List;
 import lombok.Builder;
 
-public interface ListRestaurantsContainingCoordinatesQuery {
+public interface ListRestaurantsShippingAtCoordinatesQuery {
 
-  List<Restaurant> listRestaurantsContainingCoordinates(
-      ListRestaurantsContainingCoordinatesCommand command);
+  List<Restaurant> listRestaurantsShippingAtCoordinates(
+      ListRestaurantsShippingAtCoordinatesCommand command);
 
   @Builder
-  record ListRestaurantsContainingCoordinatesCommand(
+  record ListRestaurantsShippingAtCoordinatesCommand(
       double longitude, double latitude, int pageSize, int offset) {}
 }

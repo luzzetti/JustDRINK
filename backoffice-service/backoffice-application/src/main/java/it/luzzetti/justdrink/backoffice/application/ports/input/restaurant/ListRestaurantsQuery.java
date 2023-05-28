@@ -10,5 +10,5 @@ public interface ListRestaurantsQuery {
   List<Restaurant> listRestaurants(ListRestaurantsCommand command);
 
   @Builder
-  record ListRestaurantsCommand(@NotEmpty String filter, Integer maxPageSize, Integer offset) {}
+  record ListRestaurantsCommand(@NotEmpty String filter, Integer pageSize, Integer offset) {}
 }

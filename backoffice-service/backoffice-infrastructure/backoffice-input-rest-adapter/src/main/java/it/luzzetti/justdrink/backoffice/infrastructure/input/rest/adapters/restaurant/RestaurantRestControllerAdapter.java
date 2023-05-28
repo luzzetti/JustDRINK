@@ -13,10 +13,10 @@ import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.Creat
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.CreateRestaurantUseCase.CreateRestaurantCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.DeleteRestaurantUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.DeleteRestaurantUseCase.DeleteRestaurantCommand;
-import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsContainingCoordinatesQuery;
-import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsContainingCoordinatesQuery.ListRestaurantsContainingCoordinatesCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsQuery;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsQuery.ListRestaurantsCommand;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsShippingAtCoordinatesQuery;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsShippingAtCoordinatesQuery.ListRestaurantsShippingAtCoordinatesCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.RemoveCuisineFromRestaurantUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.RemoveCuisineFromRestaurantUseCase.RemoveCuisineFromRestaurantCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.RetrieveRestaurantLogoUseCase;
@@ -42,7 +42,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.io.IOException;
-import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -88,7 +87,7 @@ public class RestaurantRestControllerAdapter {
   private final RetrieveRestaurantLogoUseCase retrieveRestaurantLogoUseCase;
 
   // Queries
-  private final ListRestaurantsContainingCoordinatesQuery listRestaurantsContainingCoordinatesQuery;
+  private final ListRestaurantsShippingAtCoordinatesQuery listRestaurantsShippingAtCoordinatesQuery;
   private final ListRestaurantsQuery listRestaurantsQuery;
   private final ShowRestaurantQuery showRestaurantQuery;
 
@@ -114,16 +113,16 @@ public class RestaurantRestControllerAdapter {
   @GetMapping
   public ResponseEntity<ListRestaurantsResponse> listRestaurants(
       @RequestParam Optional<String> filter,
-      @RequestParam Optional<Integer> maxPageSize,
-      @RequestParam Optional<String> pageToken) {
+      @RequestParam Optional<Integer> pageSize,
+      @RequestParam Optional<Integer> pageNumber) {
 
-    // Parsing values into a command
-    Integer offset = pageToken.map(PageTokenCodec::decode).orElse(0);
+    // Fetching needed data
+
     var command =
         ListRestaurantsCommand.builder()
             .filter(filter.orElse(""))
-            .maxPageSize(maxPageSize.orElse(10))
-            .offset(offset)
+            .pageSize(pageSize.orElse(10))
+            .offset(pageNumber.orElse(0))
             .build();
 
     // Calling UseCase
@@ -133,44 +132,46 @@ public class RestaurantRestControllerAdapter {
             .toList();
 
     // Crafting a response
-    var response =
-        ListRestaurantsResponse.builder()
-            .restaurants(restaurants)
-            .nextPageToken(PageTokenCodec.encode(offset + restaurants.size()))
-            .build();
+
+    var response = ListRestaurantsResponse.builder().restaurants(restaurants).build();
     return ResponseEntity.ok(response);
   }
 
+  /*
+   * ../restaurants/search/shippingAtCoordinares
+   *
+   * probabilmente, in futuro, agglomereremo altri tipi di ricerca, sotto l'endpoint
+   * /restaurants/search/nomeRicerca
+   */
 
   @Operation(summary = "Mostra la lista dei ristoranti che spediscono alle coordinate fornite")
-  @GetMapping("/nearbyrestaurant")
-  public ResponseEntity<ListRestaurantsResponse> listRestaurantsContainingCoordinates(
-      @RequestBody @Valid RestaurantSearchByClientAdressRequest request,
+  @GetMapping("/search/shippingAtCoordinates")
+  public ResponseEntity<ListRestaurantsResponse> listRestaurantsShippingAtCoordinates(
+      @RequestParam double latitude,
+      @RequestParam double longitude,
       @RequestParam Optional<Integer> pageSize,
       @RequestParam Optional<Integer> pageNumber) {
 
-    Integer offset = pageNumber.orElse(0);
-    Integer size = pageSize.orElse(10);
+    // Fetching Parameters
 
     var command =
-        ListRestaurantsContainingCoordinatesCommand.builder()
-            .latitude()
-            .longitude()
-            .offset(offset)
+        ListRestaurantsShippingAtCoordinatesCommand.builder()
+            .latitude(latitude)
+            .longitude(longitude)
+            .pageSize(pageSize.orElse(10))
+            .offset(pageNumber.orElse(0))
             .build();
 
-    List<Restaurant> restaurantbyClientAdress =
-        listRestaurantsContainingCoordinatesQuery.listRestaurantsContainingCoordinates(command);
+    // Executing UseCase
 
-    var restaurants =
-        restaurantbyClientAdress.stream().map(restaurantWebMapper::toListElement).toList();
+    var theFoundRestaurants =
+        listRestaurantsShippingAtCoordinatesQuery.listRestaurantsShippingAtCoordinates(command);
 
-    var response =
-        ListRestaurantsResponse.builder()
-            .restaurants(restaurants)
-            .nextPageToken(PageTokenCodec.encode(offset + restaurants.size()))
-            .build();
+    // Crafting a Response
 
+    var theRestaurantResources =
+        theFoundRestaurants.stream().map(restaurantWebMapper::toListElement).toList();
+    var response = ListRestaurantsResponse.builder().restaurants(theRestaurantResources).build();
     return ResponseEntity.ok(response);
   }
 
@@ -319,8 +320,7 @@ public class RestaurantRestControllerAdapter {
   public record AddCuisineRequest(@NotNull @NotBlank String name) {}
 
   @Builder
-  public record ListRestaurantsResponse(
-      List<RestaurantListElement> restaurants, String nextPageToken) {}
+  public record ListRestaurantsResponse(List<RestaurantListElement> restaurants) {}
 
   public record RestaurantListElement(UUID id, String name) {}
 
@@ -333,21 +333,6 @@ public class RestaurantRestControllerAdapter {
     @Override
     public Set<CuisineResource> cuisines() {
       return Objects.requireNonNullElseGet(cuisines, HashSet::new);
-    }
-  }
-
-  private record PageTokenCodec() {
-    static Integer decode(String encodedString) {
-      if (encodedString == null) {
-        return 0;
-      }
-      String decodedString = new String(Base64.getDecoder().decode(encodedString));
-      return Integer.parseInt(decodedString);
-    }
-
-    static String encode(Integer decodedValue) {
-      String decodedString = decodedValue.toString();
-      return Base64.getEncoder().encodeToString(decodedString.getBytes());
     }
   }
 

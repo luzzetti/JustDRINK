@@ -1,6 +1,6 @@
 package it.luzzetti.justdrink.backoffice.application.services.restaurant;
 
-import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsContainingCoordinatesQuery;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsShippingAtCoordinatesQuery;
 import it.luzzetti.justdrink.backoffice.application.ports.output.FindCoordinatesPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.FindDeliveryAreasPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.ListRestaurantsPort;
@@ -20,15 +20,15 @@ import org.springframework.stereotype.Service;
 @Log4j2
 @RequiredArgsConstructor
 public class ListRestaurantsByCliendAdressService implements
-    ListRestaurantsContainingCoordinatesQuery {
+    ListRestaurantsShippingAtCoordinatesQuery {
 
   private final FindCoordinatesPort findCoordinatesPort;
   private final ListRestaurantsPort listRestaurantsPort;
   private final FindDeliveryAreasPort findDeliveryAreasPort;
 
   @Override
-  public List<Restaurant> listRestaurantsContainingCoordinates(
-      ListRestaurantsContainingCoordinatesCommand command) {
+  public List<Restaurant> listRestaurantsShippingAtCoordinates(
+      ListRestaurantsShippingAtCoordinatesCommand command) {
 
     Coordinates coordinates = searchCoordinates(command.addressName(), command.coordinates());
 

@@ -9,14 +9,12 @@ import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.RestaurantErrors;
 import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotFoundException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
-import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.RestaurantJpaEntity;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.mappers.RestaurantJpaMapper;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.repositories.RestaurantJpaRepository;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
@@ -43,10 +41,10 @@ public class RestaurantJpaAdapter
   }
 
   @Override
-  public List<Restaurant> listRestaurants(String filter, Integer maxPageSize, Integer offset) {
+  public List<Restaurant> listRestaurants(String filter, Integer offset, Integer pageSize) {
 
     List<RestaurantJpaEntity> restaurants =
-        restaurantJpaRepository.findAll(filter, maxPageSize, offset);
+        restaurantJpaRepository.findAll(filter, pageSize, offset);
 
     return restaurants.stream().map(restaurantJpaMapper::toDomain).toList();
   }
