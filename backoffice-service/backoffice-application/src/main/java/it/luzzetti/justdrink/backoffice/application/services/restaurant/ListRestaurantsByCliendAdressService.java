@@ -1,6 +1,6 @@
 package it.luzzetti.justdrink.backoffice.application.services.restaurant;
 
-import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.FindRestaurantsByCliendAdressUseCase;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsContainingCoordinatesQuery;
 import it.luzzetti.justdrink.backoffice.application.ports.output.FindCoordinatesPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.FindDeliveryAreasPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.ListRestaurantsPort;
@@ -12,7 +12,6 @@ import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -20,15 +19,16 @@ import org.springframework.stereotype.Service;
 @Service
 @Log4j2
 @RequiredArgsConstructor
-public class FindRestaurantsByCliendAdressService implements FindRestaurantsByCliendAdressUseCase {
+public class ListRestaurantsByCliendAdressService implements
+    ListRestaurantsContainingCoordinatesQuery {
 
   private final FindCoordinatesPort findCoordinatesPort;
   private final ListRestaurantsPort listRestaurantsPort;
   private final FindDeliveryAreasPort findDeliveryAreasPort;
 
   @Override
-  public List<Restaurant> findRestaurantbyClientAdress(
-      FindRestaurantsByClientAdressCommand command) {
+  public List<Restaurant> listRestaurantsContainingCoordinates(
+      ListRestaurantsContainingCoordinatesCommand command) {
 
     Coordinates coordinates = searchCoordinates(command.addressName(), command.coordinates());
 

@@ -13,8 +13,8 @@ import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.Creat
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.CreateRestaurantUseCase.CreateRestaurantCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.DeleteRestaurantUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.DeleteRestaurantUseCase.DeleteRestaurantCommand;
-import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.FindRestaurantsByCliendAdressUseCase;
-import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.FindRestaurantsByCliendAdressUseCase.FindRestaurantsByClientAdressCommand;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsContainingCoordinatesQuery;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsContainingCoordinatesQuery.ListRestaurantsContainingCoordinatesCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsQuery;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsQuery.ListRestaurantsCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.RemoveCuisineFromRestaurantUseCase;
@@ -85,11 +85,10 @@ public class RestaurantRestControllerAdapter {
   private final AddCuisineToRestaurantUseCase addCuisineToRestaurantUseCase;
   private final RemoveCuisineFromRestaurantUseCase removeCuisineFromRestaurantUseCase;
   private final StoreRestaurantLogoUseCase storeRestaurantLogoUseCase;
-  private final FindRestaurantsByCliendAdressUseCase findRestaurantsByCliendAdressUseCase;
-
   private final RetrieveRestaurantLogoUseCase retrieveRestaurantLogoUseCase;
 
   // Queries
+  private final ListRestaurantsContainingCoordinatesQuery listRestaurantsContainingCoordinatesQuery;
   private final ListRestaurantsQuery listRestaurantsQuery;
   private final ShowRestaurantQuery showRestaurantQuery;
 
@@ -110,6 +109,7 @@ public class RestaurantRestControllerAdapter {
         linkTo(thisAdapter).withRel("listRestaurants"));
   }
 
+  @Deprecated
   @Operation(summary = "Mostra la lista di ristoranti presenti")
   @GetMapping
   public ResponseEntity<ListRestaurantsResponse> listRestaurants(
@@ -141,25 +141,26 @@ public class RestaurantRestControllerAdapter {
     return ResponseEntity.ok(response);
   }
 
-  @Operation(summary = "Mostra la lista dei ristoranti che sono disposti a portarti le bevande")
+
+  @Operation(summary = "Mostra la lista dei ristoranti che spediscono alle coordinate fornite")
   @GetMapping("/nearbyrestaurant")
-  public ResponseEntity<ListRestaurantsResponse> listNearbyRestaurants(
+  public ResponseEntity<ListRestaurantsResponse> listRestaurantsContainingCoordinates(
       @RequestBody @Valid RestaurantSearchByClientAdressRequest request,
-      @RequestParam Optional<Integer> maxPageSize,
-      @RequestParam Optional<String> pageToken) {
+      @RequestParam Optional<Integer> pageSize,
+      @RequestParam Optional<Integer> pageNumber) {
 
-    Integer offset = pageToken.map(PageTokenCodec::decode).orElse(0);
+    Integer offset = pageNumber.orElse(0);
+    Integer size = pageSize.orElse(10);
 
-    FindRestaurantsByClientAdressCommand command =
-        FindRestaurantsByClientAdressCommand.builder()
-            .addressName(request.addressName())
-            .coordinates(request.coordinates())
-            .maxPageSize(maxPageSize.orElse(10))
+    var command =
+        ListRestaurantsContainingCoordinatesCommand.builder()
+            .latitude()
+            .longitude()
             .offset(offset)
             .build();
 
     List<Restaurant> restaurantbyClientAdress =
-        findRestaurantsByCliendAdressUseCase.findRestaurantbyClientAdress(command);
+        listRestaurantsContainingCoordinatesQuery.listRestaurantsContainingCoordinates(command);
 
     var restaurants =
         restaurantbyClientAdress.stream().map(restaurantWebMapper::toListElement).toList();
@@ -172,9 +173,6 @@ public class RestaurantRestControllerAdapter {
 
     return ResponseEntity.ok(response);
   }
-
-  public record RestaurantSearchByClientAdressRequest(
-      @NotNull @NotBlank String addressName, Optional<Coordinates> coordinates) {}
 
   @Operation(summary = "Mostra il dettaglio di un ristorante in base al restaurantId")
   @GetMapping("/{restaurantId}")
