@@ -15,7 +15,7 @@ import {FooterComponent} from './footer/footer.component';
 import {MenubarModule} from "primeng/menubar";
 import {AvatarModule} from "primeng/avatar";
 import {RatingModule} from "primeng/rating";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {DividerModule} from "primeng/divider";
 import {AccordionModule} from "primeng/accordion";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
@@ -36,7 +36,16 @@ import {NotFoundComponent} from './not-found/not-found.component';
 import {HttpClientModule} from "@angular/common/http";
 import {FieldsetModule} from "primeng/fieldset";
 import {TabViewModule} from "primeng/tabview";
-import { DrawFeatureComponent } from './restaurants/feature-edit-restaurant/draw-feature/draw-feature.component';
+import {
+  DrawFeatureComponent
+} from './restaurants/feature-edit-restaurant/draw-feature/draw-feature.component';
+import {
+  WorkingHoursComponent
+} from './restaurants/feature-edit-restaurant/working-hours/working-hours.component';
+import {InputSwitchModule} from "primeng/inputswitch";
+import {CalendarModule} from "primeng/calendar";
+import {SelectButtonModule} from "primeng/selectbutton";
+import { StandardHourComponent } from './restaurants/feature-edit-restaurant/working-hours/standard-hour/standard-hour.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +58,9 @@ import { DrawFeatureComponent } from './restaurants/feature-edit-restaurant/draw
     RestaurantBasketComponent,
     EditRestaurantComponent,
     NotFoundComponent,
-    DrawFeatureComponent
+    DrawFeatureComponent,
+    WorkingHoursComponent,
+    StandardHourComponent
   ],
   imports: [
     BrowserModule,
@@ -61,6 +72,7 @@ import { DrawFeatureComponent } from './restaurants/feature-edit-restaurant/draw
     AvatarModule,
     RatingModule,
     FormsModule,
+    ReactiveFormsModule,
     DividerModule,
     AccordionModule,
     PanelModule,
@@ -68,7 +80,10 @@ import { DrawFeatureComponent } from './restaurants/feature-edit-restaurant/draw
     MenuModule,
     ButtonModule,
     FieldsetModule,
-    TabViewModule
+    TabViewModule,
+    InputSwitchModule,
+    CalendarModule,
+    SelectButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]
