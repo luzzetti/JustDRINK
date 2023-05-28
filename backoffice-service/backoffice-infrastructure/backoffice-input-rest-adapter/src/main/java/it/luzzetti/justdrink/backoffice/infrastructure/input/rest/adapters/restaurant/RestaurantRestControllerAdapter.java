@@ -31,6 +31,8 @@ import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotProce
 import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotValidException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
+import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates.Latitude;
+import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates.Longitude;
 import it.luzzetti.justdrink.backoffice.domain.vo.Cuisine;
 import it.luzzetti.justdrink.backoffice.domain.vo.Extension;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.menu.MenuRestControllerAdapter;
@@ -154,10 +156,11 @@ public class RestaurantRestControllerAdapter {
 
     // Fetching Parameters
 
+    Coordinates coordinates = Coordinates.of(Latitude.of(latitude), Longitude.of(longitude));
+
     var command =
         ListRestaurantsShippingAtCoordinatesCommand.builder()
-            .latitude(latitude)
-            .longitude(longitude)
+            .coordinates(coordinates)
             .pageSize(pageSize.orElse(10))
             .offset(pageNumber.orElse(0))
             .build();

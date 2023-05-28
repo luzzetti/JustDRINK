@@ -46,7 +46,7 @@ public class DeliveryAreaJpaAdapter
   }
 
   @Override
-  public List<DeliveryArea> findDeliveryAreasByClientAdress(Coordinates coordinates) {
+  public List<DeliveryArea> findDeliveryAreasContainingCoordinates(Coordinates coordinates) {
 
 //TODO non ho idea se la costruzione di questo point funziona
     CoordinateReferenceSystem<?> crs =

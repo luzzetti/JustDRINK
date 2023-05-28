@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface FindDeliveryAreasPort {
 
-  public List<DeliveryArea> findDeliveryAreasByClientAdress(Coordinates coordinates);
+  public List<DeliveryArea> findDeliveryAreasContainingCoordinates(Coordinates coordinates);
 }

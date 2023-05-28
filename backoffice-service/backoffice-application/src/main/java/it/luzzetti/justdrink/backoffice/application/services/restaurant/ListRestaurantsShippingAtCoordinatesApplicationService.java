@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Log4j2
 @RequiredArgsConstructor
-public class ListRestaurantsByCliendAdressService implements
+public class ListRestaurantsShippingAtCoordinatesApplicationService implements
     ListRestaurantsShippingAtCoordinatesQuery {
 
   private final FindCoordinatesPort findCoordinatesPort;
@@ -30,13 +30,13 @@ public class ListRestaurantsByCliendAdressService implements
   public List<Restaurant> listRestaurantsShippingAtCoordinates(
       ListRestaurantsShippingAtCoordinatesCommand command) {
 
-    Coordinates coordinates = searchCoordinates(command.addressName(), command.coordinates());
+//    Coordinates coordinates = searchCoordinates(command.addressName(), command.coordinates());
 
-    List<DeliveryArea> deliveryAreasByClientAdress =
-        findDeliveryAreasPort.findDeliveryAreasByClientAdress(coordinates);
+    List<DeliveryArea> areasContainingTheCoordinates =
+        findDeliveryAreasPort.findDeliveryAreasContainingCoordinates(command.coordinates());
 
     List<RestaurantId> restaurantIds =
-        deliveryAreasByClientAdress.stream().map(DeliveryArea::getRestaurantId).toList();
+        areasContainingTheCoordinates.stream().map(DeliveryArea::getRestaurantId).toList();
 
     log.warn(
         () -> String.format("ID ristoranti che possono portarti il vino a casa %s", restaurantIds));
