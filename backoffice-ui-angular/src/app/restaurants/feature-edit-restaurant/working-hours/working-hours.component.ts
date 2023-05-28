@@ -1,44 +1,36 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {Component, OnInit} from '@angular/core';
+import {FormControl, FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-working-hours',
   templateUrl: './working-hours.component.html',
   styleUrls: ['./working-hours.component.scss']
 })
-export class WorkingHoursComponent implements OnInit, OnDestroy {
+export class WorkingHoursComponent implements OnInit {
 
-  protected istantanea: string = '';
+  debug: string = '';
 
-  workingHoursForm: FormGroup = new FormGroup<any>({
-
-    'monday': new FormGroup({
-      'isOpen': new FormControl(null, Validators.required),
-      'hourFrom': new FormControl(),
-      'hourTo': new FormControl()
-    }),
-    'tuesday': new FormGroup({
-      'isOpen': new FormControl(null, Validators.required),
-      'hourFrom': new FormControl(),
-      'hourTo': new FormControl()
-    })
-
-
+  public workingHoursForm: FormGroup = new FormGroup({
+    monday: new FormControl(null),
+    tuesday: new FormControl(null),
+    wednesday: new FormControl(null),
+    thursday: new FormControl(null),
+    friday: new FormControl(null),
+    saturday: new FormControl(null),
+    sunday: new FormControl(null),
   });
 
   constructor() {
   }
 
   ngOnInit(): void {
-    this.workingHoursForm.valueChanges
-    .subscribe(vc => this.istantanea = JSON.stringify(vc, null, 2))
+    this.workingHoursForm.valueChanges.subscribe(
+      vc => this.debug = JSON.stringify(vc, null, 2)
+    );
   }
 
-  ngOnDestroy(): void {
-  }
-
-  onSubmit() {
-    console.log(this.workingHoursForm);
+  sendForm() {
+    console.log('Send Father Form', this.workingHoursForm.value);
   }
 
 }

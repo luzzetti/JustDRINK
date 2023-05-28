@@ -3,51 +3,22 @@
 
 <p-card class="block w-8 m-auto" header="Standard Hours">
 
-  <form [formGroup]="workingHoursForm" (ngSubmit)="onSubmit()">
+  <div>
+    <form [formGroup]="workingHoursForm" (ngSubmit)="sendForm()">
 
-    <div formGroupName="monday"
-         class="grid justify-content-center align-items-center">
-      <div class="col-3">Monday</div>
+      <app-standard-hour formControlName="monday" labelName="Monday"></app-standard-hour>
+      <app-standard-hour formControlName="tuesday" labelName="Tuesday"></app-standard-hour>
+      <app-standard-hour formControlName="wednesday" labelName="Wednesday"></app-standard-hour>
+      <app-standard-hour formControlName="thursday" labelName="Thursday"></app-standard-hour>
+      <app-standard-hour formControlName="friday" labelName="Friday"></app-standard-hour>
+      <app-standard-hour formControlName="saturday" labelName="Saturday"></app-standard-hour>
+      <app-standard-hour formControlName="sunday" labelName="Sunday"></app-standard-hour>
 
-      <div class="col-3">
-        <p-inputSwitch formControlName="isOpen"></p-inputSwitch>
-      </div>
+      <p-button type="submit" [disabled]="workingHoursForm.invalid">Save</p-button>
+    </form>
 
-      <div class="col-2">
-        <p-calendar formControlName="hourFrom" [showTime]="true" [timeOnly]="true"></p-calendar>
-      </div>
-
-      <div class="col-2 text-center">to</div>
-
-      <div class="col-2">
-        <p-calendar formControlName="hourTo" [showTime]="true" [timeOnly]="true"></p-calendar>
-      </div>
-    </div>
-
-    <div formGroupName="tuesday"
-         class="grid justify-content-center align-items-center">
-      <div class="col-3">Tuesday</div>
-
-      <div class="col-3">
-        <p-inputSwitch formControlName="isOpen"></p-inputSwitch>
-      </div>
-
-      <div class="col-2">
-        <p-calendar formControlName="hourFrom" [showTime]="true" [timeOnly]="true"></p-calendar>
-      </div>
-
-      <div class="col-2 text-center">to</div>
-
-      <div class="col-2">
-        <p-calendar formControlName="hourTo" [showTime]="true" [timeOnly]="true"></p-calendar>
-      </div>
-    </div>
-
-    <p-button type="submit">Salva</p-button>
-
-  </form>
-
-  <pre>{{ istantanea }}</pre>
+    <pre> {{ debug }} </pre>
+  </div>
 
 
 </p-card>
