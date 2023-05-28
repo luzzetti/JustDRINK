@@ -2,7 +2,6 @@ package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.adapters;
 
 import it.luzzetti.justdrink.backoffice.application.ports.output.delivery_area.GenerateDeliveryAreaIdPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.menu.SaveDeliveryAreaPort;
-import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.FindDeliveryAreasPort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.delivery_area.DeliveryArea;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.DeliveryAreaId;
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
@@ -29,19 +28,24 @@ import org.springframework.stereotype.Component;
 public class DeliveryAreaJpaAdapter
     implements SaveDeliveryAreaPort, GenerateDeliveryAreaIdPort, FindDeliveryAreasPort {
 
+  private final RestaurantJpaRepository restaurantJpaRepository;
   private final DeliveryAreaJpaRepository deliveryAreaJpaRepository;
   private final DeliveryAreaJpaMapper deliveryAreaJpaMapper;
   private final CustomDeliveryAreaRepository customDeliveryAreaRepository;
 
   @Override
-  public DeliveryAreaId nextDeliveryAreaIdentifier() {
-    return DeliveryAreaId.from(UUID.randomUUID());
-  }
-
-  @Override
   public DeliveryArea saveDeliveryArea(DeliveryArea aNewDeliveryArea) {
-    DeliveryAreaJpaEntity theEntity = deliveryAreaJpaMapper.toEntity(aNewDeliveryArea);
-    DeliveryAreaJpaEntity theSavedEntity = deliveryAreaJpaRepository.save(theEntity);
+
+    DeliveryAreaJpaEntity theDeliveryArea = deliveryAreaJpaMapper.toEntity(aNewDeliveryArea);
+
+    RestaurantJpaEntity theAssociatedRestaurant =
+        restaurantJpaRepository
+            .findById(aNewDeliveryArea.getRestaurantId().id())
+            .orElseThrow(() -> new ElementNotFoundException(RestaurantErrors.NOT_FOUND));
+
+    theDeliveryArea.setRestaurant(theAssociatedRestaurant);
+
+    DeliveryAreaJpaEntity theSavedEntity = deliveryAreaJpaRepository.save(theDeliveryArea);
     return deliveryAreaJpaMapper.toDomain(theSavedEntity);
   }
 
@@ -70,4 +74,5 @@ public class DeliveryAreaJpaAdapter
         .map(deliveryAreaJpaMapper::toDomain)
         .collect(Collectors.toList());
   }
+
 }

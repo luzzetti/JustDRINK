@@ -1,0 +1,31 @@
+server:
+  port: 9091
+
+spring:
+  application:
+    name: customer-service
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:10010/customer_service
+    username: justdrink_usr
+    password: justdrink_pwd
+
+  jpa:
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+      hibernate:
+        jdbc:
+          time_zone: UTC
+        format_sql: false
+    hibernate:
+      ddl-auto: create-drop
+
+
+logging:
+  level:
+    org.springframework.security: debug
+    it:
+      luzzetti:
+        justdrink:
+          customer: DEBUG

@@ -1,0 +1,18 @@
+<div>
+  <p-button label="Draw on the map!"
+            icon="pi pi-pencil"
+            styleClass="p-button p-button-primary text-800"
+            (click)="addInteraction()"/>
+
+  <p-button label="Reset Selection"
+            icon="pi pi-eraser"
+            styleClass="p-button p-button-danger text-800"
+            (click)="clearDrawing()"/>
+
+  <p-button label="Save Area"
+            icon="pi pi-save"
+            styleClass="p-button p-button-warning text-800"
+            (click)="saveShippingArea()"/>
+</div>
+
+<div id="ol-map-container" class="map-container"></div>
