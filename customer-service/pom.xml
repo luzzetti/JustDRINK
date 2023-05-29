@@ -14,7 +14,7 @@
   <artifactId>customer</artifactId>
   <version>${revision}</version>
 
-  <name>:: customer ::</name>
+  <name>:: JustDRINK - customer ::</name>
 
   <modules>
     <module>customer-domain</module>
