@@ -1,4 +1,4 @@
-package it.luzzetti.justdrink.backoffice.domain.shared.exceptions;
+package it.luzzetti.commons.exceptions;
 
 public class ElementNotProcessableException extends ApplicationException {
   public ElementNotProcessableException(ErrorCode errorCode) {

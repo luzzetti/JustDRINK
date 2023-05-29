@@ -1,5 +1,6 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.adapters;
 
+import it.luzzetti.commons.exceptions.ElementNotFoundException;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.DeleteRestaurantPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.FindRestaurantPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.GenerateRestaurantIdPort;
@@ -7,7 +8,6 @@ import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.List
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.SaveRestaurantPort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.RestaurantErrors;
-import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotFoundException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.RestaurantJpaEntity;

@@ -1,12 +1,12 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.errors;
 
+import it.luzzetti.commons.exceptions.ApplicationException;
+import it.luzzetti.commons.exceptions.ElementNotFoundException;
+import it.luzzetti.commons.exceptions.ElementNotProcessableException;
+import it.luzzetti.commons.exceptions.ElementNotUniqueException;
+import it.luzzetti.commons.exceptions.ElementNotValidException;
 import it.luzzetti.justdrink.backoffice.application.ports.output.SecurityPort.OwnerNotAuthenticatedException;
 import it.luzzetti.justdrink.backoffice.application.ports.output.SecurityPort.OwnerNotAuthorizedException;
-import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ApplicationException;
-import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotFoundException;
-import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotProcessableException;
-import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotUniqueException;
-import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotValidException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.Locale;

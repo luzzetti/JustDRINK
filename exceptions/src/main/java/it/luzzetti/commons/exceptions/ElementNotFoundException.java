@@ -1,4 +1,4 @@
-package it.luzzetti.justdrink.backoffice.domain.shared.exceptions;
+package it.luzzetti.commons.exceptions;
 
 public class ElementNotFoundException extends ApplicationException {
   public ElementNotFoundException(ErrorCode errorCode) {

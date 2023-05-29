@@ -1,10 +1,10 @@
 package it.luzzetti.justdrink.backoffice.application.services.restaurant;
 
+import it.luzzetti.commons.exceptions.ElementNotProcessableException;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.RetrieveRestaurantLogoUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.FindRestaurantPort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.RestaurantErrors;
-import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotProcessableException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

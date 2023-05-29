@@ -1,6 +1,6 @@
 package it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant;
 
-import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ErrorCode;
+import it.luzzetti.commons.exceptions.ErrorCode;
 
 public enum RestaurantErrors implements ErrorCode {
   NOT_FOUND("domain.restaurant.not_found"),

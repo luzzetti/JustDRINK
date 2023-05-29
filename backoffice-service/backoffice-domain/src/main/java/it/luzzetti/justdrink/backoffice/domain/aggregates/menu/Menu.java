@@ -1,7 +1,7 @@
 package it.luzzetti.justdrink.backoffice.domain.aggregates.menu;
 
-import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotFoundException;
-import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotValidException;
+import it.luzzetti.commons.exceptions.ElementNotFoundException;
+import it.luzzetti.commons.exceptions.ElementNotValidException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.MenuId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.MenuSectionId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.ProductId;

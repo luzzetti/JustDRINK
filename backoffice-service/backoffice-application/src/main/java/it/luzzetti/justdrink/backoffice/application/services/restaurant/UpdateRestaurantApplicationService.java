@@ -1,12 +1,12 @@
 package it.luzzetti.justdrink.backoffice.application.services.restaurant;
 
+import it.luzzetti.commons.exceptions.ElementNotValidException;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ChangeRestaurantAddressUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.output.FindCoordinatesPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.FindRestaurantPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.restaurant.SaveRestaurantPort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.RestaurantErrors;
-import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotValidException;
 import it.luzzetti.justdrink.backoffice.domain.vo.Address;
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +43,8 @@ public class UpdateRestaurantApplicationService implements ChangeRestaurantAddre
                         .putInfo("address", displayName));
 
     // Calling UseCase
-    Address theNewAddress = Address.builder().displayName(displayName).coordinates(coordinates).build();
+    Address theNewAddress =
+        Address.builder().displayName(displayName).coordinates(coordinates).build();
     theFoundRestaurant.changeAddress(theNewAddress);
 
     // Saving Resources

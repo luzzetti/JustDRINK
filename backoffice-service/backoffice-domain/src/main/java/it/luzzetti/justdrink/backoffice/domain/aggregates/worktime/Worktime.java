@@ -3,10 +3,10 @@ package it.luzzetti.justdrink.backoffice.domain.aggregates.worktime;
 // https://schema.org/OpeningHoursSpecification
 // https://stackoverflow.com/a/4465072
 
+import it.luzzetti.commons.exceptions.ElementNotFoundException;
+import it.luzzetti.commons.exceptions.ElementNotValidException;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.validators.ClashingOpeningsChecker;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.worktime.validators.ClashingOverrulesChecker;
-import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotFoundException;
-import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotValidException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.OpeningId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.OverruleId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;

@@ -1,5 +1,6 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.adapters;
 
+import it.luzzetti.commons.exceptions.ElementNotFoundException;
 import it.luzzetti.justdrink.backoffice.application.ports.output.menu.DeleteMenuPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.menu.FindMenuPort;
 import it.luzzetti.justdrink.backoffice.application.ports.output.menu.GenerateMenuIdPort;
@@ -8,7 +9,6 @@ import it.luzzetti.justdrink.backoffice.application.ports.output.menu.GeneratePr
 import it.luzzetti.justdrink.backoffice.application.ports.output.menu.SaveMenuPort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.menu.Menu;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.menu.MenuErrors;
-import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotFoundException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.MenuId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.MenuSectionId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.ProductId;

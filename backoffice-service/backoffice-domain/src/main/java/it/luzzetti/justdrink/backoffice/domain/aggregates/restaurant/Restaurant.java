@@ -1,8 +1,8 @@
 package it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant;
 
-import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotFoundException;
-import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotUniqueException;
-import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotValidException;
+import it.luzzetti.commons.exceptions.ElementNotFoundException;
+import it.luzzetti.commons.exceptions.ElementNotUniqueException;
+import it.luzzetti.commons.exceptions.ElementNotValidException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.domain.vo.Address;
 import it.luzzetti.justdrink.backoffice.domain.vo.Cuisine;

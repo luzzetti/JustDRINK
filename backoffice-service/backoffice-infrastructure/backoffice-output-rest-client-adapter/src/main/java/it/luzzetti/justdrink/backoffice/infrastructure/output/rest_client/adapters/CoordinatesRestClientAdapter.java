@@ -1,8 +1,8 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.output.rest_client.adapters;
 
+import it.luzzetti.commons.exceptions.ElementNotProcessableException;
 import it.luzzetti.justdrink.backoffice.application.ports.output.FindCoordinatesPort;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.RestaurantErrors;
-import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotProcessableException;
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates.Latitude;
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates.Longitude;

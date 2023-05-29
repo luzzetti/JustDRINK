@@ -1,7 +1,7 @@
 package it.luzzetti.justdrink.backoffice.domain.aggregates.menu;
 
-import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotFoundException;
-import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotUniqueException;
+import it.luzzetti.commons.exceptions.ElementNotFoundException;
+import it.luzzetti.commons.exceptions.ElementNotUniqueException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.MenuSectionId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.ProductId;
 import java.time.Instant;
@@ -36,8 +36,7 @@ public class MenuSection {
     return products.stream()
         .filter(product -> product.getId().equals(productId))
         .findFirst()
-        .orElseThrow(
-            () -> new ElementNotFoundException(MenuErrors.PRODUCT_NOT_FOUND));
+        .orElseThrow(() -> new ElementNotFoundException(MenuErrors.PRODUCT_NOT_FOUND));
   }
 
   public void removeProductById(ProductId productIdToRemove) {
