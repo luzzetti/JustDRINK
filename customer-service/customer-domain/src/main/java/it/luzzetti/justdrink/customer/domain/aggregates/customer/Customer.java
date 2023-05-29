@@ -2,22 +2,42 @@ package it.luzzetti.justdrink.customer.domain.aggregates.customer;
 
 import it.luzzetti.justdrink.customer.domain.shared.typed_ids.CustomerId;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import lombok.Builder;
 import lombok.Getter;
 
 @Builder
+@Getter
 public class Customer {
 
-  private CustomerId id;
-  @Getter private String name;
+  private final CustomerId id;
+
+  private String name;
   @Builder.Default private Set<Address> addressBook = new HashSet<>();
+
+  public static CustomerBuilder builder() {
+    return new CustomBuilder();
+  }
 
   public void addAddressToAddressBook(Address address) {
     this.addressBook.add(address);
   }
+
   public void removeAddressToAddressBook(Address address) {
     this.addressBook.remove(address);
+  }
+
+  // Validations
+
+  private static class CustomBuilder extends CustomerBuilder {
+
+    /* Adding validations as part of build() method. */
+    public Customer build() {
+
+      Objects.requireNonNull(super.name, "Customer name cannot be null");
+
+      return super.build();
+    }
   }
 }

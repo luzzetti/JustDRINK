@@ -2,13 +2,11 @@ package it.luzzetti.justdrink.customer.infrastructure.input.rest.adapters.custom
 
 import it.luzzetti.justdrink.customer.application.ports.input.customer.CreateCustomerUseCase;
 import it.luzzetti.justdrink.customer.application.ports.input.customer.CreateCustomerUseCase.CreateCustomerCommand;
-import it.luzzetti.justdrink.customer.domain.aggregates.customer.Address;
 import it.luzzetti.justdrink.customer.domain.aggregates.customer.Customer;
 import it.luzzetti.justdrink.customer.infrastructure.input.rest.adapters.customer.dto.CustomerResource;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import java.util.Set;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
@@ -33,14 +31,19 @@ public class CustomerRestControllerAdapter {
 
   @PostMapping
   public ResponseEntity<CustomerResource> createCustomer(
-      @RequestBody CustomerCreationRequest request) {
+      @RequestBody @Valid CustomerCreationRequest request) {
 
+    // Fetching resources
     var command = CreateCustomerCommand.builder().name(request.name()).build();
 
+    // Calling UseCase
     Customer theCreatedCustomer = createCustomerUseCase.createCustomer(command);
 
-    return ResponseEntity.ok(CustomerResource.builder().name(theCreatedCustomer.getName()).build());
+    // Crafting a Response
+    CustomerResource theResponse =
+        CustomerResource.builder().name(theCreatedCustomer.getName()).build();
+    return ResponseEntity.ok(theResponse);
   }
 
-  record CustomerCreationRequest(@NotNull @NotBlank String name) {}
+  public record CustomerCreationRequest(@NotNull @NotBlank String name) {}
 }

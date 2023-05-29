@@ -1,4 +1,10 @@
 /* To learn more about this file see: https://angular.io/config/tsconfig. */
+
+/*
+* Inoltre, in teoria, dovrebbero esserci tante belle configurazioni
+*  qui https://aka.ms/tsconfig per rendere tutto il piu strict possibile
+*/
+
 {
   "compileOnSave": false,
   "compilerOptions": {
@@ -10,6 +16,8 @@
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "sourceMap": true,
     "declaration": false,
     "downlevelIteration": true,

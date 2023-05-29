@@ -1,12 +1,14 @@
 package it.luzzetti.justdrink.customer.infrastructure.output.jpa.mappers.customer;
 
-import it.luzzetti.justdrink.customer.infrastructure.output.jpa.entities.customer.CustomerJpaEntity;
 import it.luzzetti.justdrink.customer.domain.aggregates.customer.Customer;
 import it.luzzetti.justdrink.customer.domain.shared.typed_ids.CustomerId;
+import it.luzzetti.justdrink.customer.infrastructure.output.jpa.entities.customer.CustomerJpaEntity;
 import java.util.UUID;
 import org.mapstruct.Mapper;
 
-@Mapper(uses = {AddressJpaMapper.class})
+@Mapper(
+    componentModel = "spring",
+    uses = {AddressJpaMapper.class})
 public interface CustomerJpaMapper {
 
   Customer toDomain(CustomerJpaEntity theCreatedEntity);

@@ -22,16 +22,13 @@ public class CreateCustomerApplicationService implements CreateCustomerUseCase {
   @Override
   @Transactional
   public Customer createCustomer(@Valid CreateCustomerCommand command) {
-
+    // Fetching resources
     CustomerId generatedId = customerIdGeneratorPort.generateCustomerIdentifier();
 
-    Customer aNewCustomer =
-        Customer.builder()
-            .id(generatedId)
-            .name(command.name())
-            .addressBook(command.addressBook())
-            .build();
+    // Calling useCase
+    Customer aNewCustomer = Customer.builder().id(generatedId).name(command.name()).build();
 
+    // Crafting response
     return saveCustomerPort.saveCustomer(aNewCustomer);
   }
 }

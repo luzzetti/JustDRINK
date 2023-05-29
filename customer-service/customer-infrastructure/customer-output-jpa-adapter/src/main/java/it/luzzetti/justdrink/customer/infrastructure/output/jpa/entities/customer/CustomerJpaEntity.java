@@ -8,6 +8,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import lombok.Getter;
@@ -21,10 +22,11 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CustomerJpaEntity {
 
-  @Id private UUID uuid;
+  @Id private UUID id;
+
   @NotNull @NotBlank private String name;
 
   @OneToMany(cascade = CascadeType.ALL)
   @JoinColumn(name = "CUSTOMER_ID")
-  private Set<AddressJpaEntity> addressBook;
+  private Set<AddressJpaEntity> addressBook = new HashSet<>();
 }

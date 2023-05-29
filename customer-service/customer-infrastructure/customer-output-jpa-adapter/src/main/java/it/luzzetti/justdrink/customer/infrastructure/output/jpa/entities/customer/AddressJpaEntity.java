@@ -8,11 +8,15 @@ import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Entity
-@Table(name = "ADDRESSBOOK")
+@Table(name = "ADDRESSBOOKS")
 public class AddressJpaEntity {
 
   @Id private UUID id;
+
   @NotNull @NotBlank private String name;
+
+  // Coordinate si
+
   private String city;
   private String postalCode;
   private String street;

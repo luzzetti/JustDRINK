@@ -3,6 +3,4 @@ package it.luzzetti.justdrink.customer.infrastructure.input.rest.adapters.custom
 import lombok.Builder;
 
 @Builder
-public class CustomerResource {
-  String name;
-}
+public record CustomerResource(String name) {}
