@@ -15,8 +15,8 @@ import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.Delet
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.DeleteRestaurantUseCase.DeleteRestaurantCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsQuery;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsQuery.ListRestaurantsCommand;
-import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsShippingAtCoordinatesQuery;
-import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsShippingAtCoordinatesQuery.ListRestaurantsShippingAtCoordinatesCommand;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsDeliveringAtCoordinatesQuery;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsDeliveringAtCoordinatesQuery.ListRestaurantsDeliveringAtCoordinatesCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.RemoveCuisineFromRestaurantUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.RemoveCuisineFromRestaurantUseCase.RemoveCuisineFromRestaurantCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.RetrieveRestaurantLogoUseCase;
@@ -89,7 +89,7 @@ public class RestaurantRestControllerAdapter {
   private final RetrieveRestaurantLogoUseCase retrieveRestaurantLogoUseCase;
 
   // Queries
-  private final ListRestaurantsShippingAtCoordinatesQuery listRestaurantsShippingAtCoordinatesQuery;
+  private final ListRestaurantsDeliveringAtCoordinatesQuery listRestaurantsDeliveringAtCoordinatesQuery;
   private final ListRestaurantsQuery listRestaurantsQuery;
   private final ShowRestaurantQuery showRestaurantQuery;
 
@@ -158,7 +158,7 @@ public class RestaurantRestControllerAdapter {
     Coordinates coordinates = Coordinates.of(Latitude.of(latitude), Longitude.of(longitude));
 
     var command =
-        ListRestaurantsShippingAtCoordinatesCommand.builder()
+        ListRestaurantsDeliveringAtCoordinatesCommand.builder()
             .coordinates(coordinates)
             .pageSize(pageSize.orElse(10))
             .offset(pageNumber.orElse(0))
@@ -167,7 +167,7 @@ public class RestaurantRestControllerAdapter {
     // Executing UseCase
 
     var theFoundRestaurants =
-        listRestaurantsShippingAtCoordinatesQuery.listRestaurantsShippingAtCoordinates(command);
+        listRestaurantsDeliveringAtCoordinatesQuery.listRestaurantsDeliveringAtCoordinates(command);
 
     // Crafting a Response
 

@@ -1,7 +1,7 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.delivery_area;
 
-import it.luzzetti.justdrink.backoffice.application.ports.input.delivery_area.SetDeliveryAreaUseCase;
-import it.luzzetti.justdrink.backoffice.application.ports.input.delivery_area.SetDeliveryAreaUseCase.SetDeliveryAreaCommand;
+import it.luzzetti.justdrink.backoffice.application.ports.input.delivery_area.SetDeliveryAreaForRestaurantUseCase;
+import it.luzzetti.justdrink.backoffice.application.ports.input.delivery_area.SetDeliveryAreaForRestaurantUseCase.SetDeliveryAreaCommand;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin("*")
 public class DeliveryAreaRestControllerAdapter {
 
-  private final SetDeliveryAreaUseCase setDeliveryAreaUseCase;
+  private final SetDeliveryAreaForRestaurantUseCase setDeliveryAreaUseCase;
 
   @PutMapping("/area")
   public ResponseEntity<Void> setDeliveryArea(

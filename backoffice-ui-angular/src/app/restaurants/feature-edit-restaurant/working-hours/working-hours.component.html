@@ -14,10 +14,18 @@
       <app-standard-hour formControlName="saturday" labelName="Saturday"></app-standard-hour>
       <app-standard-hour formControlName="sunday" labelName="Sunday"></app-standard-hour>
 
-      <p-button type="submit" [disabled]="workingHoursForm.invalid">Save</p-button>
+      <p-button label="Save Schedule"
+                type="submit"
+                icon="pi pi-save"
+                styleClass="p-button p-button-primary"
+                [disabled]="workingHoursForm.invalid"></p-button>
+
+      <p-button label="Cancel"
+                type="reset"
+                icon="pi pi-trash"
+                styleClass="p-button-outlined p-button-secondary"></p-button>
     </form>
 
-    <pre> {{ debug }} </pre>
   </div>
 
 

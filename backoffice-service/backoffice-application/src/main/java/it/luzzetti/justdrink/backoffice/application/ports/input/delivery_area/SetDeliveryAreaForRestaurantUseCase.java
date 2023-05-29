@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import org.locationtech.jts.geom.Polygon;
 
-public interface SetDeliveryAreaUseCase {
+public interface SetDeliveryAreaForRestaurantUseCase {
   DeliveryArea setDeliveryArea(SetDeliveryAreaCommand command);
 
   @Builder

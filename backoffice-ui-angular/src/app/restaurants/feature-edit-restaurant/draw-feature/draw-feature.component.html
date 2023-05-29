@@ -9,13 +9,13 @@
 <div id="ol-map-container" class="map-container"></div>
 
 <div class="text-center">
-  <p-button label="Reset Selection"
-            icon="pi pi-trash"
-            styleClass="p-button-outlined p-button-danger"
-            (click)="clearDrawing()"/>
-
   <p-button label="Save Area"
             icon="pi pi-save"
-            styleClass="p-button-outlined p-button-warning"
+            styleClass="p-button p-button-primary"
             (click)="saveShippingArea()"/>
+
+  <p-button label="Reset Selection"
+            icon="pi pi-trash"
+            styleClass="p-button-outlined p-button-secondary"
+            (click)="clearDrawing()"/>
 </div>

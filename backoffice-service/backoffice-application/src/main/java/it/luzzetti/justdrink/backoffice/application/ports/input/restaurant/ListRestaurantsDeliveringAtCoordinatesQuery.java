@@ -5,12 +5,12 @@ import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
 import java.util.List;
 import lombok.Builder;
 
-public interface ListRestaurantsShippingAtCoordinatesQuery {
+public interface ListRestaurantsDeliveringAtCoordinatesQuery {
 
-  List<Restaurant> listRestaurantsShippingAtCoordinates(
-      ListRestaurantsShippingAtCoordinatesCommand command);
+  List<Restaurant> listRestaurantsDeliveringAtCoordinates(
+      ListRestaurantsDeliveringAtCoordinatesCommand command);
 
   @Builder
-  record ListRestaurantsShippingAtCoordinatesCommand(
+  record ListRestaurantsDeliveringAtCoordinatesCommand(
       Coordinates coordinates, int pageSize, int offset) {}
 }
