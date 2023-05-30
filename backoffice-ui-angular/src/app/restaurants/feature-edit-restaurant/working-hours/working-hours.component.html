@@ -1,33 +1,50 @@
 <h1>Working Hours</h1>
 
 
-<p-card class="block w-8 m-auto" header="Standard Hours">
+<p-card class="block w-5 m-auto" header="Standard Hours">
 
-  <div>
-    <form [formGroup]="workingHoursForm" (ngSubmit)="sendForm()">
+  <p-accordion [multiple]="true">
+    <p-accordionTab iconPos="end" [selected]="isMondaySelected"
+                    (selectedChange)="isMondaySelected = !isMondaySelected">
 
-      <app-standard-hour formControlName="monday" labelName="Monday"></app-standard-hour>
-      <app-standard-hour formControlName="tuesday" labelName="Tuesday"></app-standard-hour>
-      <app-standard-hour formControlName="wednesday" labelName="Wednesday"></app-standard-hour>
-      <app-standard-hour formControlName="thursday" labelName="Thursday"></app-standard-hour>
-      <app-standard-hour formControlName="friday" labelName="Friday"></app-standard-hour>
-      <app-standard-hour formControlName="saturday" labelName="Saturday"></app-standard-hour>
-      <app-standard-hour formControlName="sunday" labelName="Sunday"></app-standard-hour>
+      <ng-template pTemplate="header">
+        <div class="flex align-items-center justify-content-evenly">
+          <span class="vertical-align-middle">Monday</span>
+        </div>
+        <div class="w-full text-center">
+          <span [hidden]="isMondaySelected" class="text-xs"> 8:00 - 12:00</span>
+        </div>
+      </ng-template>
 
-      <p-button label="Save Schedule"
-                type="submit"
-                icon="pi pi-save"
-                styleClass="p-button p-button-primary"
-                [disabled]="workingHoursForm.invalid"></p-button>
+      <ng-template pTemplate="content">
+        <div class="grid">
 
-      <p-button label="Cancel"
-                type="reset"
-                icon="pi pi-trash"
-                styleClass="p-button-outlined p-button-secondary"></p-button>
-    </form>
+          <div class="col-5">
+            <p-calendar
+              [showIcon]="true"
+              icon="pi pi-clock"
+              [showTime]="true"
+              [timeOnly]="true"></p-calendar>
+          </div>
 
-  </div>
+          <div class="col-2 text-center">
+            <p>to</p>
+          </div>
 
+          <div class="col-5">
+            <p-calendar
+              class="text-center"
+              styleClass="text-center"
+              [showIcon]="true"
+              icon="pi pi-clock"
+              [showTime]="true"
+              [timeOnly]="true"></p-calendar>
+          </div>
+
+        </div>
+      </ng-template>
+    </p-accordionTab>
+  </p-accordion>
 
 </p-card>
 

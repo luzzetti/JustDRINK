@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormControl, FormGroup} from "@angular/forms";
+import {FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-working-hours',
@@ -8,24 +8,23 @@ import {FormControl, FormGroup} from "@angular/forms";
 })
 export class WorkingHoursComponent implements OnInit {
 
-  debug: string = '';
-
   public workingHoursForm: FormGroup = new FormGroup({
-    monday: new FormControl(null),
-    tuesday: new FormControl(null),
-    wednesday: new FormControl(null),
-    thursday: new FormControl(null),
-    friday: new FormControl(null),
-    saturday: new FormControl(null),
-    sunday: new FormControl(null),
+    // monday: new FormControl(null),
+    // tuesday: new FormControl(null),
+    // wednesday: new FormControl(null),
+    // thursday: new FormControl(null),
+    // friday: new FormControl(null),
+    // saturday: new FormControl(null),
+    // sunday: new FormControl(null),
   });
+  isMondaySelected: boolean = false;
 
   constructor() {
   }
 
   ngOnInit(): void {
     this.workingHoursForm.valueChanges.subscribe(
-      vc => this.debug = JSON.stringify(vc, null, 2)
+      vc => console.log(JSON.stringify(vc, null, 2))
     );
   }
 

@@ -2,8 +2,8 @@ package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.adapters;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import it.luzzetti.commons.exceptions.ApplicationException;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
-import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ApplicationException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.domain.vo.Address;
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;

@@ -2,9 +2,9 @@ package it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import it.luzzetti.commons.exceptions.ApplicationException;
+import it.luzzetti.commons.exceptions.ElementNotFoundException;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant.RestaurantBuilder;
-import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ApplicationException;
-import it.luzzetti.justdrink.backoffice.domain.shared.exceptions.ElementNotFoundException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.domain.vo.Address;
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
