@@ -24,8 +24,4 @@ public class AddressJpaEntity {
   private String postalCode;
   private String street;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "CUSTOMER_ID")
-  private CustomerJpaEntity customer;
-
 }

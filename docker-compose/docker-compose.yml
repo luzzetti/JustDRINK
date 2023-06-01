@@ -27,14 +27,14 @@ services:
     ports:
       - "10010:5432"
 
-  pgadmin:
-    image: dpage/pgadmin4:7.0
-    env_file:
-      - ./database.dev.env
-    networks:
-      - justdrink
-    ports:
-      - "10020:80"
+#  pgadmin:
+#    image: dpage/pgadmin4:7.0
+#    env_file:
+#      - ./database.dev.env
+#    networks:
+#      - justdrink
+#    ports:
+#      - "10020:80"
 
   justdrink-keycloak:
     image: quay.io/keycloak/keycloak:20.0.3
@@ -50,21 +50,21 @@ services:
     networks:
       - justdrink
 
-  backoffice-service:
-    image: luzzetti/backoffice-bootloader:latest
-    ports:
-      - "9090:8080"
-    networks:
-      - justdrink
-    mem_limit: 500m
-
-  backoffice-ui-vue:
-    image: luzzetti/backoffice-ui-vue:latest
-    ports:
-      - "7070:80"
-    networks:
-      - justdrink
-    mem_limit: 50mb
+#  backoffice-service:
+#    image: luzzetti/backoffice-bootloader:latest
+#    ports:
+#      - "9090:8080"
+#    networks:
+#      - justdrink
+#    mem_limit: 500m
+#
+#  backoffice-ui-vue:
+#    image: luzzetti/backoffice-ui-vue:latest
+#    ports:
+#      - "7070:80"
+#    networks:
+#      - justdrink
+#    mem_limit: 50mb
 
 networks:
   justdrink:

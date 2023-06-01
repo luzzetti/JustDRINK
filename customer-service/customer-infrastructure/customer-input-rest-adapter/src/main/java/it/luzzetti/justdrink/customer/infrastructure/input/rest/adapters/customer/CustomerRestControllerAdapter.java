@@ -7,14 +7,11 @@ import it.luzzetti.justdrink.customer.infrastructure.input.rest.adapters.custome
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/1.0/customers")
@@ -45,5 +42,5 @@ public class CustomerRestControllerAdapter {
     return ResponseEntity.ok(theResponse);
   }
 
-  public record CustomerCreationRequest(@NotNull @NotBlank String name) {}
+  public record CustomerCreationRequest(@NotNull @NotBlank @Size(max = 100) String name) {}
 }

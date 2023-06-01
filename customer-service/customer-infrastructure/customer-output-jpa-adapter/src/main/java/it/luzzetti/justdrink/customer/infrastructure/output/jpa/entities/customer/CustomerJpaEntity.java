@@ -1,10 +1,11 @@
 package it.luzzetti.justdrink.customer.infrastructure.output.jpa.entities.customer;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,5 +20,12 @@ public class CustomerJpaEntity {
 
   @Id private UUID id;
   @NotNull @NotBlank private String name;
+
+
+// TODO: fai delle prove di rimozione figli per testare l'orphanRemoval!
+
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+  @JoinColumn(name = "CUSTOMER_ID")
+  private Set<AddressJpaEntity> addressBook = new HashSet<>();
 
 }
