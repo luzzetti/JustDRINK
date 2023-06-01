@@ -14,18 +14,9 @@ public class Customer {
   private final CustomerId id;
 
   private String name;
-  @Builder.Default private Set<Address> addressBook = new HashSet<>();
 
   public static CustomerBuilder builder() {
     return new CustomBuilder();
-  }
-
-  public void addAddressToAddressBook(Address address) {
-    this.addressBook.add(address);
-  }
-
-  public void removeAddressToAddressBook(Address address) {
-    this.addressBook.remove(address);
   }
 
   // Validations

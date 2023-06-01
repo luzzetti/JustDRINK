@@ -7,8 +7,10 @@ import lombok.Builder;
 public class Address {
 
   private AddressId id;
+  private Customer customer;
   private String name;
   private String city;
   private String postalCode;
   private String street;
+
 }

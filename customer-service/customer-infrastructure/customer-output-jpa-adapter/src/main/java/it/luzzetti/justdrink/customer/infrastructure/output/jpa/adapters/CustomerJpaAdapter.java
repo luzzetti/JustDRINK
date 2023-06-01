@@ -23,7 +23,6 @@ public class CustomerJpaAdapter implements SaveCustomerPort, CustomerIdGenerator
   @Override
   public Customer saveCustomer(Customer aNewCustomer) {
     CustomerJpaEntity aNewEntity = customerJpaMapper.toEntity(aNewCustomer);
-
     CustomerJpaEntity savedEntity = customerJpaRepository.save(aNewEntity);
 
     return customerJpaMapper.toDomain(savedEntity);
