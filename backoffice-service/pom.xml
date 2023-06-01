@@ -37,6 +37,9 @@
 
   <properties>
     <revision>0.0.2-SNAPSHOT</revision>
+
+    <luzzetti.commons.exceptions>1.0.0</luzzetti.commons.exceptions>
+
     <start-class>it.luzzetti.justdrink.backoffice.BackofficeAppLauncher</start-class>
     <docker.image.name>docker.io/luzzetti/${project.artifactId}:latest</docker.image.name>
     <dockerhub.username/>
@@ -84,7 +87,7 @@
       <dependency>
         <groupId>it.luzzetti.commons</groupId>
         <artifactId>exceptions</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>${luzzetti.commons.exceptions}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
