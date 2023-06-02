@@ -41,7 +41,7 @@ export class WorkingHoursComponent implements OnInit {
   }
 
   removeTimeslot(index: number) {
-    console.log("DA IMPLEMENTARE");
+    (<FormArray>this.hoursForm.get('shifts')).removeAt(index);
   }
 
   getControls() {
