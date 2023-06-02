@@ -9,7 +9,6 @@ import it.luzzetti.commons.exceptions.ElementNotProcessableException;
 import it.luzzetti.commons.exceptions.ElementNotValidException;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.AddCuisineToRestaurantUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.AddCuisineToRestaurantUseCase.AddCuisineToRestaurantCommand;
-import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ChangeRestaurantAddressUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.CreateRestaurantUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.CreateRestaurantUseCase.CreateRestaurantCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.DeleteRestaurantUseCase;
@@ -55,7 +54,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -70,16 +68,10 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/1.0/restaurants")
 @Log4j2
 @RequiredArgsConstructor
-/*
- * TODO: Rimuovere ASSOLUTAMENTE questa configurazione crossorigin da qui, una volta aggiunte
- *  le corrette configurazioni WEB
- */
-@CrossOrigin("*")
 public class RestaurantRestControllerAdapter {
 
   // UseCases
   private final CreateRestaurantUseCase createRestaurantUseCase;
-  private final ChangeRestaurantAddressUseCase changeRestaurantAddressUseCase;
   private final DeleteRestaurantUseCase deleteRestaurantUseCase;
   private final AddCuisineToRestaurantUseCase addCuisineToRestaurantUseCase;
   private final RemoveCuisineFromRestaurantUseCase removeCuisineFromRestaurantUseCase;
