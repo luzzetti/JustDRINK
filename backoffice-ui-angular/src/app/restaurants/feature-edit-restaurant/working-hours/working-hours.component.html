@@ -3,38 +3,18 @@
 
     <p-card header="Standard Hours">
 
-      <!--      <div>-->
-      <!--        <p-dropdown [options]="weekdays"-->
-      <!--                    formControlName="dayOfWeek"-->
-      <!--                    optionLabel="name"-->
-      <!--                    [showClear]="true"-->
-      <!--                    placeholder="Day of week"></p-dropdown>-->
-      <!--      </div>-->
+      <form [formGroup]="openingsForm">
+        <div formArrayName="openings">
 
-      <form [formGroup]="hoursForm" (ngSubmit)="onSubmit()">
-        <div formArrayName="shifts">
-
-          <div class="form-group" *ngFor="let shiftControl of getControls(); let i = index">
-            <div class="flex justify-content-center align-items-center">
-              <app-time-slot [formControlName]="i" class="w-full"></app-time-slot>
-              <p-button icon="pi pi-trash" styleClass="p-button-danger"
-                        (click)="removeTimeslot(i)"/>
-            </div>
+          <div *ngFor="let dayOfWeek of weekdays; let i = index">
+            <p>{{ dayOfWeek }}</p>
+            <app-opening [formControlName]="i"
+                         [weekday]="dayOfWeek"></app-opening>
           </div>
 
-          <p-button label="Add Timeslot"
-                    icon="pi pi-add"
-                    styleClass="p-button-outlined p-button-primary"
-                    (click)="addTimeslot()"/>
-
         </div>
-
-        <p-button label="Save"
-                  type="submit"
-                  icon="pi pi-save"
-                  styleClass="p-button-outlined p-button-warning"/>
-
       </form>
+
     </p-card>
 
   </div>

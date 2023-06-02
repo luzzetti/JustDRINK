@@ -1,0 +1,18 @@
+<form [formGroup]="hoursForm">
+  <div formArrayName="shifts">
+
+    <div class="form-group" *ngFor="let shiftControl of getControls(); let i = index">
+      <div class="flex justify-content-center align-items-center">
+        <app-time-slot [formControlName]="i" class="w-full"></app-time-slot>
+        <p-button icon="pi pi-trash" styleClass="p-button-danger"
+                  (click)="removeTimeslot(i)"/>
+      </div>
+    </div>
+
+    <p-button icon="pi pi-plus"
+              styleClass="p-button-outlined p-button-primary"
+              (click)="addTimeslot()"/>
+
+  </div>
+
+</form>
