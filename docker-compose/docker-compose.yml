@@ -3,18 +3,6 @@ services:
   # https://medium.com/swlh/alpine-slim-stretch-buster-jessie-bullseye-bookworm-what-are-the-differences-in-docker-62171ed4531d
   # https://dev.to/bgord/multiple-postgres-databases-in-a-single-docker-container-417l
 
-  #  justdrink-database:
-  #    image: postgres:15.2
-  #    volumes:
-  #      - ../_database/db-data:/var/lib/postgresql/data/
-  #      - ../_database/sql:/docker-entrypoint-initdb.d/:ro
-  #    env_file:
-  #      - ./database.dev.env
-  #    networks:
-  #      - justdrink
-  #    ports:
-  #      - "10010:5432"
-
   justdrink-database:
     image: postgis/postgis:15-3.3
     volumes:

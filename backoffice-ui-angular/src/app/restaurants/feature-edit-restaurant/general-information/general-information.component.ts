@@ -29,7 +29,7 @@ export class GeneralInformationComponent implements OnInit {
     this._restaurantService.getRestaurantById(this.restaurantId)
     .subscribe(res => {
       // Form initialization
-      this.generalInfoForm.form.setValue({
+      this.generalInfoForm.form.reset({
         restaurantName: res.name,
       });
 
@@ -38,5 +38,6 @@ export class GeneralInformationComponent implements OnInit {
 
   onSubmitChangeInfo(): void {
     console.log("Submitted: ", this.generalInfoForm);
+    throw Error("Non implementato");
   }
 }

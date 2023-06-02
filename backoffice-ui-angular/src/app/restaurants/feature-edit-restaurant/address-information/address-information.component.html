@@ -44,6 +44,7 @@
         <p-button label="Save"
                   icon="pi pi-save"
                   type="submit"
+                  [disabled]="!addressInfoForm?.dirty"
                   styleClass="p-button-outlined p-button-warning"/>
 
       </form>

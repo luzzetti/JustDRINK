@@ -11,10 +11,10 @@ import {NgForm} from "@angular/forms";
 export class AddressInformationComponent implements OnInit {
 
   @Input() restaurantId!: string;
-
-  @ViewChild('f') addressInfoForm!: NgForm;
-
+  @ViewChild('f') addressInfoForm?: NgForm;
   private theAddress: RestaurantAddress | undefined;
+
+  private isSaving: boolean = false;
 
   constructor(private _restaurantService: RestaurantService) {
   }
@@ -34,26 +34,30 @@ export class AddressInformationComponent implements OnInit {
   onSubmitChangeAddress() {
 
     const theUpdatedAddress: RestaurantAddress = {
-      displayName: this.addressInfoForm.value.restaurantAddress,
-      latitude: this.addressInfoForm.value.restaurantLatitude,
-      longitude: this.addressInfoForm.value.restaurantLongitude
+      displayName: this.addressInfoForm?.value.restaurantAddress,
+      latitude: this.addressInfoForm?.value.restaurantLatitude,
+      longitude: this.addressInfoForm?.value.restaurantLongitude
     }
 
+    this.isSaving = true;
     this._restaurantService
     .updateAddressOfRestaurant(this.restaurantId, theUpdatedAddress)
-    .subscribe(res => this.initAddressForm(res));
+    .subscribe(res => {
+      this.initAddressForm(res)
+      this.isSaving = false;
+    });
 
   }
 
   onAddressInputted($event: Event) {
-    this.addressInfoForm.form.patchValue({
+    this.addressInfoForm?.form.patchValue({
       restaurantLatitude: null,
       restaurantLongitude: null,
     });
   }
 
   private initAddressForm(res: RestaurantAddress) {
-    this.addressInfoForm.form.setValue({
+    this.addressInfoForm?.form.reset({
       restaurantAddress: res.displayName,
       restaurantLatitude: res.latitude,
       restaurantLongitude: res.longitude,
