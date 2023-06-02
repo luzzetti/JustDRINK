@@ -281,13 +281,18 @@ public class RestaurantRestControllerAdapter {
   @Operation(summary = "Permette l'upload del logo di un ristorante")
   @PostMapping("/{restaurantId}/logo:upload")
   public void uploadLogo(
-      @PathVariable UUID restaurantId, @RequestParam("logo") MultipartFile file) {
+      @PathVariable UUID restaurantId,
+      @RequestParam("theMultipartLogo") MultipartFile theMultipartLogo) {
 
-    String contentType = file.getContentType();
-    String originalFileName = file.getOriginalFilename();
+    String contentType = theMultipartLogo.getContentType();
+    String originalFileName = theMultipartLogo.getOriginalFilename();
 
     if (originalFileName == null) {
       throw new ElementNotProcessableException(RestaurantErrors.LOGO_UPLOAD_IMPOSSIBLE);
+    }
+
+    if (theMultipartLogo.isEmpty()) {
+      throw new ElementNotValidException(RestaurantErrors.LOGO_UPLOAD_IMPOSSIBLE);
     }
 
     if (contentType == null) {
@@ -300,11 +305,15 @@ public class RestaurantRestControllerAdapter {
 
     byte[] logo;
     try {
-      logo = file.getBytes();
+      logo = theMultipartLogo.getBytes();
     } catch (IOException exception) {
       throw new ElementNotValidException(RestaurantErrors.LOGO_UPLOAD_IMPOSSIBLE);
     }
 
+    /*
+     * In realtà questa logica (tagliare il nome per trovare l'estensione) potrebbe
+     * essere messa all'interno della classe Extensions
+     */
     int indexOfLastDot = originalFileName.lastIndexOf('.');
     Extension extension = Extension.from(originalFileName.substring(indexOfLastDot));
 

@@ -8,7 +8,6 @@ import VectorSource from "ol/source/Vector";
 import {Draw} from "ol/interaction";
 import {GeoJSON} from "ol/format";
 import {RestaurantService} from "../../restaurant.service";
-import {log} from "ol/console";
 import {Polygon} from "ol/geom";
 import {getCenter} from "ol/extent";
 import {Fill, Stroke, Style} from "ol/style";
@@ -56,7 +55,6 @@ export class DrawFeatureComponent implements OnInit {
 
     this._restaurantService.getDeliveryAreaByRestaurantId(this.restaurantId)
     .subscribe(res => {
-      log('Res: ', res);
       this.setLastDeliveryAreaFromCoordinates(res.polygon.coordinates);
     });
   }
@@ -129,7 +127,6 @@ export class DrawFeatureComponent implements OnInit {
     }
 
     const geometry = new Polygon(coordinates).transform('EPSG:4326', 'EPSG:3857');
-    console.log('Geom: ', geometry);
 
     let source = new VectorSource({
       features: [new Feature(geometry)]
@@ -148,7 +145,7 @@ export class DrawFeatureComponent implements OnInit {
     });
 
     this.map.addLayer(this.lastDeliveryArea);
-    
+
     // Centra la mappa sul 'centroide' della geometria
     this.map.getView().setCenter(getCenter(geometry.getExtent()));
 

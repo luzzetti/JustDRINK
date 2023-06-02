@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormGroup} from "@angular/forms";
+import {FormArray, FormControl, FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-working-hours',
@@ -8,28 +8,48 @@ import {FormGroup} from "@angular/forms";
 })
 export class WorkingHoursComponent implements OnInit {
 
-  public workingHoursForm: FormGroup = new FormGroup({
-    // monday: new FormControl(null),
-    // tuesday: new FormControl(null),
-    // wednesday: new FormControl(null),
-    // thursday: new FormControl(null),
-    // friday: new FormControl(null),
-    // saturday: new FormControl(null),
-    // sunday: new FormControl(null),
-  });
-  isMondaySelected: boolean = false;
+  weekdays: any = [
+    {name: 'Monday'},
+    {name: 'Tuesday'},
+    {name: 'Wednesday'},
+    {name: 'Thursday'},
+    {name: 'Friday'},
+    {name: 'Saturday'},
+    {name: 'Sunday'},
+  ]
+
+  hoursForm: FormGroup = new FormGroup({
+    'shifts': new FormArray([])
+  })
 
   constructor() {
   }
 
   ngOnInit(): void {
-    this.workingHoursForm.valueChanges.subscribe(
-      vc => console.log(JSON.stringify(vc, null, 2))
-    );
+    this.hoursForm.valueChanges.subscribe(v => {
+      console.log(JSON.stringify(v));
+    });
+
+    const theControl = new FormControl(null);
+    (<FormArray>this.hoursForm.get('shifts')).push(theControl);
   }
 
-  sendForm() {
-    console.log('Send Father Form', this.workingHoursForm.value);
+  addTimeslot() {
+    console.log('Add Timeslot!');
+    const theControl = new FormControl(null);
+    (<FormArray>this.hoursForm.get('shifts')).push(theControl);
+  }
+
+  removeTimeslot(index: number) {
+    console.log("DA IMPLEMENTARE");
+  }
+
+  getControls() {
+    return (<FormArray>this.hoursForm.get('shifts')).controls;
+  }
+
+  onSubmit() {
+    console.log('Form: ', this.hoursForm);
   }
 
 }

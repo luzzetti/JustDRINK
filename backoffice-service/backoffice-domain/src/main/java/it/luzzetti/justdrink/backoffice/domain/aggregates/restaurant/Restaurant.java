@@ -57,6 +57,8 @@ public class Restaurant {
    *
    * Come si comporta JustEAT? Hai mai trovato un ristorante senza cuisines?
    * Serve un po' di analisi :)
+   *
+   * Io forse la trasformerei in una ENUM
    */
   public void addCuisine(Cuisine theNewCuisine) {
     if (this.cuisines.contains(theNewCuisine)) {

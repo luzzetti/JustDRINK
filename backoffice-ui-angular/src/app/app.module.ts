@@ -51,6 +51,8 @@ import {InplaceModule} from "primeng/inplace";
 import {InputTextModule} from "primeng/inputtext";
 import { AddressInformationComponent } from './restaurants/feature-edit-restaurant/address-information/address-information.component';
 import { MapViewerComponent } from './shared/map-viewer/map-viewer.component';
+import { TimeSlotComponent } from './shared/time-slot/time-slot.component';
+import {DropdownModule} from "primeng/dropdown";
 
 @NgModule({
   declarations: [
@@ -68,7 +70,8 @@ import { MapViewerComponent } from './shared/map-viewer/map-viewer.component';
     StandardHourComponent,
     GeneralInformationComponent,
     AddressInformationComponent,
-    MapViewerComponent
+    MapViewerComponent,
+    TimeSlotComponent
   ],
   imports: [
     BrowserModule,
@@ -93,7 +96,8 @@ import { MapViewerComponent } from './shared/map-viewer/map-viewer.component';
     CalendarModule,
     SelectButtonModule,
     InplaceModule,
-    InputTextModule
+    InputTextModule,
+    DropdownModule
   ],
   providers: [],
   bootstrap: [AppComponent]
