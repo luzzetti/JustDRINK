@@ -1,0 +1,53 @@
+<div class="grid">
+  <div class="col-offset-4 col-4">
+    <div class="card">
+
+      <form (ngSubmit)="onSubmitChangeAddress()" #f="ngForm">
+
+        <div class="formgrid grid">
+          <div class="field col-12">
+            <label for="restaurantAddress">Address</label>
+            <input id="restaurantAddress"
+                   type="text"
+                   pInputText
+                   class="w-full"
+                   ngModel
+                   name="restaurantAddress"
+                   (input)="onAddressInputted($event)">
+          </div>
+
+          <div class="field col-12 md:col-6">
+            <label for="restaurantLatitude">Latitude</label>
+            <input id="restaurantLatitude"
+                   [disabled]="true"
+                   type="text"
+                   pInputText
+                   class="w-full"
+                   ngModel
+                   name="restaurantLatitude">
+          </div>
+
+          <div class="field col-12 md:col-6">
+            <label for="restaurantLongitude">Longitude</label>
+            <input id="restaurantLongitude"
+                   [disabled]="true"
+                   type="text"
+                   pInputText
+                   class="w-full"
+                   ngModel
+                   name="restaurantLongitude">
+          </div>
+        </div>
+
+        <hr/>
+
+        <p-button label="Save"
+                  icon="pi pi-save"
+                  type="submit"
+                  styleClass="p-button-outlined p-button-warning"/>
+
+      </form>
+
+    </div>
+  </div>
+</div>

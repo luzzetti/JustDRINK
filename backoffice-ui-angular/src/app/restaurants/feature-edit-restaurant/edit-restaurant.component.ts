@@ -1,6 +1,5 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
-import {RestaurantService} from "../restaurant.service";
 import {MenuItem} from "primeng/api";
 
 @Component({
@@ -8,31 +7,27 @@ import {MenuItem} from "primeng/api";
   templateUrl: './edit-restaurant.component.html',
   styleUrls: ['./edit-restaurant.component.scss']
 })
-export class EditRestaurantComponent implements OnInit {
+export class EditRestaurantComponent {
 
-  protected readonly restaurantId: string;
+  protected readonly theRestaurantId: string;
+
   protected readonly pageSections: MenuItem[];
 
-  constructor(route: ActivatedRoute, private _restaurantService: RestaurantService) {
+  constructor(route: ActivatedRoute) {
+
     const theRestaurantId = route.snapshot.paramMap.get('restaurantId');
+
     if (!theRestaurantId) {
       throw new Error("the restaurant id cannot be null");
     }
-    this.restaurantId = theRestaurantId;
+
+    this.theRestaurantId = theRestaurantId;
 
     this.pageSections = [
       {label: 'Basic Info', icon: 'pi pi-id-card'},
       {label: 'Cuisines', icon: 'pi pi-download'},
       {label: 'Address', icon: 'pi pi-download'}
     ];
-  }
-
-  ngOnInit(): void {
-    console.log('Loading data for restaurantId: ', this.restaurantId);
-    if (!this.restaurantId) {
-      throw new Error("The restaurantId is null");
-    }
-    this._restaurantService.getRestaurantById(this.restaurantId);
   }
 
 }

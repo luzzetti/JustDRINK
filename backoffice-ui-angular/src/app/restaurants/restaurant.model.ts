@@ -1,5 +1,11 @@
-export class Restaurant {
-  constructor(private id: string, private nome: string) {
-  }
+export interface Restaurant {
+  id: string,
+  name: string,
+  address: RestaurantAddress
+}
 
+export interface RestaurantAddress {
+  displayName: string,
+  latitude: number,
+  longitude: number
 }

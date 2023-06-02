@@ -46,6 +46,10 @@ import {InputSwitchModule} from "primeng/inputswitch";
 import {CalendarModule} from "primeng/calendar";
 import {SelectButtonModule} from "primeng/selectbutton";
 import { StandardHourComponent } from './restaurants/feature-edit-restaurant/working-hours/standard-hour/standard-hour.component';
+import { GeneralInformationComponent } from './restaurants/feature-edit-restaurant/general-information/general-information.component';
+import {InplaceModule} from "primeng/inplace";
+import {InputTextModule} from "primeng/inputtext";
+import { AddressInformationComponent } from './restaurants/feature-edit-restaurant/address-information/address-information.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +64,9 @@ import { StandardHourComponent } from './restaurants/feature-edit-restaurant/wor
     NotFoundComponent,
     DrawFeatureComponent,
     WorkingHoursComponent,
-    StandardHourComponent
+    StandardHourComponent,
+    GeneralInformationComponent,
+    AddressInformationComponent
   ],
   imports: [
     BrowserModule,
@@ -83,7 +89,9 @@ import { StandardHourComponent } from './restaurants/feature-edit-restaurant/wor
     TabViewModule,
     InputSwitchModule,
     CalendarModule,
-    SelectButtonModule
+    SelectButtonModule,
+    InplaceModule,
+    InputTextModule
   ],
   providers: [],
   bootstrap: [AppComponent]

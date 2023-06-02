@@ -10,15 +10,14 @@ import it.luzzetti.commons.exceptions.ElementNotValidException;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.AddCuisineToRestaurantUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.AddCuisineToRestaurantUseCase.AddCuisineToRestaurantCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ChangeRestaurantAddressUseCase;
-import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ChangeRestaurantAddressUseCase.ChangeRestaurantAddressCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.CreateRestaurantUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.CreateRestaurantUseCase.CreateRestaurantCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.DeleteRestaurantUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.DeleteRestaurantUseCase.DeleteRestaurantCommand;
-import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsQuery;
-import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsQuery.ListRestaurantsCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsDeliveringAtCoordinatesQuery;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsDeliveringAtCoordinatesQuery.ListRestaurantsDeliveringAtCoordinatesCommand;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsQuery;
+import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsQuery.ListRestaurantsCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.RemoveCuisineFromRestaurantUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.RemoveCuisineFromRestaurantUseCase.RemoveCuisineFromRestaurantCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.RetrieveRestaurantLogoUseCase;
@@ -61,7 +60,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -89,7 +87,8 @@ public class RestaurantRestControllerAdapter {
   private final RetrieveRestaurantLogoUseCase retrieveRestaurantLogoUseCase;
 
   // Queries
-  private final ListRestaurantsDeliveringAtCoordinatesQuery listRestaurantsDeliveringAtCoordinatesQuery;
+  private final ListRestaurantsDeliveringAtCoordinatesQuery
+      listRestaurantsDeliveringAtCoordinatesQuery;
   private final ListRestaurantsQuery listRestaurantsQuery;
   private final ShowRestaurantQuery showRestaurantQuery;
 
@@ -147,7 +146,7 @@ public class RestaurantRestControllerAdapter {
 
   @Operation(summary = "Mostra la lista dei ristoranti che spediscono alle coordinate fornite")
   @GetMapping("/search/shippingAtCoordinates")
-  public ResponseEntity<ListRestaurantsResponse> listRestaurantsShippingAtCoordinates(
+  public ResponseEntity<ListRestaurantsResponse> listRestaurantsDeliveringAtCoordinates(
       @RequestParam double latitude,
       @RequestParam double longitude,
       @RequestParam Optional<Integer> pageSize,
@@ -194,29 +193,6 @@ public class RestaurantRestControllerAdapter {
 
     return ResponseEntity.ok(resource);
   }
-
-  @Operation(summary = "Cambia l'indirizzo del ristorante")
-  @PutMapping("/{restaurantId}/address")
-  public ResponseEntity<RestaurantResource> changeRestaurantAddress(
-      @PathVariable UUID restaurantId, @RequestBody @Valid ChangeRestaurantAddressRequest request) {
-
-    var command =
-        ChangeRestaurantAddressCommand.builder()
-            .restaurantId(RestaurantId.from(restaurantId))
-            .addressName(request.addressName())
-            .coordinates(request.coordinates())
-            .build();
-
-    Restaurant thePartiallyUpdatedRestaurant =
-        changeRestaurantAddressUseCase.changeRestaurantAddress(command);
-
-    // Crafting response
-    var response = restaurantWebMapper.toResource(thePartiallyUpdatedRestaurant);
-    return ResponseEntity.ok(response);
-  }
-
-  public record ChangeRestaurantAddressRequest(
-      @NotNull @NotBlank String addressName, Optional<Coordinates> coordinates) {}
 
   @Operation(summary = "Esegue la creazione di un nuovo ristorante")
   @PostMapping

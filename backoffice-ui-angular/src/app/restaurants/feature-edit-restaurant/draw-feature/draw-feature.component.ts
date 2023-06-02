@@ -8,6 +8,7 @@ import VectorSource from "ol/source/Vector";
 import {Draw} from "ol/interaction";
 import {GeoJSON} from "ol/format";
 import {RestaurantService} from "../../restaurant.service";
+import {retry} from "rxjs";
 
 // https://dev.to/camptocamp-geo/openlayers-in-an-angular-application-mn1
 
@@ -103,11 +104,19 @@ export class DrawFeatureComponent implements AfterViewInit {
       throw new Error("L'ID non può essere null");
     }
 
-    this._restaurantService.updateDeliveryArea(this.restaurantId, theGeoJson);
+    this._restaurantService.updateDeliveryArea(this.restaurantId, theGeoJson)
+    .pipe(
+      retry(2),
+    )
+    .subscribe(res => {
+      console.log("Response: ", res)
+    });
 
   }
 
   protected clearDrawing() {
     this.theSource.clear();
   }
+
+
 }

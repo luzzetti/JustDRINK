@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {RestaurantService} from "../restaurant.service";
+import {Restaurant} from "../restaurant.model";
 
 @Component({
   selector: 'app-show-restaurant',
@@ -10,8 +11,10 @@ import {RestaurantService} from "../restaurant.service";
 export class ShowRestaurantComponent implements OnInit {
 
   protected readonly restaurantId: string;
+  protected theRestaurant: Restaurant | undefined;
 
-  constructor(private _route: ActivatedRoute, private _restaurantService: RestaurantService) {
+  constructor(private _route: ActivatedRoute,
+              private _restaurantService: RestaurantService) {
     const theRestaurantId = _route.snapshot.paramMap.get('restaurantId');
     if (!theRestaurantId) {
       throw new Error("Invalid Id");
@@ -25,7 +28,9 @@ export class ShowRestaurantComponent implements OnInit {
     if (!this.restaurantId) {
       throw new Error("The restaurantId is null");
     }
-    this._restaurantService.getRestaurantById(this.restaurantId);
+    this._restaurantService.getRestaurantById(this.restaurantId).subscribe(res => {
+      this.theRestaurant = res;
+    });
   }
 
 

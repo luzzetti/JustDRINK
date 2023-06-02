@@ -44,7 +44,7 @@ public class RestaurantJpaAdapter
   }
 
   @Override
-  public List<Restaurant> listRestaurants(String filter, Integer offset, Integer pageSize) {
+  public List<Restaurant> listRestaurants(String filter, Integer pageSize, Integer offset) {
 
     List<RestaurantJpaEntity> restaurants =
         restaurantJpaRepository.findAll(filter, pageSize, offset);

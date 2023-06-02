@@ -1,0 +1,28 @@
+<div class="grid">
+  <div class="col-offset-4 col-4">
+    <div class="card">
+
+      <form (ngSubmit)="onSubmitChangeInfo()" #f="ngForm">
+        <div class="formgrid grid">
+          <div class="field col-12">
+            <label for="restaurantName">Name</label>
+            <input id="restaurantName"
+                   type="text"
+                   pInputText
+                   class="w-full"
+                   ngModel
+                   name="restaurantName">
+          </div>
+        </div>
+
+        <hr/>
+
+        <p-button label="Save"
+                  icon="pi pi-save"
+                  type="submit"
+                  styleClass="p-button-outlined p-button-warning"/>
+      </form>
+
+    </div>
+  </div>
+</div>
