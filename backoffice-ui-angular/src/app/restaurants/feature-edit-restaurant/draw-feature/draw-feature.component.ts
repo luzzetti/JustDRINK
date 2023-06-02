@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import Map from 'ol/Map';
 import {Feature, View} from "ol";
 import TileLayer from "ol/layer/Tile";
@@ -8,7 +8,11 @@ import VectorSource from "ol/source/Vector";
 import {Draw} from "ol/interaction";
 import {GeoJSON} from "ol/format";
 import {RestaurantService} from "../../restaurant.service";
-import {retry} from "rxjs";
+import {log} from "ol/console";
+import {Polygon} from "ol/geom";
+import {getCenter} from "ol/extent";
+import {Fill, Stroke, Style} from "ol/style";
+import {Position} from "geojson";
 
 // https://dev.to/camptocamp-geo/openlayers-in-an-angular-application-mn1
 
@@ -17,7 +21,7 @@ import {retry} from "rxjs";
   templateUrl: './draw-feature.component.html',
   styleUrls: ['./draw-feature.component.scss']
 })
-export class DrawFeatureComponent implements AfterViewInit {
+export class DrawFeatureComponent implements OnInit {
 
   @Input() restaurantId: string | undefined;
 
@@ -25,28 +29,36 @@ export class DrawFeatureComponent implements AfterViewInit {
   private theSource = new VectorSource({wrapX: false, format: new GeoJSON()});
   private vector = new VectorLayer({source: this.theSource})
 
-  private map: Map | undefined;
+  private lastDeliveryArea?: VectorLayer<VectorSource<any>>;
+
+  /*  Note:
+  * Il sistema di coordinate di default, è EPSG:3857
+  */
+  map: Map;
 
   private drawnPolygon: Feature | undefined;
 
   constructor(private _restaurantService: RestaurantService) {
-
-  }
-
-  ngAfterViewInit(): void {
-
-    // Target è l'ID del container dove verrà attaccata la mappa
+    console.log("Warning...");
     this.map = new Map({
-      target: 'ol-map-container',
       layers: [this.raster, this.vector],
       view: new View({
         center: [1391683.7965990657, 5143642.832094591],
         zoom: 11,
       })
     });
+  }
 
-    // Il sistema di coordinate di default, è EPSG:3857
+  ngOnInit(): void {
+    if (!this.restaurantId) {
+      throw new Error("Impossible to initialize this component without a provided ID");
+    }
 
+    this._restaurantService.getDeliveryAreaByRestaurantId(this.restaurantId)
+    .subscribe(res => {
+      log('Res: ', res);
+      this.setLastDeliveryAreaFromCoordinates(res.polygon.coordinates);
+    });
   }
 
   private draw: Draw = new Draw({
@@ -77,22 +89,20 @@ export class DrawFeatureComponent implements AfterViewInit {
 
   }
 
-
-  // let writer = new GeoJSON();
-  //   pass the feature as an array
-  // let geojsonStr = writer.writeFeatures([e.feature]);
-  // console.log(geojsonStr);
-
   saveShippingArea() {
 
-    const lastDrownGeometry = this.drawnPolygon?.getGeometry();
+    const lastDrawnGeometry = this.drawnPolygon?.getGeometry();
 
-    if (!lastDrownGeometry) {
+    if (!lastDrawnGeometry) {
       console.log("Non è stato ancora disegnato nessun poligono");
       return;
     }
 
-    const theGeoJson = new GeoJSON().writeGeometry(lastDrownGeometry,
+    if (!this.restaurantId) {
+      throw new Error("L'ID non può essere null");
+    }
+
+    const theGeoJson = new GeoJSON().writeGeometry(lastDrawnGeometry,
       {
         dataProjection: 'EPSG:4326',
         featureProjection: this.map?.getView().getProjection()
@@ -100,16 +110,10 @@ export class DrawFeatureComponent implements AfterViewInit {
 
     console.log('The GeoJSON in EPSG:4326: ', theGeoJson);
 
-    if (!this.restaurantId) {
-      throw new Error("L'ID non può essere null");
-    }
-
     this._restaurantService.updateDeliveryArea(this.restaurantId, theGeoJson)
-    .pipe(
-      retry(2),
-    )
     .subscribe(res => {
       console.log("Response: ", res)
+      this.setLastDeliveryAreaFromCoordinates(res.polygon.coordinates);
     });
 
   }
@@ -118,5 +122,37 @@ export class DrawFeatureComponent implements AfterViewInit {
     this.theSource.clear();
   }
 
+  private setLastDeliveryAreaFromCoordinates(coordinates: Position[][]) {
 
+    if (this.lastDeliveryArea) {
+      this.map.removeLayer(this.lastDeliveryArea);
+    }
+
+    const geometry = new Polygon(coordinates).transform('EPSG:4326', 'EPSG:3857');
+    console.log('Geom: ', geometry);
+
+    let source = new VectorSource({
+      features: [new Feature(geometry)]
+    });
+
+    this.lastDeliveryArea = new VectorLayer({
+      source: source,
+      style: new Style({
+        fill: new Fill({
+          color: 'rgba(255,0,0,0.10)'
+        }),
+        stroke: new Stroke({
+          color: 'rgba(255,0,0,0.8)'
+        }),
+      })
+    });
+
+    this.map.addLayer(this.lastDeliveryArea);
+    
+    // Centra la mappa sul 'centroide' della geometria
+    this.map.getView().setCenter(getCenter(geometry.getExtent()));
+
+    // Zoomma la mappa per fittare la geometria
+    this.map.getView().fit(geometry.getExtent());
+  }
 }

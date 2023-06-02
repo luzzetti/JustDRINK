@@ -50,6 +50,7 @@ import { GeneralInformationComponent } from './restaurants/feature-edit-restaura
 import {InplaceModule} from "primeng/inplace";
 import {InputTextModule} from "primeng/inputtext";
 import { AddressInformationComponent } from './restaurants/feature-edit-restaurant/address-information/address-information.component';
+import { MapViewerComponent } from './shared/map-viewer/map-viewer.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +67,8 @@ import { AddressInformationComponent } from './restaurants/feature-edit-restaura
     WorkingHoursComponent,
     StandardHourComponent,
     GeneralInformationComponent,
-    AddressInformationComponent
+    AddressInformationComponent,
+    MapViewerComponent
   ],
   imports: [
     BrowserModule,

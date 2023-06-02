@@ -12,7 +12,7 @@ export class GeneralInformationComponent implements OnInit {
 
   @Input() restaurantId!: string;
 
-  @ViewChild('f') generalInfoForm!: NgForm;
+  @ViewChild('f') generalInfoForm?: NgForm;
 
   private theRestaurant: Restaurant | undefined;
 
@@ -29,7 +29,7 @@ export class GeneralInformationComponent implements OnInit {
     this._restaurantService.getRestaurantById(this.restaurantId)
     .subscribe(res => {
       // Form initialization
-      this.generalInfoForm.form.reset({
+      this.generalInfoForm?.form.reset({
         restaurantName: res.name,
       });
 
