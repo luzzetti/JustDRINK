@@ -44,7 +44,11 @@ services:
 
   justdrink-keycloak:
     image: quay.io/keycloak/keycloak:20.0.3
-    command: start-dev
+    volumes:
+      - ./realm.json:/opt/keycloak/data/import/realm.json
+    command:
+      - start-dev
+      - --import-realm
     depends_on:
       justdrink-database:
         condition: service_healthy
