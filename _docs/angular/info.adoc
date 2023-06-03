@@ -1,0 +1,3 @@
+== Idee per la gestione del Token JWT
+
+https://www.syncfusion.com/blogs/post/best-practices-for-jwt-authentication-in-angular-apps.aspx
