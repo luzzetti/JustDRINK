@@ -1,0 +1,31 @@
+<form [formGroup]="standardHourForm">
+
+  <div class="flex justify-content-center align-items-center">
+
+    <div class="col-3 text-center"><p> {{labelName}} </p></div>
+
+    <div class="col-3 flex align-items-center justify-content-center">
+      <p-inputSwitch class="mt-2" inputId="theSwitch" formControlName="isOpen"></p-inputSwitch>
+    </div>
+
+    <div class="col-2">
+      <p-calendar formControlName="from"
+                  [showTime]="true"
+                  [timeOnly]="true"
+                  [hidden]="!standardHourForm.get('isOpen')?.value"></p-calendar>
+    </div>
+
+    <div class="col-2 text-center">
+      <p [hidden]="!standardHourForm.get('isOpen')?.value">to</p>
+    </div>
+
+    <div class="col-2">
+      <p-calendar formControlName="through"
+                  [showTime]="true"
+                  [timeOnly]="true"
+                  [hidden]="!standardHourForm.get('isOpen')?.value"></p-calendar>
+    </div>
+
+  </div>
+
+</form>

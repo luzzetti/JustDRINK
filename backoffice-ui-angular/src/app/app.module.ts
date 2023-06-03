@@ -45,18 +45,14 @@ import {
 import {InputSwitchModule} from "primeng/inputswitch";
 import {CalendarModule} from "primeng/calendar";
 import {SelectButtonModule} from "primeng/selectbutton";
-import {
-  GeneralInformationComponent
-} from './restaurants/feature-edit-restaurant/general-information/general-information.component';
+import { StandardHourComponent } from './restaurants/feature-edit-restaurant/working-hours/standard-hour/standard-hour.component';
+import { GeneralInformationComponent } from './restaurants/feature-edit-restaurant/general-information/general-information.component';
 import {InplaceModule} from "primeng/inplace";
 import {InputTextModule} from "primeng/inputtext";
-import {
-  AddressInformationComponent
-} from './restaurants/feature-edit-restaurant/address-information/address-information.component';
-import {MapViewerComponent} from './shared/map-viewer/map-viewer.component';
-import {TimeSlotComponent} from './shared/time-slot/time-slot.component';
+import { AddressInformationComponent } from './restaurants/feature-edit-restaurant/address-information/address-information.component';
+import { MapViewerComponent } from './shared/map-viewer/map-viewer.component';
+import { TimeSlotComponent } from './shared/time-slot/time-slot.component';
 import {DropdownModule} from "primeng/dropdown";
-import { OpeningComponent } from './restaurants/feature-edit-restaurant/working-hours/opening/opening.component';
 
 @NgModule({
   declarations: [
@@ -71,11 +67,11 @@ import { OpeningComponent } from './restaurants/feature-edit-restaurant/working-
     NotFoundComponent,
     DrawFeatureComponent,
     WorkingHoursComponent,
+    StandardHourComponent,
     GeneralInformationComponent,
     AddressInformationComponent,
     MapViewerComponent,
-    TimeSlotComponent,
-    OpeningComponent
+    TimeSlotComponent
   ],
   imports: [
     BrowserModule,
