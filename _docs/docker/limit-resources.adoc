@@ -7,6 +7,10 @@ wsl --shutdown
 create a .wslconfig file in the Windows home directory (C:\Users\<Your Account Name>).
 (Forse c'è gia)
 
+scorciatoia:
+
+%userprofile%
+
 Input the contents of the file as follows:
 
 ----
