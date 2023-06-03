@@ -13,8 +13,6 @@ import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.Creat
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.CreateRestaurantUseCase.CreateRestaurantCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.DeleteRestaurantUseCase;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.DeleteRestaurantUseCase.DeleteRestaurantCommand;
-import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsDeliveringAtCoordinatesQuery;
-import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsDeliveringAtCoordinatesQuery.ListRestaurantsDeliveringAtCoordinatesCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsQuery;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.ListRestaurantsQuery.ListRestaurantsCommand;
 import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.RemoveCuisineFromRestaurantUseCase;
@@ -28,28 +26,21 @@ import it.luzzetti.justdrink.backoffice.application.ports.input.restaurant.Store
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.RestaurantErrors;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
-import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
-import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates.Latitude;
-import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates.Longitude;
 import it.luzzetti.justdrink.backoffice.domain.vo.Cuisine;
 import it.luzzetti.justdrink.backoffice.domain.vo.Extension;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.menu.MenuRestControllerAdapter;
-import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant.dto.CuisineResource;
+import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant.dto.CuisineAdditionRequest;
+import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant.dto.ListRestaurantsResponse;
+import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant.dto.RestaurantCreationRequest;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant.dto.RestaurantResource;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.CuisineWebMapper;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.RestaurantWebMapper;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.MediaType;
@@ -79,8 +70,6 @@ public class RestaurantRestControllerAdapter {
   private final RetrieveRestaurantLogoUseCase retrieveRestaurantLogoUseCase;
 
   // Queries
-  private final ListRestaurantsDeliveringAtCoordinatesQuery
-      listRestaurantsDeliveringAtCoordinatesQuery;
   private final ListRestaurantsQuery listRestaurantsQuery;
   private final ShowRestaurantQuery showRestaurantQuery;
 
@@ -126,45 +115,6 @@ public class RestaurantRestControllerAdapter {
     // Crafting a response
 
     var response = ListRestaurantsResponse.builder().restaurants(restaurants).build();
-    return ResponseEntity.ok(response);
-  }
-
-  /*
-   * ../restaurants/search/shippingAtCoordinares
-   *
-   * probabilmente, in futuro, agglomereremo altri tipi di ricerca, sotto l'endpoint
-   * /restaurants/search/nomeRicerca
-   */
-
-  @Operation(summary = "Mostra la lista dei ristoranti che spediscono alle coordinate fornite")
-  @GetMapping("/search/shippingAtCoordinates")
-  public ResponseEntity<ListRestaurantsResponse> listRestaurantsDeliveringAtCoordinates(
-      @RequestParam double latitude,
-      @RequestParam double longitude,
-      @RequestParam Optional<Integer> pageSize,
-      @RequestParam Optional<Integer> pageNumber) {
-
-    // Fetching Parameters
-
-    Coordinates coordinates = Coordinates.of(Latitude.of(latitude), Longitude.of(longitude));
-
-    var command =
-        ListRestaurantsDeliveringAtCoordinatesCommand.builder()
-            .coordinates(coordinates)
-            .pageSize(pageSize.orElse(10))
-            .offset(pageNumber.orElse(0))
-            .build();
-
-    // Executing UseCase
-
-    var theFoundRestaurants =
-        listRestaurantsDeliveringAtCoordinatesQuery.listRestaurantsDeliveringAtCoordinates(command);
-
-    // Crafting a Response
-
-    var theRestaurantResources =
-        theFoundRestaurants.stream().map(restaurantWebMapper::toListElement).toList();
-    var response = ListRestaurantsResponse.builder().restaurants(theRestaurantResources).build();
     return ResponseEntity.ok(response);
   }
 
@@ -230,12 +180,12 @@ public class RestaurantRestControllerAdapter {
   @Operation(summary = "Esegue l'aggiunta di una cuisine ad un ristorante")
   @PostMapping("/{restaurantId}/cuisines")
   public ResponseEntity<Void> addCuisineToRestaurant(
-      @PathVariable UUID restaurantId, @RequestBody @Valid AddCuisineRequest request) {
+      @PathVariable UUID restaurantId, @RequestBody @Valid CuisineAdditionRequest request) {
 
     var command =
         AddCuisineToRestaurantCommand.builder()
             .restaurantId(RestaurantId.from(restaurantId))
-            .theCuisineToAdd(Cuisine.of(request.name))
+            .theCuisineToAdd(Cuisine.of(request.name()))
             .build();
 
     addCuisineToRestaurantUseCase.addCuisineToRestaurant(command);
@@ -259,30 +209,10 @@ public class RestaurantRestControllerAdapter {
     return ResponseEntity.noContent().build();
   }
 
-  public record AddCuisineRequest(@NotNull @NotBlank String name) {}
-
-  @Builder
-  public record ListRestaurantsResponse(List<RestaurantListElement> restaurants) {}
-
-  public record RestaurantListElement(UUID id, String name) {}
-
-  public record RestaurantCreationRequest(
-      @NotNull @NotBlank String name,
-      @NotNull @NotBlank String addressName,
-      Optional<Coordinates> coordinates,
-      Set<CuisineResource> cuisines) {
-
-    @Override
-    public Set<CuisineResource> cuisines() {
-      return Objects.requireNonNullElseGet(cuisines, HashSet::new);
-    }
-  }
-
   @Operation(summary = "Permette l'upload del logo di un ristorante")
   @PostMapping("/{restaurantId}/logo:upload")
-  public void uploadLogo(
-      @PathVariable UUID restaurantId,
-      @RequestParam("theMultipartLogo") MultipartFile theMultipartLogo) {
+  public void logoUpload(
+      @PathVariable UUID restaurantId, @RequestParam("logo") MultipartFile theMultipartLogo) {
 
     String contentType = theMultipartLogo.getContentType();
     String originalFileName = theMultipartLogo.getOriginalFilename();

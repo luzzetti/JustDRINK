@@ -46,7 +46,7 @@ public class SecurityConfig {
     http.csrf().disable();
 
     http.oauth2ResourceServer()
-        .jwt(customizer -> customizer.jwtAuthenticationConverter(new PrincipalToUserConverter()));
+        .jwt(customizer -> customizer.jwtAuthenticationConverter(new PrincipalToOwnerConverter()));
 
     return http.build();
   }

@@ -17,6 +17,7 @@
     <module>backoffice-output-jpa-adapter</module>
     <module>backoffice-output-rest-client-adapter</module>
     <module>backoffice-output-filesystem-adapter</module>
+    <module>backoffice-output-keycloak-client-adapter</module>
   </modules>
 
   <packaging>pom</packaging>

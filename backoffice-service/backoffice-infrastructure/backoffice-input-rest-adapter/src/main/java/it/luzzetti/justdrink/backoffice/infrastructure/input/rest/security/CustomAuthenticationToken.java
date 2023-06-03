@@ -1,8 +1,10 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.security;
 
-import it.luzzetti.justdrink.backoffice.domain.vo.Owner;
+import it.luzzetti.justdrink.backoffice.domain.aggregates.owner.Owner;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import lombok.EqualsAndHashCode;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,14 +24,16 @@ public class CustomAuthenticationToken extends AbstractAuthenticationToken {
   }
 
   private static List<SimpleGrantedAuthority> getAuthorities(Jwt source) {
-    final Map<String, Object> realmAccess =
-        (Map<String, Object>) source.getClaims().get("realm_access");
 
-    return ((List<String>) realmAccess.get("roles"))
-        .stream()
-            .map(roleName -> "ROLE_" + roleName) // prefix to map to a Spring Security "role"
-            .map(SimpleGrantedAuthority::new)
-            .toList();
+    final Map<String, List<String>> realmAccess =
+        Objects.requireNonNullElse(
+            (Map<String, List<String>>) source.getClaims().get("realm_access"),
+            Collections.emptyMap());
+
+    return realmAccess.getOrDefault("roles", Collections.emptyList()).stream()
+        .map(roleName -> "ROLE_" + roleName) // prefix to map to a Spring Security "role"
+        .map(SimpleGrantedAuthority::new)
+        .toList();
   }
 
   @Override

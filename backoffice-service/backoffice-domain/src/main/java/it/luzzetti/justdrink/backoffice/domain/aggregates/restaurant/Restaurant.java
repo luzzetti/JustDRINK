@@ -6,7 +6,7 @@ import it.luzzetti.commons.exceptions.ElementNotValidException;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.domain.vo.Address;
 import it.luzzetti.justdrink.backoffice.domain.vo.Cuisine;
-import it.luzzetti.justdrink.backoffice.domain.vo.Owner;
+import it.luzzetti.justdrink.backoffice.domain.aggregates.owner.Owner;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;

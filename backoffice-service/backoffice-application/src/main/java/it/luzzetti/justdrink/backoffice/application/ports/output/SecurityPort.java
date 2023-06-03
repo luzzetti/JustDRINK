@@ -3,7 +3,7 @@ package it.luzzetti.justdrink.backoffice.application.ports.output;
 import it.luzzetti.commons.exceptions.ApplicationException;
 import it.luzzetti.commons.exceptions.ErrorCode;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
-import it.luzzetti.justdrink.backoffice.domain.vo.Owner;
+import it.luzzetti.justdrink.backoffice.domain.aggregates.owner.Owner;
 
 public interface SecurityPort {
 

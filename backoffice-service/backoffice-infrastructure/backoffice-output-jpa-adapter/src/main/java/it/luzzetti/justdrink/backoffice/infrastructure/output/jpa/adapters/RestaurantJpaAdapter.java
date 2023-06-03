@@ -73,10 +73,12 @@ public class RestaurantJpaAdapter
      * Ci ha detto culo che viene utilizzato lo stesso sistema di coordinate.
      */
     GeometryFactory gm = new GeometryFactory();
+
+    // Nota: JTS vuole prima la LONGITUDE poi la LATITUDE
     Point point =
         gm.createPoint(
             new Coordinate(
-                coordinate.latitude().latitudeValue(), coordinate.longitude().longitudeValue()));
+                coordinate.longitude().longitudeValue(), coordinate.latitude().latitudeValue()));
 
     return restaurantJpaRepository.findByPointContainedInDeliveryArea(point).stream()
         .map(restaurantJpaMapper::toDomain)

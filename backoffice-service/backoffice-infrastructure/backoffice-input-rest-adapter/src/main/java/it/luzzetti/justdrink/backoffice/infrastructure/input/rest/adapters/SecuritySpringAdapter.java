@@ -1,7 +1,7 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters;
 
 import it.luzzetti.justdrink.backoffice.application.ports.output.SecurityPort;
-import it.luzzetti.justdrink.backoffice.domain.vo.Owner;
+import it.luzzetti.justdrink.backoffice.domain.aggregates.owner.Owner;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.security.CustomAuthenticationToken;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
