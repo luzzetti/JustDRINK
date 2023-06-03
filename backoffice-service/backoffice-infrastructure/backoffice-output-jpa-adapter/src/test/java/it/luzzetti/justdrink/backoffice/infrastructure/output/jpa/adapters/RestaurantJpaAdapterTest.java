@@ -3,7 +3,9 @@ package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.adapters;
 import static org.junit.jupiter.api.Assertions.*;
 
 import it.luzzetti.commons.exceptions.ApplicationException;
+import it.luzzetti.justdrink.backoffice.domain.aggregates.owner.Owner;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
+import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.OwnerId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.domain.vo.Address;
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
@@ -82,6 +84,12 @@ class RestaurantJpaAdapterTest {
         Restaurant.builder()
             .id(RestaurantId.from(UUID.randomUUID()))
             .name("aName")
+            .owner(
+                Owner.builder()
+                    .id(OwnerId.from(UUID.randomUUID()))
+                    .username("FAKE OWNER")
+                    .email("FAKE.OWNER@NONEXISTENT.XXX")
+                    .build())
             .address(
                 Address.builder()
                     .displayName("via")

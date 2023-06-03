@@ -89,6 +89,7 @@ public class CreateRestaurantApplicationService implements CreateRestaurantUseCa
     return Restaurant.builder()
         .id(aGeneratedRestaurantId)
         .name(providedName)
+        .owner(securityPort.mySelf())
         .address(theAddress)
         .cuisines(providedCuisines)
         .build();

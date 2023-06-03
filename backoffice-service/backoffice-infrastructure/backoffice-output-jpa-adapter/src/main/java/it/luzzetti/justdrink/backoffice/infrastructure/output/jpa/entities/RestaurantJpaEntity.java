@@ -16,11 +16,12 @@ import lombok.Setter;
 @NoArgsConstructor
 public class RestaurantJpaEntity {
 
-  @Id
-  private UUID id;
+  @Id private UUID id;
 
   @NotNull @NotBlank private String name;
   @NotNull private AddressJpaEmbeddable address;
+  @NotNull private OwnerJpaEmbeddable owner;
+
   private boolean enabled;
 
   @ElementCollection

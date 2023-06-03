@@ -30,6 +30,7 @@ import it.luzzetti.justdrink.backoffice.domain.vo.Cuisine;
 import it.luzzetti.justdrink.backoffice.domain.vo.Extension;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.menu.MenuRestControllerAdapter;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant.dto.CuisineAdditionRequest;
+import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant.dto.CuisineResource;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant.dto.ListRestaurantsResponse;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant.dto.RestaurantCreationRequest;
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.adapters.restaurant.dto.RestaurantResource;
@@ -37,6 +38,8 @@ import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.Cuisin
 import it.luzzetti.justdrink.backoffice.infrastructure.input.rest.mappers.RestaurantWebMapper;
 import jakarta.validation.Valid;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -141,8 +144,12 @@ public class RestaurantRestControllerAdapter {
   public ResponseEntity<RestaurantResource> createRestaurant(
       @RequestBody @Valid RestaurantCreationRequest request) {
 
+    // Probabilmente da nascondere dentro al mapper request -> command
+    Set<CuisineResource> cuisineResources =
+        Objects.requireNonNullElse(request.cuisines(), Collections.emptySet());
+
     Set<Cuisine> theCuisines =
-        request.cuisines().stream().map(cuisineWebMapper::toDomain).collect(Collectors.toSet());
+        cuisineResources.stream().map(cuisineWebMapper::toDomain).collect(Collectors.toSet());
 
     // Creating the command
     var command =

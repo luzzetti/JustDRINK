@@ -14,7 +14,8 @@ public enum RestaurantErrors implements ErrorCode {
   PATH_REQUIRED("domain.restaurant.logo.path.required"),
   LOGO_WRONG_CONTENT_TYPE("rest.adapter.restaurant.logo.upload.wrong_content_type"),
   LOGO_UPLOAD_IMPOSSIBLE("domain.restaurant.logo.upload.impossible"),
-  LOGO_DOWNLOAD_IMPOSSIBLE("domain.restaurant.logo.download.impossible");
+  LOGO_DOWNLOAD_IMPOSSIBLE("domain.restaurant.logo.download.impossible"),
+  OWNER_REQUIRED("domain.restaurant.owner.required");
 
   private final String code;
 

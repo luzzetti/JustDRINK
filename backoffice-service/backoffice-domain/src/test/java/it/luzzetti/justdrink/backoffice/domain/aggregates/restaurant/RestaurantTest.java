@@ -4,7 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import it.luzzetti.commons.exceptions.ApplicationException;
 import it.luzzetti.commons.exceptions.ElementNotFoundException;
+import it.luzzetti.justdrink.backoffice.domain.aggregates.owner.Owner;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant.RestaurantBuilder;
+import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.OwnerId;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.domain.vo.Address;
 import it.luzzetti.justdrink.backoffice.domain.vo.Coordinates;
@@ -26,6 +28,12 @@ class RestaurantTest {
     theRestaurantBuilder =
         Restaurant.builder()
             .id(RestaurantId.from(UUID.randomUUID()))
+            .owner(
+                Owner.builder()
+                    .id(OwnerId.from(UUID.randomUUID()))
+                    .username("FAKE OWNER")
+                    .email("FAKE.OWNER@NONEXISTENT.XXX")
+                    .build())
             .address(
                 Address.builder()
                     .displayName("via pippo")
@@ -38,6 +46,13 @@ class RestaurantTest {
   @DisplayName("Restaurant Creating - No id Error")
   void whenCreatingANewRestaurantWithoutId_thenThrowsApplicationException() {
     theRestaurantBuilder.id(null);
+    assertThrows(ApplicationException.class, theRestaurantBuilder::build);
+  }
+
+  @Test
+  @DisplayName("Restaurant Creating - No Owner Error")
+  void whenCreatingANewRestaurantWithoutOwner_thenThrowsApplicationException() {
+    theRestaurantBuilder.owner(null);
     assertThrows(ApplicationException.class, theRestaurantBuilder::build);
   }
 

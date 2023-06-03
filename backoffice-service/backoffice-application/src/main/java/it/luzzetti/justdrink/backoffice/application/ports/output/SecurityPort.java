@@ -2,12 +2,13 @@ package it.luzzetti.justdrink.backoffice.application.ports.output;
 
 import it.luzzetti.commons.exceptions.ApplicationException;
 import it.luzzetti.commons.exceptions.ErrorCode;
-import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.owner.Owner;
+import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.Restaurant;
 
 public interface SecurityPort {
 
   String ROLE_ADMIN = "ADMIN";
+  String RESTAURANT_OWNER = "RESTAURANT-OWNER";
 
   Owner mySelf();
 
@@ -16,6 +17,10 @@ public interface SecurityPort {
   // Policies
   default void assertThatUserHasPermissionToCreateRestaurant() {
     if (iHaveTheRole(ROLE_ADMIN)) {
+      return;
+    }
+
+    if (iHaveTheRole(RESTAURANT_OWNER)) {
       return;
     }
 

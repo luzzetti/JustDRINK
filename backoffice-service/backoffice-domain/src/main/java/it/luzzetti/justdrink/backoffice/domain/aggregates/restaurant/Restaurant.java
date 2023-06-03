@@ -3,10 +3,10 @@ package it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant;
 import it.luzzetti.commons.exceptions.ElementNotFoundException;
 import it.luzzetti.commons.exceptions.ElementNotUniqueException;
 import it.luzzetti.commons.exceptions.ElementNotValidException;
+import it.luzzetti.justdrink.backoffice.domain.aggregates.owner.Owner;
 import it.luzzetti.justdrink.backoffice.domain.shared.typed_ids.RestaurantId;
 import it.luzzetti.justdrink.backoffice.domain.vo.Address;
 import it.luzzetti.justdrink.backoffice.domain.vo.Cuisine;
-import it.luzzetti.justdrink.backoffice.domain.aggregates.owner.Owner;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -97,6 +97,10 @@ public class Restaurant {
 
       if (super.address == null) {
         throw new ElementNotValidException(RestaurantErrors.ADDRESS_REQUIRED);
+      }
+
+      if (super.owner == null) {
+        throw new ElementNotValidException(RestaurantErrors.OWNER_REQUIRED);
       }
 
       return super.build();
