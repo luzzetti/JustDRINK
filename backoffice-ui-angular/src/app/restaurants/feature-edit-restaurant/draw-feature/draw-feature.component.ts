@@ -53,6 +53,9 @@ export class DrawFeatureComponent implements OnInit {
       throw new Error("Impossible to initialize this component without a provided ID");
     }
 
+
+    console.log('Loading Delivery Area for restaurantId: ', this.restaurantId);
+
     this._restaurantService.getDeliveryAreaByRestaurantId(this.restaurantId)
     .subscribe(res => {
       this.setLastDeliveryAreaFromCoordinates(res.polygon.coordinates);

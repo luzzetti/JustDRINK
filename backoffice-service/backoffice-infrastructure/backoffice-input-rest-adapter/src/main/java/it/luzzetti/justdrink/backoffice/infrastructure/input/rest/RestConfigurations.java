@@ -43,6 +43,13 @@ public class RestConfigurations {
     return messageSource;
   }
 
+  /*
+   * Questo dovrebbe iniettare il bean che serve a Jackson per serializzare/deserializzare
+   * le classi relative a JTS (Le geometry, i GeoJSON, ecc...)
+   *
+   * Presa direttamente dalla documentazione
+   */
+
   @Bean
   public JtsModule jtsModule() {
     return new JtsModule();

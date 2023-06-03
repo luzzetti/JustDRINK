@@ -24,7 +24,7 @@ export class ShowRestaurantComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('Loading data for restaurantId: ', this.restaurantId);
+
     if (!this.restaurantId) {
       throw new Error("The restaurantId is null");
     }

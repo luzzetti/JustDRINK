@@ -2,6 +2,7 @@ package it.luzzetti.justdrink.backoffice.infrastructure.input.rest.security;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -19,6 +20,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@Log4j2
 public class SecurityConfig {
 
   @Bean
@@ -59,6 +61,9 @@ public class SecurityConfig {
     CorsConfiguration configuration = new CorsConfiguration();
 
     configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+
+    // Eh...
+    configuration.addAllowedHeader("*");
 
     configuration.setAllowedMethods(
         List.of(

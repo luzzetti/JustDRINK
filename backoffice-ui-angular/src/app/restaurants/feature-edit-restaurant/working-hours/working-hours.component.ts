@@ -25,7 +25,13 @@ export class WorkingHoursComponent implements OnInit {
   constructor() {
   }
 
+  /*
+   * Da rivedere quando avrò più esperienza coi form Angular
+   * https://medium.com/@knoldus/how-to-create-custom-form-control-in-angular-3742fc81255a
+   */
+
   ngOnInit(): void {
+
     this.hoursForm.valueChanges.subscribe(v => {
       console.log(JSON.stringify(v));
     });

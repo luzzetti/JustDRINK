@@ -17,6 +17,9 @@ spring:
 
 logging:
   level:
+    org:
+      springframework:
+        security: debug
     it:
       luzzetti:
         justdrink:
