@@ -13,7 +13,7 @@ spring:
       hibernate:
         format_sql: false
     hibernate:
-      ddl-auto: update
+      ddl-auto: none # NON CAMBIARE!!! Utilizzare Liquibase
 
 logging:
   level:
@@ -24,3 +24,4 @@ logging:
       luzzetti:
         justdrink:
           backoffice: DEBUG
+    liquibase: info

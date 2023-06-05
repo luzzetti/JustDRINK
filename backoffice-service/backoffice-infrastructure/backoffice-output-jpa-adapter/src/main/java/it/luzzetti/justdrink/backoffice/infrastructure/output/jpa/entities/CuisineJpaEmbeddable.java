@@ -13,5 +13,4 @@ import lombok.Setter;
 public class CuisineJpaEmbeddable {
 
   @NotNull private String name;
-
 }

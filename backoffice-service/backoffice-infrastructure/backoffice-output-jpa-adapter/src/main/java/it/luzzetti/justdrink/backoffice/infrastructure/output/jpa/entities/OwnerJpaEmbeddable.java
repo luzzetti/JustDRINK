@@ -15,9 +15,9 @@ public class OwnerJpaEmbeddable {
   @Column(name = "owner_id", nullable = false)
   private UUID id;
 
-  @Column(name = "owner_username", nullable = false)
+  @Column(name = "ownerUsername", nullable = false)
   private String username;
 
-  @Column(name = "owner_email", nullable = false)
+  @Column(name = "ownerEmail", nullable = false)
   private String email;
 }

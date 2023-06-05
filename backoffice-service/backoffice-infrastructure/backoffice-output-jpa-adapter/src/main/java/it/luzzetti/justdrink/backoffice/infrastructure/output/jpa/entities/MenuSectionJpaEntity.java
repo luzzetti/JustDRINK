@@ -4,6 +4,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.Instant;
@@ -27,6 +28,7 @@ public class MenuSectionJpaEntity {
 
   // Composition vs aggregation vs association
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "SECTION_ID")
   private Set<ProductJpaEntity> products = new HashSet<>();
 
   private Instant createdAt;

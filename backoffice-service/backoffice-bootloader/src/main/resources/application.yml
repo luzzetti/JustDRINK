@@ -23,8 +23,15 @@ spring:
           time_zone: UTC
         format_sql: false
     hibernate:
-      ddl-auto: none
+      ddl-auto: none # NON CAMBIARE!!! Utilizzare Liquibase
     database-platform: org.hibernate.spatial.dialect.postgis.PostgisDialect
+    open-in-view: true
+
+  liquibase:
+    change-log: db/changelog/changelog-master.yaml
+    drop-first: true
+    default-schema: public
+    enabled: true
 
   # OVVIAMENTE...vanno configurati per prod. E i valori iniettati dall'esterno (Env?)
   security:

@@ -16,6 +16,5 @@ public class RestaurantResource extends RepresentationModel<RestaurantResource> 
   private UUID id;
   private String name;
   private AddressResource address;
-  private boolean enabled;
   private Set<CuisineResource> cuisines;
 }

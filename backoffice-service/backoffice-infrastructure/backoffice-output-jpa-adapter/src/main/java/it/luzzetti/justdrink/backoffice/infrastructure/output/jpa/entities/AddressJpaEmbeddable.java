@@ -32,12 +32,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class AddressJpaEmbeddable {
-  @Column(name = "address_display_name", nullable = false)
+  @Column(name = "addressDisplayName", nullable = false)
   private String displayName;
 
-  @Column(name = "address_latitude", nullable = false)
+  @Column(name = "addressLatitude", nullable = false)
   private double latitude;
 
-  @Column(name = "address_longitude", nullable = false)
+  @Column(name = "addressLongitude", nullable = false)
   private double longitude;
 }

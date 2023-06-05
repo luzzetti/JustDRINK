@@ -50,6 +50,50 @@
       <artifactId>h2</artifactId>
       <scope>test</scope>
     </dependency>
+
+    <!-- Liquibase -->
+    <dependency>
+      <groupId>org.liquibase</groupId>
+      <artifactId>liquibase-core</artifactId>
+    </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <!-- LIQUIBASE -->
+      <plugin>
+        <groupId>org.liquibase</groupId>
+        <artifactId>liquibase-maven-plugin</artifactId>
+        <version>${liquibase-maven-plugin.version}</version>
+        <configuration>
+          <propertyFile>src/main/resources/liquibase.properties</propertyFile>
+        </configuration>
+        <dependencies>
+          <!--set up any dependencies for Liquibase to function in your
+          environment for example, a database-specific plugin-->
+          <dependency>
+            <groupId>org.liquibase.ext</groupId>
+            <artifactId>liquibase-hibernate6</artifactId>
+            <version>${liquibase-hibernate.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>6.0.4</version>
+          </dependency>
+          <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>3.0.5</version>
+          </dependency>
+          <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+            <version>3.0.5</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
