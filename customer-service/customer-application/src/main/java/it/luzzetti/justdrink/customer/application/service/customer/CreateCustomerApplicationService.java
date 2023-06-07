@@ -4,6 +4,7 @@ import it.luzzetti.justdrink.customer.application.ports.input.customer.CreateCus
 import it.luzzetti.justdrink.customer.application.ports.output.customer.CustomerIdGeneratorPort;
 import it.luzzetti.justdrink.customer.application.ports.output.customer.SaveCustomerPort;
 import it.luzzetti.justdrink.customer.domain.aggregates.customer.Customer;
+import it.luzzetti.justdrink.customer.domain.aggregates.customer.CustomerName;
 import it.luzzetti.justdrink.customer.domain.shared.typed_ids.CustomerId;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,11 @@ public class CreateCustomerApplicationService implements CreateCustomerUseCase {
     CustomerId generatedId = customerIdGeneratorPort.generateCustomerIdentifier();
 
     // Calling useCase
-    Customer aNewCustomer = Customer.builder().id(generatedId).name(command.name()).build();
+    Customer aNewCustomer =
+        Customer.builder()
+            .id(generatedId)
+            .customerName(CustomerName.newAnonymousCustomer())
+            .build();
 
     // Crafting response
     return saveCustomerPort.saveCustomer(aNewCustomer);

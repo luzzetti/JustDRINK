@@ -19,13 +19,12 @@ import lombok.Setter;
 public class CustomerJpaEntity {
 
   @Id private UUID id;
-  @NotNull @NotBlank private String name;
+  @NotNull @NotBlank private String firstName;
+  @NotNull @NotBlank private String lastName;
 
-
-// TODO: fai delle prove di rimozione figli per testare l'orphanRemoval!
+  // TODO: fai delle prove di rimozione figli per testare l'orphanRemoval!
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
   @JoinColumn(name = "CUSTOMER_ID")
   private Set<AddressJpaEntity> addressBook = new HashSet<>();
-
 }

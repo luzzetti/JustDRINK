@@ -14,37 +14,46 @@ import lombok.Getter;
 @Getter
 public class Customer {
 
-    private final CustomerId id;
+  private final CustomerId id;
+  private CustomerName customerName;
 
-    private String name;
-    @Builder.Default
-    private Set<Address> addressBook = new HashSet<>();
+  // TODO: da fare
+  private PhoneNumber phoneNumber;
 
+  @Builder.Default private Set<Address> addressBook = new HashSet<>();
 
-    public void addAddress(Address address) {
-        this.addressBook.add(address);
+  public void addAddress(Address address) {
+    this.addressBook.add(address);
+  }
+
+  // TODO: implementare un test !!
+  public void removeAddress(AddressId addressId) {
+    this.addressBook.removeIf(address -> Objects.equals(address.getId(), addressId));
+  }
+
+  public void changeCustomerName(String firstName, String lastName) {
+    this.customerName = CustomerName.of(firstName, lastName);
+  }
+
+  public void changeCustomerName(CustomerName customerName) {
+    this.customerName = customerName;
+  }
+
+  public static CustomerBuilder builder() {
+    return new CustomBuilder();
+  }
+
+  // Validations
+
+  private static class CustomBuilder extends CustomerBuilder {
+
+    /* Adding validations as part of build() method. */
+    public Customer build() {
+      // TODO controllare id!!
+
+      Objects.requireNonNull(super.customerName, "Customer name cannot be null");
+
+      return super.build();
     }
-
-    // TODO: implementare un test !!
-    public void removeAddress(AddressId addressId) {
-        this.addressBook.removeIf(address -> Objects.equals(address.getId(), addressId));
-    }
-
-
-    public static CustomerBuilder builder() {
-        return new CustomBuilder();
-    }
-
-    // Validations
-
-    private static class CustomBuilder extends CustomerBuilder {
-
-        /* Adding validations as part of build() method. */
-        public Customer build() {
-
-            Objects.requireNonNull(super.name, "Customer name cannot be null");
-
-            return super.build();
-        }
-    }
+  }
 }

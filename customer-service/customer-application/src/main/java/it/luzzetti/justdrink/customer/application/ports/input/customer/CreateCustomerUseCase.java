@@ -9,5 +9,5 @@ public interface CreateCustomerUseCase {
   Customer createCustomer(CreateCustomerCommand command);
 
   @Builder
-  record CreateCustomerCommand(@NotNull @NotEmpty String name) {}
+  record CreateCustomerCommand() {}
 }
