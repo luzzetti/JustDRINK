@@ -20,10 +20,23 @@
       <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
 
+    <!-- GIS -->
     <dependency>
       <groupId>org.hibernate.orm</groupId>
       <artifactId>hibernate-spatial</artifactId>
       <version>${hibernate.version}</version>
+    </dependency>
+
+    <!-- Storicizzazione -->
+<!--    <dependency>-->
+<!--      <groupId>org.hibernate.orm</groupId>-->
+<!--      <artifactId>hibernate-envers</artifactId>-->
+<!--      <version>${hibernate.version}</version>-->
+<!--    </dependency>-->
+    <!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-envers -->
+    <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-envers</artifactId>
     </dependency>
 
     <!-- QueryDSL -->

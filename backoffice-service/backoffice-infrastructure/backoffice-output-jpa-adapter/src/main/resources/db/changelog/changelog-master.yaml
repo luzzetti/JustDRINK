@@ -1,3 +1,5 @@
 databaseChangeLog:
   - includeAll:
       path: "/db/changelog/changelogs"
+  - includeAll:
+      path: "/db/changelog/seed"

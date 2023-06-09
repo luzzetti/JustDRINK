@@ -12,9 +12,11 @@ import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
 import org.locationtech.jts.geom.Polygon;
 
 @Entity
+@Audited
 @Table(name = "DELIVERY_AREAS")
 @Getter
 @Setter

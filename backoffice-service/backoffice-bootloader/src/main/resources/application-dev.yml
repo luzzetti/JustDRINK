@@ -19,9 +19,13 @@ spring:
     drop-first: true
     enabled: true
 
+
 logging:
   level:
     org:
+      hibernate:
+        envers:
+          boot: warn
       springframework:
         security: debug
     it:

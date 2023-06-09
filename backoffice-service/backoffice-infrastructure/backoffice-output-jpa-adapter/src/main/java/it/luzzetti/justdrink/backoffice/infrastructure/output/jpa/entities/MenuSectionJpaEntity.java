@@ -14,8 +14,10 @@ import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
 
 @Entity
+@Audited
 @Table(name = "SECTIONS")
 @Getter
 @Setter
