@@ -2,16 +2,12 @@ package it.luzzetti.justdrink.backoffice.domain.vo;
 
 import it.luzzetti.commons.exceptions.ElementNotProcessableException;
 import it.luzzetti.justdrink.backoffice.domain.aggregates.restaurant.RestaurantErrors;
-import lombok.Getter;
-
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
+import lombok.Getter;
 
 public class Extension {
 
-  private static final Set<String> extensionsSupported =
-      new HashSet<>(Arrays.asList(".JPG", ".PNG"));
+  private static final Set<String> extensionsSupported =Set.of(".JPG", ".PNG");
 
   @Getter private final String value;
 
