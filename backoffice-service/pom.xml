@@ -31,6 +31,10 @@
       <name>Christian Luzzetti</name>
       <email>christian.luzzetti@gmail.com</email>
     </developer>
+    <developer>
+      <name>Stefano Ricci</name>
+      <email>ricci.stefano90@gmail.com</email>
+    </developer>
   </developers>
 
   <!-- il Docker image name è strettamente correlato al nome del repository DockerHub su cui pushare -->

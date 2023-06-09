@@ -8,5 +8,5 @@ import java.util.List;
 public interface FindRestaurantPort {
   Restaurant findRestaurantByIdMandatory(RestaurantId restaurantId);
 
-  List<Restaurant> findRestaurantByCoordinateContainedInShippingArea(Coordinates coordinate);
+  List<Restaurant> findRestaurantByCoordinateContainedInDeliveryArea(Coordinates coordinate);
 }

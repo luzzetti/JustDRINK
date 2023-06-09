@@ -20,7 +20,7 @@ public class ListRestaurantsDeliveringAtCoordinatesApplicationService
   public List<Restaurant> listRestaurantsDeliveringAtCoordinates(
       ListRestaurantsDeliveringAtCoordinatesCommand command) {
 
-    return findRestaurantPort.findRestaurantByCoordinateContainedInShippingArea(
+    return findRestaurantPort.findRestaurantByCoordinateContainedInDeliveryArea(
         command.coordinates());
   }
 }

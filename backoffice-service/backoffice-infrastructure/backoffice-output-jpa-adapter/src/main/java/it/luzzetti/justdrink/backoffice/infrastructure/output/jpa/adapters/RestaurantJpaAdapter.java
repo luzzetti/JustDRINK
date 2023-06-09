@@ -65,7 +65,7 @@ public class RestaurantJpaAdapter
   }
 
   @Override
-  public List<Restaurant> findRestaurantByCoordinateContainedInShippingArea(
+  public List<Restaurant> findRestaurantByCoordinateContainedInDeliveryArea(
       Coordinates coordinate) {
 
     /*
