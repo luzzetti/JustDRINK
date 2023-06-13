@@ -13,22 +13,20 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CustomerTest {
 
-    private CustomerBuilder theCustomerBuilder;
+  private CustomerBuilder theCustomerBuilder;
 
-    @BeforeEach
-    void init() {
-        theCustomerBuilder =
-                Customer.builder()
-                        .id(CustomerId.from(UUID.randomUUID()))
-                        .customerName(
-                                CustomerName.of("Christian", "Luzzetti")
-                        );
-    }
+  @BeforeEach
+  void init() {
+    theCustomerBuilder =
+        Customer.builder()
+            .id(CustomerId.from(UUID.randomUUID()))
+            .customerName(CustomerName.of("Christian", "Luzzetti"));
+  }
 
-    @Test
-    @DisplayName("Customer Creating - No name Error")
-    void whenCreatingANewCustomerWithoutCustomerName_thenThrowsApplicationException() {
-        theCustomerBuilder.customerName(null);
-        assertThrows(Exception.class, theCustomerBuilder::build);
-    }
+  @Test
+  @DisplayName("Customer Creating - No name Error")
+  void whenCreatingANewCustomerWithoutCustomerName_thenThrowsApplicationException() {
+    theCustomerBuilder.customerName(null);
+    assertThrows(Exception.class, theCustomerBuilder::build);
+  }
 }

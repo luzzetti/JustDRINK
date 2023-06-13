@@ -1,10 +1,16 @@
 package it.luzzetti.justdrink.customer.domain.aggregates.customer;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.Value;
 
-@Builder
-@Getter
+@Value
 public class PhoneNumber {
-    private String value;
+  String value;
+
+  private PhoneNumber(String value) {
+    this.value = value;
+  }
+
+  public static PhoneNumber from(String value) {
+    return new PhoneNumber(value);
+  }
 }

@@ -5,8 +5,8 @@ import it.luzzetti.justdrink.customer.domain.shared.typed_ids.CustomerId;
 
 import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
+import java.util.Set;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -16,43 +16,45 @@ public class Customer {
 
   private final CustomerId id;
   private CustomerName customerName;
-
-  // TODO: da fare
+  private Gender gender;
+  private BirthDate birthDate;
   private PhoneNumber phoneNumber;
-
   @Builder.Default private Set<Address> addressBook = new HashSet<>();
 
   public void addAddress(Address address) {
     this.addressBook.add(address);
   }
 
-  // TODO: implementare un test !!
   public void removeAddress(AddressId addressId) {
-    this.addressBook.removeIf(address -> Objects.equals(address.getId(), addressId));
-  }
-
-  public void changeCustomerName(String firstName, String lastName) {
-    this.customerName = CustomerName.of(firstName, lastName);
+    this.addressBook.removeIf(address -> Objects.equals(addressId, address.getId()));
   }
 
   public void changeCustomerName(CustomerName customerName) {
     this.customerName = customerName;
   }
 
+  public void changeGender(Gender gender) {
+    this.gender = gender;
+  }
+
+  public Age calculateAge() {
+    return Age.from(this.birthDate);
+  }
+
+  public void changePhoneNumber(PhoneNumber phoneNumber) {
+    this.phoneNumber = phoneNumber;
+  }
+
   public static CustomerBuilder builder() {
     return new CustomBuilder();
   }
 
-  // Validations
-
   private static class CustomBuilder extends CustomerBuilder {
 
-    /* Adding validations as part of build() method. */
     public Customer build() {
-      // TODO controllare id!!
-
-      Objects.requireNonNull(super.customerName, "Customer name cannot be null");
-
+      if (super.id == null || super.id.id() == null) {
+        throw new IllegalArgumentException("change me");
+      }
       return super.build();
     }
   }
