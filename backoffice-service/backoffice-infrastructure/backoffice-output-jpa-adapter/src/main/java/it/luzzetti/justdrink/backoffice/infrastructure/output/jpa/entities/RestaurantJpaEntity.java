@@ -1,10 +1,10 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities;
 
+import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.shared.AuditableEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.util.Set;
-import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,14 +16,11 @@ import org.hibernate.envers.Audited;
 @Getter
 @Setter
 @NoArgsConstructor
-public class RestaurantJpaEntity {
-
-  @Id private UUID id;
+public class RestaurantJpaEntity extends AuditableEntity<String> {
 
   @NotNull @NotBlank private String name;
   @NotNull private AddressJpaEmbeddable address;
   @NotNull private OwnerJpaEmbeddable owner;
-
   private boolean enabled;
 
   @ElementCollection

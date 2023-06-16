@@ -2,6 +2,7 @@ package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import java.io.Serializable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,13 +32,13 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class AddressJpaEmbeddable {
-  @Column(name = "addressdisplayname", nullable = false)
+public class AddressJpaEmbeddable implements Serializable {
+  @Column(name = "address_Displayname", nullable = false)
   private String displayName;
 
-  @Column(name = "addresslatitude", nullable = false)
+  @Column(name = "address_Latitude", nullable = false)
   private double latitude;
 
-  @Column(name = "addresslongitude", nullable = false)
+  @Column(name = "address_Longitude", nullable = false)
   private double longitude;
 }

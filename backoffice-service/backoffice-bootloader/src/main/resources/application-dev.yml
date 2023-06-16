@@ -13,11 +13,11 @@ spring:
       hibernate:
         format_sql: false
     hibernate:
-      ddl-auto: none # NON CAMBIARE!!! Utilizzare Liquibase
+      ddl-auto: create-drop # NON CAMBIARE!!! Utilizzare Liquibase
 
   liquibase:
     drop-first: true
-    enabled: true
+    enabled: false
 
 
 logging:

@@ -1,6 +1,7 @@
 package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities;
 
 import jakarta.persistence.*;
+import java.io.Serializable;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,13 +12,13 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class OwnerJpaEmbeddable {
+public class OwnerJpaEmbeddable implements Serializable {
   @Column(name = "owner_id", nullable = false)
   private UUID id;
 
-  @Column(name = "ownerUsername", nullable = false)
+  @Column(name = "owner_username", nullable = false)
   private String username;
 
-  @Column(name = "ownerEmail", nullable = false)
+  @Column(name = "owner_email", nullable = false)
   private String email;
 }

@@ -49,6 +49,18 @@ services:
       - justdrink
     mem_limit: 1g
 
+  justdrink-broker:
+    image: rabbitmq:3-management
+    ports:
+      - 5672:5672  # RabbitMQ default port
+      - 15672:15672  # RabbitMQ management console port
+    volumes:
+      - ../_broker/broker-data:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=justdrink.admin@gmail.com
+      - RABBITMQ_DEFAULT_PASS=justdrink.admin
+
+
   backoffice-service:
     image: luzzetti/backoffice-bootloader:latest
     ports:
