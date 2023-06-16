@@ -4,9 +4,11 @@ import it.luzzetti.justdrink.geocodifica.domain.aggregates.address.Address;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
+import java.util.List;
+
 public interface GeocodeAddressUseCase {
 
-  public Address geocoding(GeocodingAddressCommand command);
+  public List<Address> geocoding(GeocodingAddressCommand command);
 
   @Builder
   record GeocodingAddressCommand(@NotNull String displayName) {}

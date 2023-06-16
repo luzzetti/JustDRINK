@@ -1,9 +1,16 @@
 package it.luzzetti.justdrink.geocodifica.application.services.address;
 
+import it.luzzetti.commons.exceptions.ElementNotProcessableException;
+import it.luzzetti.commons.exceptions.ElementNotValidException;
 import it.luzzetti.justdrink.geocodifica.application.ports.input.address.GeocodeAddressUseCase;
 import it.luzzetti.justdrink.geocodifica.application.ports.output.FindCoordinatesPort;
 import it.luzzetti.justdrink.geocodifica.domain.aggregates.address.Address;
+
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import it.luzzetti.justdrink.geocodifica.domain.aggregates.address.AddressErrors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.locationtech.jts.geom.Coordinate;
@@ -14,30 +21,22 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class GeocodeAddressApplicationsService implements GeocodeAddressUseCase {
 
-
-
   private final FindCoordinatesPort findCoordinatesPort;
 
   @Override
-  public Address geocoding(GeocodingAddressCommand command) {
+  public List<Address> geocoding(GeocodingAddressCommand command) {
 
-    log.warn("TEST sono dentro al service");
-
-    Address address = extractValidAddress(command.displayName());
-
-    return address;
+    return extractValidAddress(command.displayName());
   }
 
-  private Address extractValidAddress(String displayName) {
+  private List<Address> extractValidAddress(String displayName) {
 
-    Optional<Coordinate> coordinate = findCoordinatesPort.displayName(displayName);
+    List<Coordinate> coordinates = findCoordinatesPort.displayName(displayName);
 
-    return Address.builder()
-        .displayName(displayName)
-        .coordinate(coordinate.orElseThrow(IllegalArgumentException::new))
-        .build();
+    if (coordinates.isEmpty()) {
+      throw new ElementNotProcessableException(AddressErrors.IMPOSSIBLE_TO_GEOCODE);
+    }
 
-    //        return
-    // Address.builder().displayName(addressName).coordinates(correctCoordinates).build();
+      return coordinates.stream().map(c -> Address.builder().coordinate(c).displayName(displayName).build()).collect(Collectors.toList());
   }
 }
