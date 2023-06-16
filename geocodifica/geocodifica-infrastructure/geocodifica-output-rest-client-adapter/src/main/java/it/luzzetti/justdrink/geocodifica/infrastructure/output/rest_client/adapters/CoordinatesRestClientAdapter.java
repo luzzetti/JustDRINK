@@ -1,12 +1,10 @@
 package it.luzzetti.justdrink.geocodifica.infrastructure.output.rest_client.adapters;
 
 import it.luzzetti.commons.exceptions.ElementNotProcessableException;
-import it.luzzetti.commons.exceptions.geocodifica.NonUniqueResultException;
 import it.luzzetti.justdrink.geocodifica.application.ports.output.FindCoordinatesPort;
 import it.luzzetti.justdrink.geocodifica.domain.aggregates.address.AddressErrors;
 import java.util.*;
 import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.locationtech.jts.geom.Coordinate;

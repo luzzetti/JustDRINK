@@ -10,7 +10,7 @@ public enum RestaurantErrors implements ErrorCode {
   ID_REQUIRED("domain.restaurant.id.required"),
   CUISINE_NOT_EXISTING("domain.restaurant.cuisine.not.contained"),
   CUISINE_ALREADY_EXISTING("domain.restaurant.cuisine.already.contained"),
-  IMPOSSIBLE_TO_GEOCODE("domain.restaurant.address.geocoding.impossible"),
+  IMPOSSIBLE_TO_GEOCODE("domain.address.geocoding.impossible"),
   PATH_REQUIRED("domain.restaurant.logo.path.required"),
   LOGO_WRONG_CONTENT_TYPE("rest.adapter.restaurant.logo.upload.wrong_content_type"),
   LOGO_UPLOAD_IMPOSSIBLE("domain.restaurant.logo.upload.impossible"),
