@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>it.luzzetti.justdrink</groupId>
+        <artifactId>geocodifica</artifactId>
+        <version>${revision}</version>
+    </parent>
+    <name>:: backoffice-infrastructure ::</name>
+    <artifactId>geocodifica-infrastructure</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>geocodifica-input-rest-adapter</module>
+        <module>geocodifica-output-jpa-adapter</module>
+        <module>geocodifica-output-rest-client-adapter</module>
+    </modules>
+    <dependencies>
+        <dependency>
+            <groupId>it.luzzetti.justdrink</groupId>
+            <artifactId>geocodifica-application</artifactId>
+            <version>${revision}</version>
+        </dependency>
+    </dependencies>
+
+
+</project>
