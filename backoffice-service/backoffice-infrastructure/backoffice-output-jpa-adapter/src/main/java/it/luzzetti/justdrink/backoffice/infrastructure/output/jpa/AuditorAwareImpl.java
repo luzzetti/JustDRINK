@@ -16,8 +16,12 @@ public class AuditorAwareImpl implements AuditorAware<String> {
 
   @Override
   public @NotNull Optional<String> getCurrentAuditor() {
-    var principal =
-        (Principal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    return Optional.of(principal.getName());
+    try {
+      var principal =
+          (Principal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+      return Optional.of(principal.getName());
+    } catch (Exception e) {
+      return Optional.empty();
+    }
   }
 }

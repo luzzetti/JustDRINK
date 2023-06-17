@@ -31,6 +31,7 @@ public class RestaurantJpaAdapter
         SaveRestaurantPort,
         DeleteRestaurantPort,
         GenerateRestaurantIdPort {
+
   private final RestaurantJpaRepository restaurantJpaRepository;
   private final RestaurantJpaMapper restaurantJpaMapper;
 
