@@ -27,4 +27,4 @@ https://stackoverflow.com/questions/67254749/ddd-the-problem-with-domain-service
 
 
 Ooof 2
-https://stackoverflow.com/questions/67148194/domain-driven-design-ddd-domain-event-handlers-where-to-place-them
+https://stackoverflow.com/questions/67148194/domain-driven-design-ddd-domain-event-handlers-where-to-placeDTO-them

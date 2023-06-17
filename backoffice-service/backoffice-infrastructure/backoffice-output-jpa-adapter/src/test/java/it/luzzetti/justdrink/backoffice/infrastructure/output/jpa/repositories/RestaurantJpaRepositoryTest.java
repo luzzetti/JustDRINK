@@ -8,16 +8,15 @@ import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.Owner
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.RestaurantJpaEntity;
 import java.util.Optional;
 import java.util.UUID;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -31,11 +30,10 @@ import org.testcontainers.junit.jupiter.Testcontainers;
  * <a href="https://www.arhohuttunen.com/test-data-builders/">Info</a>
  */
 
-@DataJpaTest
-@ComponentScan("it.luzzetti.justdrink.backoffice.infrastructure.output.jpa")
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@TestPropertySource(
+@DataJpaTest(
     properties = {"spring.liquibase.enabled=false", "spring.jpa.hibernate.ddl-auto=create"})
+@ComponentScan("it.luzzetti.justdrink.backoffice.infrastructure.output.jpa")
+@AutoConfigureTestDatabase(replace = Replace.NONE)
 @Testcontainers
 class RestaurantJpaRepositoryTest {
 
@@ -44,6 +42,10 @@ class RestaurantJpaRepositoryTest {
    * Configurare PostGIS anziché PostgreSQL
    * static JdbcDatabaseContainer postgresqlContainer = new PostgisContainerProvider().newInstance();
    * postgresqlContainer.withUrlParam("serverTimezone", "UTC").withReuse(true).start();
+   *
+   * TODO:
+   * Lanciare la validazione una sola volta. (Quando avremo configurato Liquibase)
+   * https://vladmihalcea.com/validate-ddl-schema-spring-hibernate/
    */
 
   @ServiceConnection
@@ -90,7 +92,6 @@ class RestaurantJpaRepositoryTest {
     assertEquals(theId, anId);
   }
 
-  @NotNull
   private static RestaurantJpaEntity craftValidRestaurantEntity(UUID theId, String theName) {
 
     OwnerJpaEmbeddable anOwner = new OwnerJpaEmbeddable();
