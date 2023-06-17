@@ -1,12 +1,14 @@
-package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.adapters;
+package it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.repositories;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.AddressJpaEmbeddable;
+import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.OwnerJpaEmbeddable;
 import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.entities.RestaurantJpaEntity;
-import it.luzzetti.justdrink.backoffice.infrastructure.output.jpa.repositories.RestaurantJpaRepository;
 import java.util.Optional;
 import java.util.UUID;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -26,7 +28,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
  * <a href="https://java.testcontainers.org/test_framework_integration/junit_5/">Info</a>
  * <a href="https://www.baeldung.com/spring-boot-testcontainers-integration-test">Info</a>
  * <a href="https://softwaremill.com/do-you-still-need-testcontainers-with-spring-boot-3-1/">Info</a>
- *
+ * <a href="https://www.arhohuttunen.com/test-data-builders/">Info</a>
  */
 
 @DataJpaTest
@@ -35,7 +37,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @TestPropertySource(
     properties = {"spring.liquibase.enabled=false", "spring.jpa.hibernate.ddl-auto=create"})
 @Testcontainers
-class RestaurantJpaAdapterTest {
+class RestaurantJpaRepositoryTest {
 
   /*
    * TODO:
@@ -75,9 +77,7 @@ class RestaurantJpaAdapterTest {
     UUID theId = UUID.randomUUID();
     String theName = "TEST";
 
-    RestaurantJpaEntity anEntity = new RestaurantJpaEntity();
-    anEntity.setId(theId);
-    anEntity.setName(theName);
+    RestaurantJpaEntity anEntity = craftValidRestaurantEntity(theId, theName);
     restaurantJpaRepository.save(anEntity);
 
     Optional<RestaurantJpaEntity> theFoundEntity =
@@ -88,5 +88,24 @@ class RestaurantJpaAdapterTest {
     assertThat(theFoundRestaurant).isNotNull();
     UUID anId = theFoundRestaurant.getId();
     assertEquals(theId, anId);
+  }
+
+  @NotNull
+  private static RestaurantJpaEntity craftValidRestaurantEntity(UUID theId, String theName) {
+
+    OwnerJpaEmbeddable anOwner = new OwnerJpaEmbeddable();
+    anOwner.setId(UUID.randomUUID());
+    anOwner.setUsername("Christian");
+    anOwner.setEmail("justdrink.admin@gmail.com");
+
+    AddressJpaEmbeddable anAddress = new AddressJpaEmbeddable();
+    anAddress.setDisplayName("Via Cairoli 1, 01100, Viterbo, Italia");
+
+    RestaurantJpaEntity anEntity = new RestaurantJpaEntity();
+    anEntity.setId(theId);
+    anEntity.setName(theName);
+    anEntity.setOwner(anOwner);
+    anEntity.setAddress(anAddress);
+    return anEntity;
   }
 }

@@ -7,10 +7,12 @@ import jakarta.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
+@Log4j2
 public class CustomRestaurantJpaRepositoryImpl implements CustomRestaurantJpaRepository {
 
   private final EntityManager entityManager;
