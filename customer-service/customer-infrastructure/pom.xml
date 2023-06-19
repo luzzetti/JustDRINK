@@ -17,6 +17,7 @@
   <modules>
     <module>customer-input-rest-adapter</module>
     <module>customer-output-jpa-adapter</module>
+    <module>customer-input-amqp-adapter</module>
   </modules>
 
   <packaging>pom</packaging>

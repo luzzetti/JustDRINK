@@ -24,6 +24,11 @@
       <artifactId>order-service-output-jpa-adapter</artifactId>
       <version>${revision}</version>
     </dependency>
+    <dependency>
+      <groupId>it.luzzetti.justdrink</groupId>
+      <artifactId>order-service-output-amqp-adapter</artifactId>
+      <version>${revision}</version>
+    </dependency>
 
     <!-- Other dependencies -->
     <dependency>

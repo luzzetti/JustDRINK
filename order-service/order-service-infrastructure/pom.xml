@@ -26,5 +26,6 @@
   <modules>
     <module>order-service-input-rest-adapter</module>
     <module>order-service-output-jpa-adapter</module>
+    <module>order-service-output-amqp-adapter</module>
   </modules>
 </project>

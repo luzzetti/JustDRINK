@@ -4,3 +4,9 @@ server:
 spring:
   application:
     name: backoffice
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: justdrink.admin@gmail.com
+    password: justdrink.admin

@@ -5,6 +5,12 @@ spring:
   application:
     name: customer-service
 
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: justdrink.admin@gmail.com
+    password: justdrink.admin
+
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:10010/customer_service

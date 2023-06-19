@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Builder
@@ -15,4 +16,5 @@ public class Order {
   private final CustomerId customerId;
   private final RestaurantId restaurantId;
   @Builder.Default private final List<OrderItem> lineItems = new ArrayList<>();
+  @Builder.Default @Setter private OrderStatus status = OrderStatus.CREATED;
 }
