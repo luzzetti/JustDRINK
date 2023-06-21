@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: backoffice
+    name: order-service
 
   rabbitmq:
     host: localhost
