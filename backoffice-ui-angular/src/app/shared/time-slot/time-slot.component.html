@@ -1,0 +1,28 @@
+<form [formGroup]="openingForm" class="w-full">
+  <div class="flex justify-content-evenly align-items-center">
+    <div>
+      <p-calendar
+        formControlName="from"
+        styleClass="text-center max-w-10rem"
+        [showIcon]="true"
+        icon="pi pi-clock"
+        [showTime]="true"
+        [timeOnly]="true"></p-calendar>
+    </div>
+
+    <div class="text-center">
+      <p>to</p>
+    </div>
+
+    <div>
+      <p-calendar
+        formControlName="through"
+        styleClass="text-center max-w-10rem"
+        [showIcon]="true"
+        icon="pi pi-clock"
+        [showTime]="true"
+        [timeOnly]="true">
+      </p-calendar>
+    </div>
+  </div>
+</form>

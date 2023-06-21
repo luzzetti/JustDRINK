@@ -1,0 +1,23 @@
+<div class="text-center">
+  <p-button label="Start Drawing!"
+            icon="pi pi-pencil"
+            styleClass="p-button-outlined p-button-primary"
+            (click)="addInteraction()"/>
+
+</div>
+
+<div class="map-container">
+  <app-map-viewer [map]="map"></app-map-viewer>
+</div>
+
+<div class="text-center">
+  <p-button label="Save Area"
+            icon="pi pi-save"
+            styleClass="p-button-outlined p-button-warning"
+            (click)="saveShippingArea()"/>
+
+  <p-button label="Reset Selection"
+            icon="pi pi-trash"
+            styleClass="p-button-outlined p-button-secondary"
+            (click)="clearDrawing()"/>
+</div>

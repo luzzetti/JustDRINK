@@ -1,0 +1,57 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: backoffice
+
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:10010/backoffice
+
+
+  #  Select a schema for the envers tables
+  #  jpa.properties.org.hibernate.envers.default_schema: cold
+  #  Select a schema for live tables
+  #  jpa.properties.hibernate.default_schema: cold
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc.time_zone: UTC
+        format_sql: false
+    hibernate:
+      ddl-auto: none # NON CAMBIARE!!! Utilizzare Liquibase
+    database-platform: org.hibernate.spatial.dialect.postgis.PostgisDialect
+    open-in-view: true
+    show-sql: true
+
+  liquibase:
+    change-log: db/changelog/changelog-master.yaml
+    drop-first: false
+    default-schema: public
+    enabled: true
+
+  # OVVIAMENTE...vanno configurati per prod. E i valori iniettati dall'esterno (Env?)
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: test-client
+            authorization-grant-type: password
+            scope: openid
+        provider:
+          keycloak:
+            issuer-uri: http://justdrink-keycloak:8080/realms/justdrink
+            user-name-attribute: preferred_username
+      resourceserver:
+        jwt:
+          issuer-uri: http://justdrink-keycloak:8080/realms/justdrink

@@ -1,0 +1,31 @@
+== Spegnere il processo matto
+
+wsl --shutdown
+
+--
+
+create a .wslconfig file in the Windows home directory (C:\Users\<Your Account Name>).
+(Forse c'è gia)
+
+scorciatoia:
+
+%userprofile%
+
+Input the contents of the file as follows:
+
+----
+[wsl2]
+memory=1GB
+processors=1
+----
+
+The memory and processors are the resources allocated to the wsl2 process. You can change the memory and processors according to your preference. This is my config on a 16GB i5 machine.
+
+After that, restart the WSL2 process:-
+
+Start PowerShell in admin mode and type: Restart-Service LxssManager
+
+After that, you are good to go!
+
+P.s.: Start docker only when it is required.
+

@@ -1,0 +1,38 @@
+<p-card styleClass="restaurant-container shadow-2 relative">
+
+  <p-avatar id="restaurant-logo"
+            size="xlarge">
+    <img id="avatar-image" src="/assets/empty-restaurant-logo.png" alt="restaurant logo">
+  </p-avatar>
+
+  <p-button id="edit-button"
+            icon="pi pi-cog"
+            styleClass="p-button-rounded"
+            (click)="navigateToRestaurantEditing()"></p-button>
+
+  <h1 id="restaurant-name" class="text-center"> {{ theRestaurant?.name }} </h1>
+
+  <p id="cuisines" class="m-0">
+    <span class="cuisine">Hamburger</span>
+    <span class="cuisine">Panini</span>
+  </p>
+
+  <div id="restaurant-rating-and-review">
+    <div id="restaurant-ratings">
+      <p-rating [(ngModel)]="rating" [readonly]="true" [cancel]="false"></p-rating>
+    </div>
+    <div id="restaurant-reviews">
+      <p> 1324 Recensioni </p>
+    </div>
+  </div>
+
+  <p id="restaurant-placeDTO">
+    <span> {{theRestaurant?.address?.displayName }} </span>
+  </p>
+
+  <p-divider></p-divider>
+
+  <p class="text-sm">Note: Il ristorante non accetta i buoni pasto</p>
+
+</p-card>
+

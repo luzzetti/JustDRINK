@@ -1,0 +1,20 @@
+<!--TEST - Tiene attivo il tab Shipping-->
+<p-tabView [activeIndex]="3">
+
+  <p-tabPanel header="General">
+    <app-general-information [restaurantId]="theRestaurantId"></app-general-information>
+  </p-tabPanel>
+
+  <p-tabPanel header="Address">
+    <app-address-information [restaurantId]="theRestaurantId"></app-address-information>
+  </p-tabPanel>
+
+  <p-tabPanel header="Delivery Area">
+    <app-draw-feature [restaurantId]="theRestaurantId"></app-draw-feature>
+  </p-tabPanel>
+
+  <p-tabPanel header="Working hours">
+    <app-working-hours></app-working-hours>
+  </p-tabPanel>
+
+</p-tabView>

@@ -1,7 +1,12 @@
-
+/_broker
+/_broker/**
+/_database
 /docker-compose/database.dev.env
 /docker-compose/keycloak.dev.env
 */application-dev.yml
+/backoffice-service/backoffice-bootloader/src/main/resources/application-dev.yml
+/docker-compose/backoffice.dev.env
+
 
 ##############################
 ## Java
@@ -154,5 +159,6 @@ coverage
 *.njsproj
 *.sln
 *.sw?
-/backoffice-service/backoffice-bootloader/src/main/resources/application-dev.yml
-/docker-compose/backoffice.dev-env
+
+/_broker/broker-data/
+/_broker/broker-data/mnesia/rabbit@a1ef14c6b7ba/

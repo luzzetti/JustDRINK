@@ -1,0 +1,9 @@
+server:
+  port: 9191
+
+logging:
+  level:
+    it:
+      luzzetti:
+        justdrink:
+          backoffice: DEBUG

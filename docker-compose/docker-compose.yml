@@ -3,18 +3,6 @@ services:
   # https://medium.com/swlh/alpine-slim-stretch-buster-jessie-bullseye-bookworm-what-are-the-differences-in-docker-62171ed4531d
   # https://dev.to/bgord/multiple-postgres-databases-in-a-single-docker-container-417l
 
-  #  justdrink-database:
-  #    image: postgres:15.2
-  #    volumes:
-  #      - ../_database/db-data:/var/lib/postgresql/data/
-  #      - ../_database/sql:/docker-entrypoint-initdb.d/:ro
-  #    env_file:
-  #      - ./database.dev.env
-  #    networks:
-  #      - justdrink
-  #    ports:
-  #      - "10010:5432"
-
   justdrink-database:
     image: postgis/postgis:15-3.3
     volumes:
@@ -26,6 +14,12 @@ services:
       - justdrink
     ports:
       - "10010:5432"
+    mem_limit: 500m
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d backoffice -U justdrink_usr" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   pgadmin:
     image: dpage/pgadmin4:7.0
@@ -38,10 +32,14 @@ services:
 
   justdrink-keycloak:
     image: quay.io/keycloak/keycloak:20.0.3
-    command: start-dev
+    volumes:
+      - ./realm.json:/opt/keycloak/data/import/realm.json
+    command:
+      - start-dev
+      - --import-realm
     depends_on:
       justdrink-database:
-        condition: service_started
+        condition: service_healthy
     env_file:
       - ./keycloak.dev.env
     ports:
@@ -49,6 +47,19 @@ services:
       - "8787:8787"
     networks:
       - justdrink
+    mem_limit: 1g
+
+  justdrink-broker:
+    image: rabbitmq:3-management
+    ports:
+      - 5672:5672  # RabbitMQ default port
+      - 15672:15672  # RabbitMQ management console port
+    volumes:
+      - ../_broker/broker-data:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=justdrink.admin@gmail.com
+      - RABBITMQ_DEFAULT_PASS=justdrink.admin
+
 
   backoffice-service:
     image: luzzetti/backoffice-bootloader:latest

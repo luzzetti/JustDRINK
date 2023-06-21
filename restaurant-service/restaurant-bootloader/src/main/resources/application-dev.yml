@@ -1,0 +1,35 @@
+server:
+  port: 9090
+
+spring:
+
+  datasource:
+    username: justdrink_usr
+    password: justdrink_pwd
+
+  jpa:
+    show_sql: true
+    properties:
+      hibernate:
+        format_sql: false
+    hibernate:
+      ddl-auto: create-drop # NON CAMBIARE!!! Utilizzare Liquibase
+
+  liquibase:
+    drop-first: true
+    enabled: false
+
+
+logging:
+  level:
+    org:
+      hibernate:
+        envers:
+          boot: warn
+      springframework:
+        security: debug
+    it:
+      luzzetti:
+        justdrink:
+          backoffice: DEBUG
+    liquibase: info

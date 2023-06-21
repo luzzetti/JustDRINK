@@ -1,0 +1,8 @@
+== Best Effort 1PC
+
+Ma quanto suona bene? xD
+
+https://www.infoworld.com/article/2077963/distributed-transactions-in-spring--with-and-without-xa.html?page=2
+
+https://lifeinide.com/post/2017-12-29-spring-boot-rabbitmq-transactions/
+

@@ -1,0 +1,44 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: customer-service
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: justdrink.admin@gmail.com
+    password: justdrink.admin
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:10010/customer_service
+
+  jpa:
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+      hibernate:
+        jdbc:
+          time_zone: UTC
+        format_sql: false
+    hibernate:
+      ddl-auto: validate
+    database-platform: org.hibernate.spatial.dialect.postgis.PostgisDialect
+
+  # OVVIAMENTE...vanno configurati per prod. E i valori iniettati dall'esterno (Env?)
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: test-client
+            authorization-grant-type: password
+            scope: openid
+        provider:
+          keycloak:
+            issuer-uri: http://justdrink-keycloak:8080/realms/justdrink
+            user-name-attribute: preferred_username
+      resourceserver:
+        jwt:
+          issuer-uri: http://justdrink-keycloak:8080/realms/justdrink

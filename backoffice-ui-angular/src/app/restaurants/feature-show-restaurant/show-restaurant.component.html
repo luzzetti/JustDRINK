@@ -1,0 +1,20 @@
+<div id="banner">
+  <!-- TO BE IMPLEMENTED-->
+</div>
+
+<div id="main-container"
+     class="w-full xl:w-11 xl:m-auto">
+
+  <div class="grid w-full m-0 md:px-4">
+
+    <div class="hidden lg:inline-block lg:col-2">
+      <app-restaurant-sections/>
+    </div>
+    <div class="px-0 col-12 md:px-2 md:col-8 lg:col-6">
+      <app-restaurant-intro-card [theRestaurant]="theRestaurant" />
+    </div>
+    <div class="hidden md:inline-block md:col-4">
+      <app-restaurant-basket/>
+    </div>
+  </div>
+</div>
